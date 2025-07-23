@@ -14,22 +14,22 @@ return [
         'submenu' => [
             [
                 'title' => 'Berita',
-                'route' => 'admin/posts?type=news',
+                'route' => 'blog/posts?type=news',
                 'roles' => ['admin', 'super_user']
             ],
             [
                 'title' => 'Pengumuman',
-                'route' => 'admin/posts?type=announcement',
+                'route' => 'blog/posts?type=announcement',
                 'roles' => ['admin', 'super_user']
             ],
             [
                 'title' => 'Profil Sekolah',
-                'route' => 'admin/pages/profil',
+                'route' => 'blog/pages/profil',
                 'roles' => ['admin', 'super_user']
             ],
             [
                 'title' => 'Visi dan Misi',
-                'route' => 'admin/pages/visi-misi',
+                'route' => 'blog/pages/visi-misi',
                 'roles' => ['admin', 'super_user']
             ],
         ]

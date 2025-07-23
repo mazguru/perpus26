@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
+$routes->get('post/(:segment)', 'Home::detail/$1');
 
 $routes->get('login', 'Login::index');
 $routes->post('login/verify', 'Login::verify');

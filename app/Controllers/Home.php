@@ -19,14 +19,14 @@ class Home extends BaseController
     public function detail($slug)
     {
         $model = new PostsModel();
-        $artikel = $model->where('slug', $slug)->first();
+        $artikel = $model->where('post_slug', $slug)->first();
 
         if (!$artikel) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException("Artikel tidak ditemukan");
         }
 
         return view('blog/detail', [
-            'title' => $artikel['judul'],
+            'title' => $artikel['post_title'],
             'artikel' => $artikel
         ]);
     }
