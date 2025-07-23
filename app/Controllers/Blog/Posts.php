@@ -43,6 +43,14 @@ class Posts extends AdminController
 
         return $this->response->setJSON($results);
     }
+    public function getcategories()
+    {
+        $categories = $this->m_categories->getCategories('post');
+        $data = [
+            'categories' => $categories,
+        ];
+        return $this->response->setJSON($data);
+    }
 
 
     public function create($id = null): string

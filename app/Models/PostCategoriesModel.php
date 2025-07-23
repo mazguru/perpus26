@@ -10,7 +10,11 @@ class PostCategoriesModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'category_name', 'category_description', 'category_slug', 'category_type', 'is_deleted'
+        'category_name',
+        'category_description',
+        'category_slug',
+        'category_type',
+        'is_deleted'
     ];
 
     protected $useTimestamps = false;
@@ -48,12 +52,13 @@ class PostCategoriesModel extends Model
 
         return $builder->get()->getResult();
     }
-    public function getCategories($type)
+    public function getCategories($type = null)
     {
         $builder = $this->builder();
         $builder->select('id, category_name');
-        $builder->where('category_type', $type);
-
+        if ($type) {
+            $builder->where('category_type', $type);
+        }
         return $builder->get()->getResultArray();
     }
 

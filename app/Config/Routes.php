@@ -32,6 +32,7 @@ $routes->group('blog', ['filter' => 'auth'], function ($routes) {
     $routes->post('posts/upload_image', 'Blog\Posts::imagesUploadHandler');
     $routes->get('posts/delete/(:num)', 'Blog\Posts::delete/$1');
     $routes->get('posts/getposts', 'Blog\Posts::getposts');
+    $routes->get('posts/getcategories', 'Blog\Posts::getcategories');
 });
 
 
