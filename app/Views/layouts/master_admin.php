@@ -43,10 +43,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('assets/css/styles.css'); ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/custom.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap-icons.css'); ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/sweetalert2.min.css'); ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/main.min.css'); ?>">
 
     <script>
         const _BASEURL = '<?= base_url() ?>';
@@ -75,7 +72,8 @@
         <?= $this->include('layouts/admin/sidebar') ?>
 
         <div id="main-content" class="relative flex flex-1 flex-col overflow-x-hidden overflow-y-auto min-h-screen dark:bg-boxdark-2">
-            <main class='p-4'>
+            <main>
+                <?= $this->include('layouts/admin/header') ?>
                 <div
                     id="isLoading"
                     class="fixed left-0 top-0 z-999999 flex w-screen h-screen items-center justify-center space-x-2 bg-gray-900 bg-opacity-90"
@@ -86,9 +84,9 @@
                     <div class="h-8 w-8 bg-green-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                     <div class="h-5 w-5 bg-blue-500 rounded-full animate-bounce"></div>
                 </div>
-
-                <?= $this->renderSection('content') ?>
-
+                <div class="mx-auto max-w-(--breakpoint-2xl) p-4 md:p-6">
+                    <?= $this->renderSection('content') ?>
+                </div>
 
             </main>
             <?= $this->include('layouts/partials/footer') ?>
@@ -97,12 +95,12 @@
 
     </div>
 
+    <script src="<?= base_url('assets/js/backend.js') ?>"></script>
 
-    <script src="<?= base_url('assets/js/backend.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/notif.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/datatables.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/app.min.js') ?>"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="<?= base_url('assets/js/SwalUtils.js') ?>"></script>
 
 
 </body>

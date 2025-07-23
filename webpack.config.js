@@ -4,10 +4,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     mode: 'production', // Mode produksi untuk optimasi
-    entry: './src/js/alpine.js', // File utama
+    entry: './src/js/datatables.js', // File utama
     output: {
-        filename: 'app.min.js', // File JavaScript yang sudah di-minify
-        path: path.resolve(__dirname, 'public/js'),
+        filename: 'datatables.min.js', // File JavaScript yang sudah di-minify
+        path: path.resolve(__dirname, 'public/assets/js'),
     },
     optimization: {
         minimize: true,

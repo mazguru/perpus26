@@ -4,7 +4,7 @@ namespace App\Controllers\Settings;
 use App\Controllers\AdminController;
 use App\Models\SettingsModel;
 
-class General extends AdminController
+class Media extends AdminController
 {
     protected $settingsModel;
 
@@ -15,7 +15,7 @@ class General extends AdminController
 
     public function index()
     {
-        return view('admin/settings/general', [
+        return view('admin/settings/media', [
             'title' => 'Pengaturan Umum',
             'settings' => true,
             'general_settings' => true
@@ -24,7 +24,7 @@ class General extends AdminController
 
     public function getSettings()
     {
-        $settings = $this->settingsModel->getSettingGroupValues('general');
+        $settings = $this->settingsModel->getSettingGroupValues('media');
         $results = [];
         foreach ($settings as $key => $value) {
             $description = $this->settingsModel->getSetting($key);

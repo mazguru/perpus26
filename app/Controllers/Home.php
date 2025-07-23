@@ -2,10 +2,32 @@
 
 namespace App\Controllers;
 
+use App\Models\PostsModel;
+
 class Home extends BaseController
 {
-    public function index(): string
+    public function index()
     {
-        return view('welcome_message');
+        $model = new PostsModel();
+        return view('blog/index', [
+            'title' => 'Daftar Artikel',
+            'artikel' => $model->orderBy('created_at', 'DESC')->findAll()
+        ]);
+    }
+
+
+    public function detail($slug)
+    {
+        $model = new PostsModel();
+        $artikel = $model->where('slug', $slug)->first();
+
+        if (!$artikel) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException("Artikel tidak ditemukan");
+        }
+
+        return view('blog/detail', [
+            'title' => $artikel['judul'],
+            'artikel' => $artikel
+        ]);
     }
 }

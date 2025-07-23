@@ -4,7 +4,7 @@ return [
     [
         'title' => 'Dashboard',
         'icon'  => 'bi bi-house',
-        'route' => 'admin/dashboard',
+        'route' => 'dashboard',
         'roles' => ['admin', 'super_user']
     ],
     [
@@ -89,8 +89,33 @@ return [
         'roles' => ['super_user'],
         'submenu' => [
             [
-                'title' => 'Konfigurasi Umum',
+                'title' => 'Umum',
                 'route' => 'settings/general',
+                'roles' => ['super_user']
+            ],
+            [
+                'title' => 'Profil Sekolah',
+                'route' => 'settings/profil',
+                'roles' => ['super_user']
+            ],
+            [
+                'title' => 'Media Sosial',
+                'route' => 'settings/medsos',
+                'roles' => ['super_user']
+            ],
+            [
+                'title' => 'Media',
+                'route' => 'settings/media',
+                'roles' => ['super_user']
+            ],
+            [
+                'title' => 'Menulis',
+                'route' => 'settings/writing',
+                'roles' => ['super_user']
+            ],
+            [
+                'title' => 'Membaca',
+                'route' => 'settings/reading',
                 'roles' => ['super_user']
             ],
         ]

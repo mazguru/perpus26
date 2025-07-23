@@ -7,7 +7,7 @@
 
 <script>
     const config = {
-        controller: 'settings/general',
+        controller: 'settings/media',
         dirUpload: 'upload/image/'
     }
 

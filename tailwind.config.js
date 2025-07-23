@@ -2,13 +2,19 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
 module.exports = {
   content: [
-      './app/views/**/*.php', // Sesuaikan dengan path file PHP Anda
-      './views/*.php', // Sesuaikan dengan path file PHP Anda
+      './app/Views/*.php', // Sesuaikan dengan path file PHP Anda
+      './app/Views/**/*.php', // Sesuaikan dengan path file PHP Anda
+      './app/Views/**/**/*.php', // Sesuaikan dengan path file PHP Anda
+      './Views/*.php', // Sesuaikan dengan path file PHP Anda
       './application/libraries/*.php', // Sesuaikan dengan path file PHP Anda
       './views/**/**/*.php', // Sesuaikan dengan path file PHP Anda
       './views/**/**/*.html', // Sesuaikan dengan path file PHP Anda
       './views/**/*.html',
       './public/assets/**/*.js',
+      './public/src/**/*.js',
+      './src/**/*.js',
+      './src/js/notifier.js',
+      
 
   ],
   darkMode: 'class',
