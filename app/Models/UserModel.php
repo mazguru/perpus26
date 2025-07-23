@@ -48,4 +48,14 @@ class UserModel extends Model
         return $this->where('user_name', $username)
                     ->first();
     }
+
+    public function getUsers()
+    {
+        return $this->where('is_deleted', 'false')->findAll(); // contoh filter
+    }
+
+    public function getAllUsers()
+    {
+        return $this->findAll();
+    }
 }

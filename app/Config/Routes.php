@@ -15,12 +15,15 @@ $routes->get('logout', 'Login::logout');
 $routes->get('dashboard', 'Admin\Dashboard::index', ['filter' => 'auth']);
 
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
-    $routes->get('artikel', 'Admin\Artikel::index');
-    $routes->get('artikel/tambah', 'Admin\Artikel::tambah');
-    $routes->post('artikel/simpan', 'Admin\Artikel::simpan');
-    $routes->get('artikel/edit/(:num)', 'Admin\Artikel::edit/$1');
-    $routes->post('artikel/update/(:num)', 'Admin\Artikel::update/$1');
-    $routes->get('artikel/delete/(:num)', 'Admin\Artikel::delete/$1');
+    $groups = ['users', 'medsos', 'profil', 'writing', 'reading', 'media'];
+
+    foreach ($groups as $group) {
+        $controller = 'Admin\\' . ucfirst($group);
+        $routes->get("$group", "$controller::index");
+        $routes->get("$group/list", "$controller::list");
+        $routes->post("$group/save", "$controller::save");
+        $routes->post("$group/upload", "$controller::upload");
+    }
     $routes->get('menu', 'AdminController::menu');
 });
 $routes->group('blog', ['filter' => 'auth'], function ($routes) {
@@ -28,7 +31,7 @@ $routes->group('blog', ['filter' => 'auth'], function ($routes) {
     $routes->get('posts/create', 'Blog\Posts::create');
     $routes->post('posts/store', 'Blog\Posts::store');
     $routes->get('posts/edit/(:num)', 'Blog\Posts::edit/$1');
-    $routes->post('posts/update/(:num)', 'Blog\Posts::update/$1');
+    $routes->get('posts/getpostid/(:num)', 'Blog\Posts::getPostById/$1');
     $routes->post('posts/upload_image', 'Blog\Posts::imagesUploadHandler');
     $routes->get('posts/delete/(:num)', 'Blog\Posts::delete/$1');
     $routes->get('posts/getposts', 'Blog\Posts::getposts');

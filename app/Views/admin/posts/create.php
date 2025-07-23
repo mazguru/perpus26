@@ -2,13 +2,14 @@
 
 <?= $this->section('content') ?>
 
-<h2 class="text-2xl font-bold mb-4">Buat Post Baru</h2>
+<h2 class="text-2xl font-bold mb-4"><?= $title ?></h2>
 
 <form
     method="post"
     x-data="postForm(config)"
-    x-init="loadCategories(); initTinymce() "
-    @submit.prevent="validateForm">
+    x-init="init()"
+    @submit.prevent="validateForm"
+    enctype="multipart/form-data">
     <?= csrf_field() ?>
     <template x-if="errorMessage">
         <div class="mb-4 text-red-600 font-semibold" x-text="errorMessage"></div>
@@ -77,6 +78,14 @@
                 <div>
                     <label class="block text-sm font-medium">Gambar</label>
                     <input type="file" @change="handleFile($event)" name='post_image' x-ref="post_image" class="w-full text-sm border rounded">
+                    <!-- Dengan x-if -->
+                    <template x-if="form.post_image && form.post_image !== 'null'">
+                        <div class="mb-2">
+                            <label class="block text-sm font-medium text-gray-600">Gambar Aktif:</label>
+                            <img :src="_BASEURL + 'media_library/posts/thumbs/' + form.post_image" alt="Current Image" class="h-20 object-cover rounded border">
+                        </div>
+                    </template>
+
                 </div>
             </div>
 
@@ -88,7 +97,7 @@
                     class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
                     ATUR ULANG
                 </button>
-                <button @click="validateForm"
+                <button type="submit"
                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     SIMPAN
                 </button>
@@ -112,6 +121,11 @@
                 post_visibility: 'public',
                 post_comment_status: 'open',
             },
+
+            curent_tumb :'',
+
+            postId: <?= $post_id ?? null ?>,
+            type: '<?= $type ?? 'edit' ?>',
 
             categories: '',
 
@@ -137,19 +151,41 @@
                     return;
                 }
                 this.errorMessage = '';
-                alert('Form valid dan siap dikirim:\n' + JSON.stringify(this.form, null, 2));
+                this.submitForm();
+                console.log(this.form)
             },
 
             async submitForm() {
                 const url = _BASEURL + config.controller + '/store';
                 const method = 'POST';
-                const response = await this.fetchData(url, method, this.form);
+
+                const formData = new FormData();
+                for (const key in this.form) {
+                    formData.append(key, this.form[key]);
+                }
+
+                // Pastikan elemen file dimasukkan (gunakan ref atau cara lain)
+                const imageInput = document.querySelector('input[name="post_image"]');
+                if (imageInput && imageInput.files.length > 0) {
+                    formData.append('post_image', imageInput.files[0]);
+                }
+
+                const response = await this.fetchData(url, method, formData);
+
                 console.log(response);
+
                 if (response && response.status === 'success') {
                     Notifier.show('Berhasil!', response.message, 'success');
                 } else {
                     this.errors = response.errors ? response.errors : [];
                     Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+                }
+            },
+            init() {
+                this.loadCategories();
+                this.initTinymce()
+                if (this.type === 'edit' && this.postId) {
+                    this.loadPostById(this.postId);
                 }
             },
 
@@ -158,8 +194,9 @@
                     const headers = {
                         'X-Requested-With': 'XMLHttpRequest'
                     };
-                    const isFormData = body instanceof FormData;
 
+                    // Jangan set Content-Type jika pakai FormData, browser akan otomatis menambahkan boundary
+                    const isFormData = body instanceof FormData;
                     if (!isFormData) headers['Content-Type'] = 'application/json';
 
                     const response = await fetch(url, {
@@ -168,11 +205,10 @@
                         body: body ? (isFormData ? body : JSON.stringify(body)) : null
                     });
 
-                    // Handle status error
                     if (!response.ok) {
                         const errorText = await response.text();
                         console.error('HTTP Error', response.status, errorText);
-                        return null; // fetchData akan return null => tangani di pemanggil
+                        return null;
                     }
 
                     return await response.json();
@@ -191,10 +227,19 @@
                 }
             },
 
+            async loadPostById(id) {
+                const response = await this.fetchData(_BASEURL + `${config.controller}/getpostid/${this.postId}`);
+                console.log(response);
+                if (response) {
+                    this.form = response;
+                } else {
+                    Notifier.show('Error', 'Gagal memuat data.', 'error');
+                }
+            },
+
             resetForm() {
                 this.form = {
                     post_title: '',
-                    post_slug: '',
                     post_content: '',
                     category_id: '',
                     post_status: 'publish',
@@ -222,17 +267,20 @@
 
             initTinymce() {
                 tinymce.init({
-                    selector: '#post_content',
-                    plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap emoticons',
-                    editimage_cors_hosts: ['picsum.photos'],
-                    menubar: 'file edit view insert format tools table help',
-                    toolbar: "undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | save print | pagebreak anchor codesample | ltr rtl",
-                    autosave_ask_before_unload: true,
-                    autosave_interval: '30s',
-                    autosave_prefix: '{path}{query}-{id}-',
-                    autosave_restore_when_empty: false,
-                    autosave_retention: '2m',
+                    selector: "#post_content",
+                    theme: 'modern',
+                    paste_data_images: true,
+                    relative_urls: false,
+                    remove_script_host: false,
+                    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                    toolbar2: "print preview forecolor backcolor emoticons",
                     image_advtab: true,
+                    plugins: [
+                        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons template paste textcolor colorpicker textpattern"
+                    ],
                     automatic_uploads: true,
                     file_picker_types: 'image',
                     file_picker_callback: function(cb, value, meta) {
@@ -265,7 +313,8 @@
                                 failure('HTTP Error: ' + xhr.status);
                                 return;
                             }
-                            var res = _H.StrToObject(xhr.responseText);
+                            var res = JSON.parse(xhr.responseText);
+                            console.log(res.location);
                             if (res.status == 'error') {
                                 failure(res.message);
                                 return;

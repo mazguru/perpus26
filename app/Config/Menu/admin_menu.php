@@ -8,59 +8,33 @@ return [
         'roles' => ['admin', 'super_user']
     ],
     [
-        'title' => 'Manajemen Konten',
+        'title' => 'Manajemen Tulisan',
         'icon'  => 'bi bi-edit',
         'roles' => ['admin', 'super_user'],
         'submenu' => [
             [
-                'title' => 'Berita',
-                'route' => 'blog/posts?type=news',
+                'title' => 'Semua Tulisan',
+                'route' => 'blog/posts',
                 'roles' => ['admin', 'super_user']
             ],
             [
-                'title' => 'Pengumuman',
-                'route' => 'blog/posts?type=announcement',
+                'title' => 'Tambah Tulisan',
+                'route' => 'blog/posts/create',
                 'roles' => ['admin', 'super_user']
             ],
             [
-                'title' => 'Profil Sekolah',
-                'route' => 'blog/pages/profil',
+                'title' => 'Kategori Tulisan',
+                'route' => 'blog/category',
                 'roles' => ['admin', 'super_user']
             ],
             [
-                'title' => 'Visi dan Misi',
-                'route' => 'blog/pages/visi-misi',
+                'title' => 'Komentar',
+                'route' => 'blog/comment',
                 'roles' => ['admin', 'super_user']
             ],
         ]
     ],
-    [
-        'title' => 'Perpustakaan',
-        'icon'  => 'bi bi-book',
-        'roles' => ['admin', 'super_user'],
-        'submenu' => [
-            [
-                'title' => 'Daftar Buku',
-                'route' => 'admin/books',
-                'roles' => ['admin', 'super_user']
-            ],
-            [
-                'title' => 'Kategori Buku',
-                'route' => 'admin/book-categories',
-                'roles' => ['admin', 'super_user']
-            ],
-            [
-                'title' => 'Peminjaman',
-                'route' => 'admin/borrowings',
-                'roles' => ['admin', 'super_user']
-            ],
-            [
-                'title' => 'Pengembalian',
-                'route' => 'admin/returns',
-                'roles' => ['admin', 'super_user']
-            ],
-        ]
-    ],
+    
     [
         'title' => 'Manajemen User',
         'icon'  => 'bi bi-person-gear',

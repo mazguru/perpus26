@@ -13,6 +13,9 @@ class PostsModel extends Model
         'post_title',
         'post_content',
         'post_author',
+        'post_categories',
+        'post_image',
+        'post_slug',
         'post_status',
         'post_type',
         'created_at',
@@ -34,6 +37,7 @@ class PostsModel extends Model
         x1.created_at,
         x1.updated_at,
         x1.is_deleted,
+        x1.post_image,
         x1.post_type,
         x2.user_full_name AS post_author,
         x3.category_name
@@ -49,7 +53,67 @@ class PostsModel extends Model
 
         $builder->orderBy('x1.created_at', 'DESC');
 
-        return $builder->get()->getResult();
+        return $builder->get()->getResultArray();
+    }
+
+    public function getIdBySlug($slug)
+    {
+        return $this->where('post_slug', $slug)
+            ->where('post_type', 'post')
+            ->where('is_deleted', 'false')
+            ->select('id')
+            ->first(); // mengembalikan satu row (bisa null)
+    }
+
+    public function getPostsSlug($slug)
+    {
+        $builder = $this->db->table($this->table . ' x1');
+        $builder->select('
+        x1.id,
+        x1.post_title,
+        x1.post_slug,
+        x1.post_content,
+        x1.post_image,
+        x1.post_status,
+        x1.created_at,
+        x1.updated_at,
+        x1.is_deleted,
+        x1.post_type,
+        x2.user_full_name AS post_author,
+        x3.category_name
+    ');
+        $builder->join('users x2', 'x1.post_author = x2.id', 'left');
+        $builder->join('categories x3', 'x1.post_categories = x3.id', 'left');
+        $builder->where('x1.post_type', 'post');
+        $builder->where('x1.is_deleted', 'false');
+        $builder->where('x1.post_slug', $slug);
+
+        return $builder->get()->getRowArray();
+    }
+    public function getPostsId($id)
+    {
+        $builder = $this->db->table($this->table . ' x1');
+        $builder->select('
+        x1.id,
+        x1.post_title,
+        x1.post_slug,
+        x1.post_content,
+        x1.post_image,
+        x1.post_status,
+        x1.created_at,
+        x1.updated_at,
+        x1.is_deleted,
+        x1.post_type,
+        x2.user_full_name AS post_author,
+        x3.category_name
+    ');
+        $builder->join('users x2', 'x1.post_author = x2.id', 'left');
+        $builder->join('categories x3', 'x1.post_categories = x3.id', 'left');
+        $builder->where('x1.post_type', 'post');
+        $builder->where('x1.is_deleted', 'false');
+        $builder->where('x1.id', $id);
+
+        return $builder->get()->getRowArray();
     }
 
     public function getWhere($keyword = '', $returnType = 'count', $limit = 0, $offset = 0)

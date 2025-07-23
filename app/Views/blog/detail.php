@@ -15,4 +15,6 @@
 
 <a href="/" class="inline-block mt-4 text-blue-700 hover:underline">&larr; Kembali</a>
 
+<?= session('post_image_thumbnail_width') ?>
+
 <?= $this->endSection() ?>

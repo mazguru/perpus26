@@ -11,7 +11,7 @@ class Home extends BaseController
         $model = new PostsModel();
         return view('blog/index', [
             'title' => 'Daftar Artikel',
-            'artikel' => $model->orderBy('created_at', 'DESC')->findAll()
+            'artikel' => $model->getAllPosts()
         ]);
     }
 
@@ -19,7 +19,7 @@ class Home extends BaseController
     public function detail($slug)
     {
         $model = new PostsModel();
-        $artikel = $model->where('post_slug', $slug)->first();
+        $artikel = $model->getPostsSlug($slug);
 
         if (!$artikel) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException("Artikel tidak ditemukan");

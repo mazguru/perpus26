@@ -1,3 +1,12 @@
+function showLoading() {
+    document.getElementById('isLoading').style.display = 'flex';
+}
+
+function hideLoading() {
+    setTimeout(() => {
+        document.getElementById('isLoading').style.display = 'none';
+    }, 100);
+}
 function settingsApp(config) {
     return {
         baseUrl: _BASEURL + config.dirUpload,
@@ -162,14 +171,11 @@ function DM(config) {
         form: {},
         errors: {},
         dataTableInstance: null,
-        kurikulumData: [],
-        academicYears: [],
 
         //option
         optionsData: [],
 
         selectedId: [],
-        selectedAcademicYear: _CURRENTYEARID,
 
         deleteUrl: _BASEURL + `${config.controller}/delete`,
         editUrl: _BASEURL + `${config.controller}/edit`,
@@ -178,14 +184,7 @@ function DM(config) {
         optionsUrl: _BASEURL + `${config.controller}/options`,
         deletePermanentlyUrl: _BASEURL + `${config.controller}/delete_permanently`,
 
-        get apiUrl() {
-            if (config.sYear) {
-                url = _BASEURL + `${config.controller}/list/${this.selectedAcademicYear}`;
-            } else {
-                url = _BASEURL + `${config.controller}/list/`;
-            }
-            return url;
-        },
+        apiUrl : _BASEURL + `${config.controller}/list/`,
         get formattedDateLahir() {
             if (!this.tableData.tanggal_lahir) return '';
             let [year, month, day] = this.tableData.tanggal_lahir.split('-');
@@ -230,14 +229,6 @@ function DM(config) {
             console.log('options', response);
             if (response) {
                 this.optionsData = response;
-            }
-        },
-
-        async loadAcademicYears() {
-            const response = await this.fetchData(config.ayUrl);
-            console.log('tahun pelajaran', response);
-            if (response && response.data) {
-                this.academicYears = response.data;
             }
         },
 
