@@ -5,7 +5,6 @@
 <h2 class="text-2xl font-bold mb-4">Buat Post Baru</h2>
 
 <form
-    action="<?= site_url('posts/store') ?>"
     method="post"
     x-data="postForm(config)"
     x-init="loadCategories(); initTinymce() "
@@ -41,7 +40,7 @@
                     <label class="block">
                         <input type="checkbox"
                             :value="cat.id"
-                            :checked="form.category_id === cat.id"
+                            :checked="form.post_categories === cat.id"
                             @change="selectCategory(cat.id)"
                             class="mr-2">
                         <span x-text="cat.category_name"></span>
@@ -77,7 +76,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium">Gambar</label>
-                    <input type="file" @change="handleFile($event)" class="w-full text-sm border rounded">
+                    <input type="file" @change="handleFile($event)" name='post_image' x-ref="post_image" class="w-full text-sm border rounded">
                 </div>
             </div>
 
@@ -89,16 +88,11 @@
                     class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
                     ATUR ULANG
                 </button>
-                <button @click="submitForm"
+                <button @click="validateForm"
                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     SIMPAN
                 </button>
             </div>
-
-            <button @click="validateForm"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Simpan
-            </button>
 </form>
 
 <script>
@@ -112,9 +106,8 @@
                 post_title: '',
                 post_slug: '',
                 post_content: '',
-                category_id: '',
+                post_categories: '',
                 post_status: 'publish',
-                post_image: '',
                 post_type: 'post',
                 post_visibility: 'public',
                 post_comment_status: 'open',
@@ -139,13 +132,25 @@
                     this.errorMessage = 'Isi post tidak boleh kosong.';
                     return;
                 }
-                if (!this.form.category_id) {
+                if (!this.form.post_categories) {
                     this.errorMessage = 'Kategori harus dipilih.';
                     return;
                 }
                 this.errorMessage = '';
                 alert('Form valid dan siap dikirim:\n' + JSON.stringify(this.form, null, 2));
-                // Di sinilah biasanya form dikirim ke backend menggunakan fetch/AJAX
+            },
+
+            async submitForm() {
+                const url = _BASEURL + config.controller + '/store';
+                const method = 'POST';
+                const response = await this.fetchData(url, method, this.form);
+                console.log(response);
+                if (response && response.status === 'success') {
+                    Notifier.show('Berhasil!', response.message, 'success');
+                } else {
+                    this.errors = response.errors ? response.errors : [];
+                    Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+                }
             },
 
             async fetchData(url, method = 'GET', body = null) {
@@ -182,7 +187,7 @@
                 if (response) {
                     this.categories = response.categories;
                 } else {
-                    Swal.fire('Error', 'Gagal memuat data.', 'error');
+                    Notifier.show('Error', 'Gagal memuat data.', 'error');
                 }
             },
 
@@ -198,7 +203,21 @@
                 };
             },
             selectCategory(id) {
-                this.form.category_id = this.form.category_id === id ? null : id;
+                this.form.post_categories = this.form.post_categories === id ? null : id;
+            },
+            handleFile(event) {
+                const file = event.target.files[0];
+                const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                const imageFile = this.$refs.post_image?.files[0];
+
+                if (file && allowedExtensions.includes(file.name.split('.').pop().toLowerCase())) {
+                    if (imageFile) {
+                        this.form.post_image = imageFile;
+                    }
+                } else {
+                    this.form.post_image = null; // Reset jika file tidak valid
+                    Notifier.show('Error', 'File harus berupa JPG, JPEG, PNG, atau GIF.', 'error');
+                }
             },
 
             initTinymce() {

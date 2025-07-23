@@ -26,7 +26,7 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
 $routes->group('blog', ['filter' => 'auth'], function ($routes) {
     $routes->get('posts', 'Blog\Posts::index');
     $routes->get('posts/create', 'Blog\Posts::create');
-    $routes->post('posts/save', 'Blog\Posts::save');
+    $routes->post('posts/store', 'Blog\Posts::store');
     $routes->get('posts/edit/(:num)', 'Blog\Posts::edit/$1');
     $routes->post('posts/update/(:num)', 'Blog\Posts::update/$1');
     $routes->post('posts/upload_image', 'Blog\Posts::imagesUploadHandler');
