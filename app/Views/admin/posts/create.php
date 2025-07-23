@@ -62,7 +62,7 @@
 <script>
     tinymce.init({
         selector: '#post_content',
-        plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons accordion',
+        plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap emoticons',
         editimage_cors_hosts: ['picsum.photos'],
         menubar: 'file edit view insert format tools table help',
         toolbar: "undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | save print | pagebreak anchor codesample | ltr rtl",
@@ -98,7 +98,7 @@
             var xhr, formData;
             xhr = new XMLHttpRequest();
             xhr.withCredentials = false;
-            xhr.open('POST', _BASE_URL + 'blog/posts/upload_image');
+            xhr.open('POST', _BASEURL + 'blog/posts/upload_image');
             xhr.onload = function() {
                 if (xhr.status != 200) {
                     failure('HTTP Error: ' + xhr.status);
