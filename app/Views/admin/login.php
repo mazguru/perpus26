@@ -4,9 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <title><?= esc($page_title) ?></title>
-  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+  <!-- Favicon -->
+  <link rel="icon" href="<?= base_url('assets/images/favicon.jpg') ?>" type="image/x-icon" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="<?= base_url('assets/css/styles.css'); ?>">
+  <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap-icons.css'); ?>">
+
+  <script>
+    const _BASEURL = '<?= base_url() ?>';
+  </script>
+
 
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 
@@ -47,7 +58,8 @@
       </div>
     <?php endif ?>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
   <script>
     function loginForm() {
       return {
@@ -87,18 +99,13 @@
           const response = await this.fetchData(url, method, this.form);
           console.log(response);
           if (response && response.status === 'success') {
-            Swal.fire({
-              icon: 'success',
-              title: 'Berhasil!',
-              text: response.message
-            }).then(() => window.location.href = response.redirect);
+            Notifier.show('Berhasil!', response.message, 'success');
+            setTimeout(() => {
+              window.location.href = response.redirect;
+            }, 1500); // delay 1.5 detik (1500 ms)
           } else {
             this.errorMessage = response.message;
-            Swal.fire({
-              icon: 'error',
-              title: 'Gagal!',
-              text: response ? response.message : 'Terjadi kesalahan.'
-            })
+            Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error')
           }
 
         }
@@ -106,7 +113,10 @@
       }
     }
   </script>
+  <script src="<?= base_url('assets/js/backend.js') ?>"></script>
 
+  <script src="<?= base_url('assets/js/notif.min.js') ?>"></script>
+  <script src="<?= base_url('assets/js/app.min.js') ?>"></script>
 </body>
 
 </html>

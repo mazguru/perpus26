@@ -23,8 +23,26 @@ class Posts extends AdminController
     {
         $data = [
             'title' => 'Tulisan',
+            'content' => 'admin/posts/index',
         ];
-        return view('admin/posts/index', $data);
+        return view('layouts/master_admin', $data);
+    }
+    public function create($id = null): string
+    {
+        $data = [
+            'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
+            'content' => 'admin/posts/create'
+        ];
+        return view('layouts/master_admin', $data);
+    }
+    public function edit($id = null): string
+    {
+        $data = [
+            'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
+            'post_id' => $id,
+            'content' => 'admin/posts/create'
+        ];
+        return view('layouts/master_admin', $data);
     }
 
     public function getposts()
@@ -54,21 +72,7 @@ class Posts extends AdminController
     }
 
 
-    public function create($id = null): string
-    {
-        $data = [
-            'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
-        ];
-        return view('admin/posts/create', $data);
-    }
-    public function edit($id = null): string
-    {
-        $data = [
-            'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
-            'post_id' => $id
-        ];
-        return view('admin/posts/create', $data);
-    }
+    
 
     public function getPostById($id){
         $posts = $this->m_posts->getPostsId($id);

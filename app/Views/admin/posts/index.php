@@ -1,6 +1,4 @@
-<?= $this->extend('layouts/master_admin') ?>
 
-<?= $this->section('content') ?>
 
 <h2>Kelola Artikel</h2>
 <p>Selamat datang, <?= session('nama') ?> | <a href="/admin/logout">Logout</a></p>
@@ -143,4 +141,3 @@
         };
     }
 </script>
-<?= $this->endSection() ?>

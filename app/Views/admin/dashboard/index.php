@@ -1,6 +1,3 @@
-<?= $this->extend('layouts/master_admin') ?>
-
-<?= $this->section('content') ?>
 
 <div class="container mx-auto p-6">
     <h1 class="text-3xl font-bold mb-4">Halo, <?= esc($username) ?> 👋</h1>
@@ -23,5 +20,3 @@
         </div>
     </div>
 </div>
-
-<?= $this->endSection() ?>

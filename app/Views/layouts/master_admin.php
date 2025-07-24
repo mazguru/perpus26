@@ -86,7 +86,9 @@
                 </div>
                 <div class="mx-auto max-w-(--breakpoint-2xl) p-4 md:p-6">
                     <?= $this->renderSection('content') ?>
+                    <?php if(isset($content)){ ?>
                     <?= $this->include($content) ?>
+                    <?php }?>
                 </div>
 
             </main>

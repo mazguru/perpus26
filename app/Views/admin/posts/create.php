@@ -1,7 +1,3 @@
-<?= $this->extend('layouts/master_admin') ?>
-
-<?= $this->section('content') ?>
-
 <h2 class="text-2xl font-bold mb-4"><?= $title ?></h2>
 
 <form
@@ -39,11 +35,11 @@
                 <h3 class="font-semibold mb-2">🗂️ KATEGORI</h3>
                 <template x-for="cat in categories" :key="cat.id">
                     <label class="block">
-                        <input type="checkbox"
-                            :value="cat.id"
-                            :checked="form.post_categories === cat.id"
-                            @change="selectCategory(cat.id)"
-                            class="mr-2">
+                        <input
+                            type="radio"
+                            class="form-radio text-indigo-600"
+                            x-model="form.post_categories"
+                            :value="cat.id">
                         <span x-text="cat.category_name"></span>
                     </label>
                 </template>
@@ -115,16 +111,16 @@
                 post_title: '',
                 post_slug: '',
                 post_content: '',
-                post_categories: '',
+                post_categories: [],
                 post_status: 'publish',
                 post_type: 'post',
                 post_visibility: 'public',
                 post_comment_status: 'open',
             },
 
-            curent_tumb :'',
+            curent_tumb: '',
 
-            postId: <?= $post_id ?? null ?>,
+            postId: '<?= $post_id ?? null ?>',
             type: '<?= $type ?? 'edit' ?>',
 
             categories: '',
@@ -342,6 +338,3 @@
 
 <!-- TinyMCE -->
 <script src="<?= base_url('assets/plugins/tinymce/tinymce.min.js') ?>"></script>
-
-
-<?= $this->endSection() ?>

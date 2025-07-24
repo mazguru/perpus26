@@ -16,8 +16,9 @@ class Dashboard extends AdminController
         $data = [
             'title'    => 'Dashboard',
             'username' => session()->get('user_name'),
+            'content' => 'admin/dashboard/index',
         ];
 
-        return view('admin/dashboard/index', $data);
+        return view('layouts/master_admin', $data);
     }
 }

@@ -9,10 +9,13 @@ class Home extends BaseController
     public function index()
     {
         $model = new PostsModel();
-        return view('blog/index', [
+        $data = [
             'title' => 'Daftar Artikel',
-            'artikel' => $model->getAllPosts()
-        ]);
+            'artikel' => $model->getAllPosts(),
+            'content' => 'frontend/home/index'
+        ];
+
+        return view('layouts/master', $data);
     }
 
 

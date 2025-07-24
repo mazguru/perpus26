@@ -100,6 +100,7 @@ class PostsModel extends Model
         x1.post_content,
         x1.post_image,
         x1.post_status,
+        x1.post_categories,
         x1.created_at,
         x1.updated_at,
         x1.is_deleted,
