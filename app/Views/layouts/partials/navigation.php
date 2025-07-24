@@ -1,73 +1,140 @@
-<nav id="navbar" class="sticky top-0 w-full z-20" x-data="{ open: false }">
-    <div class="max-w-screen-xl px-4 flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="<?= base_url() ?>" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src="<?= base_url('assets/images/logo.png') ?>" class="h-10" alt="Logo Siapndan">
+<nav x-data="menuPublic()" x-init="fetchMenu()" id="navbar" class="backdrop-blur-xl transition-colors duration-500 bg-white/75 sticky top-0 z-40 font-semibold leading-6 shadow-md w-full">
+    <div class="max-w-screen-xl mx-auto px-4 flex justify-between items-center h-16">
+        <!-- Logo -->
+        <a href="/" class="flex items-center space-x-3 md:hidden">
+            <img src="/assets/images/logo/logo.svg" class="h-10" alt="Logo Adyatama">
+            <div>
+                <h1 class="text-base md:text-lg font-bold text-gray-800">PERPUSTAKAAN ADYATAMA</h1>
+                <p class="text-xs text-gray-600">SMP Islam Al Azhar 26 Yogyakarta<br>NPP. 3404061D0100001</p>
+            </div>
         </a>
-        <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            <a href="<?= base_url('login') ?>" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login </a>
-            <button @click="open = !open" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" :aria-expanded="open.toString()">
-                <span class="sr-only">Open main menu</span>
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
-                </svg>
-            </button>
+
+
+        <!-- Burger Icon -->
+        <button @click="openmenu = !openmenu" class="md:hidden focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path x-show="!openmenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16" />
+                <path x-show="openmenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Menu utama (desktop) -->
+        <div class="hidden md:flex space-x-6 items-center text-sm font-medium">
+            <template x-for="menu in menus" :key="menu.id">
+                <div class="relative group" x-data="{ hover: false }">
+                    <!-- Menu tanpa submenu -->
+                    <template x-if="menu.submenus.length === 0">
+                        <a :href="menu.url" class="hover:text-green-600 text-md" x-text="menu.title"></a>
+                    </template>
+
+                    <!-- Menu dengan submenu -->
+                    <template x-if="menu.submenus.length > 0">
+                        <div @mouseenter="hover = true" @mouseleave="hover = false">
+                            <button class="hover:text-green-600 flex items-center space-x-1">
+                                <span x-text="menu.title"></span>
+                                <!-- Chevron down icon -->
+                                <svg class="w-4 h-4 transition-transform duration-200"
+                                    :class="hover ? 'rotate-180' : ''"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div
+                                class="absolute left-0 mt-2 w-40 bg-white shadow-lg z-50 rounded-md"
+                                x-show="hover"
+                                x-transition>
+                                <template x-for="sub in menu.submenus" :key="sub.id">
+                                    <a :href="sub.url" class="block px-4 py-2 hover:bg-gray-100" x-text="sub.title"></a>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
         </div>
-        <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky" :class="{'block': open, 'hidden': !open}">
-            <ul class="flex flex-col p-4 md:p-0 mt-4 font-bold text-xl border md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0" :class="{'bg-white': open, '': !open}">
-                <li>
-                    <a href="<?= base_url() ?>"
-                        :class="{'text-blue-700 md:dark:text-blue-500': page === 'home', 'text-gray-900 hover:bg-transparent hover:text-blue-700': page !== 'home'}"
-                        class="block py-2 px-3 md:bg-transparent md:p-0 md:dark:text-blue-500"
-                        aria-current="page"
-                        @click="page = 'home'">Home</a>
-                </li>
-                <li>
-                    <a href="<?= base_url('about_us') ?>"
-                        :class="{'text-blue-700 md:dark:text-blue-500': page === 'about_us', 'text-gray-900 hover:bg-transparent hover:text-blue-700': page !== 'about_us'}"
-                        class="block py-2 px-3 md:bg-transparent md:p-0 md:dark:text-blue-500"
-                        @click="page = 'about_us'">About</a>
-                </li>
-                <li x-data="{ openl: false }" class="relative">
-                    <!-- Menu Utama -->
-                    <a href="javascript:void(0);"
-                        :class="{'text-blue-700 md:dark:text-blue-500': page === 'reports', 'text-gray-900 dark:text-gray-300': page !== 'reports' }"
-                        class="block py-2 px-3 md:bg-transparent md:p-0 md:dark:text-blue-500 hover:bg-gray-100 hover:text-blue-700 dark:hover:bg-gray-700"
-                        @click="openl = !openl">Laporan</a>
+    </div>
 
-                    <!-- Submenu -->
-                    <ul
-                        x-show="openl"
-                        @click.away="openl = false"
-                        class="absolute left-0 z-10 w-48 bg-white border font-medium text-sm border-gray-200 rounded-md shadow-lg md:dark:bg-gray-800"
-                        x-transition>
-                        <li>
-                            <a href="<?= base_url('reports') ?>"
-                                :class="{'text-blue-700 dark:text-blue-400': page === 'daily', 'text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300': page !== 'daily'}"
-                                class="block px-4 py-2"
-                                @click="page = 'daily'; open = false">Laporan Presensi Hari Ini</a>
-                        </li>
-                        <li>
-                            <a href="<?= base_url('reports/monthly') ?>"
-                                :class="{'text-blue-700 dark:text-blue-400': page === 'monthly', 'text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300': page !== 'monthly'}"
-                                class="block px-4 py-2"
-                                @click="page = 'monthly'; open = false">Laporan Presensi Bulanan</a>
-                        </li>
-                        <li>
-                            <a href="<?= base_url('reports/violations') ?>"
-                                :class="{'text-blue-700 dark:text-blue-400': page === 'violations', 'text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300': page !== 'monthly'}"
-                                class="block px-4 py-2"
-                                @click="page = 'violations'; open = false">Laporan Pelanggaran</a>
-                        </li>
-                    </ul>
-                </li>
+    <!-- Menu mobile dropdown -->
+    <div class="md:hidden" x-show="openmenu" x-transition>
+        <div class="px-4 py-2 space-y-2">
+            <template x-for="menu in menus" :key="menu.id">
+                <div x-data="{ subOpen: false }">
+                    <!-- Menu tanpa submenu -->
+                    <template x-if="menu.submenus.length === 0">
+                        <a :href="menu.url" class="block py-2 text-gray-700 hover:text-green-600 font-medium" x-text="menu.title"></a>
+                    </template>
 
-                <li>
-                    <a href="<?= base_url('kontak') ?>"
-                        :class="{'text-blue-700 md:dark:text-blue-500': page === 'kontak', 'text-gray-900 hover:bg-transparent hover:text-blue-700': page !== 'kontak'}"
-                        class="block py-2 px-3 md:bg-transparent md:p-0 md:dark:text-blue-500"
-                        @click="page = 'kontak'">Contact</a>
-                </li>
-            </ul>
+                    <!-- Menu dengan submenu -->
+                    <template x-if="menu.submenus.length > 0">
+                        <div>
+                            <button @click="subOpen = !subOpen" class="w-full flex justify-between py-2 text-gray-700 hover:text-green-600 font-medium">
+                                <span x-text="menu.title"></span>
+                                <svg class="w-4 h-4 transform" :class="subOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="subOpen" x-transition class="pl-4">
+                                <template x-for="sub in menu.submenus" :key="sub.id">
+                                    <a :href="sub.url" class="block py-1 text-gray-600 hover:text-green-600" x-text="sub.title"></a>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
         </div>
     </div>
 </nav>
+
+<script>
+    function menuPublic() {
+        return {
+            menus: [],
+            openmenu: false,
+            currentPath: window.location.pathname,
+            base_url: _BASEURL,
+            async fetchMenu() {
+                try {
+                    const res = await fetch(this.base_url + 'menu_public');
+                    const data = await res.json();
+                    console.log(data);
+
+                    this.menus = data.map(menu => {
+                        const fullMenuPath = this.base_url.replace(location.origin, '') + menu.route;
+                        let menuActive = this.currentPath === fullMenuPath;
+
+                        if (!menu.submenu) {
+                            return {
+                                ...menu,
+                                active: menuActive
+                            };
+                        }
+
+                        const submenu = menu.submenu.map(sub => {
+                            const fullSubPath = this.base_url.replace(location.origin, '') + sub.route;
+                            const isActive = this.currentPath === fullSubPath;
+                            if (isActive) menuActive = true;
+                            return {
+                                ...sub,
+                                active: isActive
+                            };
+                        });
+
+                        return {
+                            ...menu,
+                            active: menuActive,
+                            submenu
+                        };
+                    });
+
+                } catch (error) {
+                    console.error('Gagal memuat menu:', error);
+                }
+            }
+        }
+    }
+</script>

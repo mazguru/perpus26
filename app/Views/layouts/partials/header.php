@@ -1,57 +1,45 @@
-<!-- Sticky Navbar -->
-<!-- Sticky Header -->
-<header class="bg-white shadow">
-    <div class="container mx-auto px-4 py-2">
-
-        <!-- Baris 1: Logo + Search -->
-        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-                <img src="logo.png" alt="Logo" class="h-10 w-10" />
-                <h1 class="text-2xl font-bold text-green-800">Perpustakaan Ulil Albab</h1>
-            </div>
-            <div class="w-full md:w-1/3">
-                <div class="relative">
-                    <input type="text" placeholder="Search..." class="w-full border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
-                    <span class="absolute left-3 top-2.5 text-gray-500">🔍</span>
-                </div>
+<header class="bg-white shadow z-50 border-b" x-data="{ open: false, submenu: null }">
+    <!-- Logo dan Search -->
+    <div class="max-w-screen-xl mx-auto flex flex-wrap justify-between items-center px-4 pt-2">
+        <div class="hidden md:flex items-center space-x-3">
+            <img src="/assets/images/logo/logo.svg" alt="Logo" class="w-10 h-10" />
+            <div>
+                <h1 class="text-base md:text-lg font-bold text-gray-800 my-0 py-0">PERPUSTAKAAN ADYATAMA</h1>
+                <p class="text-xs text-gray-600 my-0 py-0">SMP Islam Al Azhar 26 Yogyakarta<br>NPP. 3404061D0100001</p>
             </div>
         </div>
+        <!-- Desktop -->
+        <form action="/search" method="get" class="hidden md:flex items-center justify-center">
+            <input
+                type="text"
+                name="q"
+                placeholder="Cari sesuatu..."
+                class="mr-2 border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <button
+                type="submit"
+                class="bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700 transition duration-200">
+                🔍 Cari
+            </button>
+        </form>
+        <!-- Form Pencarian (Desktop & Mobile Responsive) -->
+        <div class="w-full max-w-screen-xl mx-auto px-4 py-2">
 
 
+            <!-- Mobile -->
+            <form action="/search" method="get" class="md:hidden mt-2">
+                <div class="flex items-center space-x-2">
+                    <input
+                        type="text"
+                        name="q"
+                        placeholder="Cari..."
+                        class="w-full border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    <button
+                        type="submit"
+                        class="bg-green-600 text-white text-sm px-3 py-2 rounded hover:bg-green-700 transition duration-200">
+                        🔍
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </header>
-<!-- Baris 2: Menu Navigasi -->
-<nav class ="sticky top-0 z-50">
-<div class="mt-4 flex flex-wrap justify-center gap-4 text-sm font-medium text-gray-700">
-    <a href="#" class="hover:text-green-600">Beranda</a>
-    <div class="relative group">
-        <button class="hover:text-green-600">Profil</button>
-        <div class="absolute mt-1 left-1/2 -translate-x-1/2 w-40 bg-white shadow-lg hidden group-hover:block z-50">
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Visi & Misi</a>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Struktur</a>
-        </div>
-    </div>
-    <a href="#" class="hover:text-green-600">Galeri</a>
-    <a href="#" class="hover:text-green-600">Kemitraan</a>
-    <div class="relative group">
-        <button class="hover:text-green-600">Data & Fakta</button>
-        <div class="absolute mt-1 left-1/2 -translate-x-1/2 w-40 bg-white shadow-lg hidden group-hover:block z-50">
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Statistik</a>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Laporan</a>
-        </div>
-    </div>
-    <a href="#" class="hover:text-green-600">SLiMS</a>
-    <a href="#" class="hover:text-green-600">Hubungi Kami</a>
-</div>
-</nav>
-
-<!-- Hero Section -->
-<section class="relative h-[80vh] bg-cover bg-center" style="background-image: url('/path/to/your-image.jpg');">
-    <div class="absolute inset-0 bg-black/40"></div>
-    <div class="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 text-white">
-        <h2 class="text-4xl md:text-5xl font-bold mb-4">Perpustakaan Ulil Albab</h2>
-        <p class="max-w-2xl text-lg font-light">
-            Perpustakaan Ulil Albab MAN 3 Bantul membekali pemustaka mandiri, berprestasi, dan memiliki jiwa literat, untuk siap memimpin negeri.
-        </p>
-    </div>
-</section>

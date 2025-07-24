@@ -2,6 +2,33 @@
 <html>
 
 <head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO Meta Tags -->
+  <meta name="title" content="<?= isset($title) ? $title : 'Publik' ?> | SIAPNDAN SMKN 1 Temon" />
+  <meta name="description" content="SMKN 1 Temon adalah sekolah berbasis ketarunaan yang menyediakan informasi absensi, pelaporan pelanggaran taruna, dan layanan lainnya melalui aplikasi SIAPNDAN." />
+  <meta name="keywords" content="SMKN 1 Temon, ketarunaan, SIAPNDAN, absensi taruna, pelaporan pelanggaran, sekolah terbaik Temon" />
+  <meta name="author" content="SMKN 1 Temon" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="id" />
+
+  <!-- Open Graph / Facebook Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="<?= $title ?> | SIAPNDAN SMKN 1 Temon" />
+  <meta property="og:description" content="SMKN 1 Temon adalah sekolah berbasis ketarunaan yang menyediakan informasi absensi, pelaporan pelanggaran taruna, dan layanan lainnya melalui aplikasi SIAPNDAN." />
+  <meta property="og:image" content="<?= base_url('assets/images/logo.png') ?>" />
+  <meta property="og:url" content="<?= current_url() ?>" />
+  <meta property="og:site_name" content="SMKN 1 Temon" />
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="<?= $title ?> | SIAPNDAN SMKN 1 Temon" />
+  <meta name="twitter:description" content="SMKN 1 Temon adalah sekolah berbasis ketarunaan yang menyediakan informasi absensi, pelaporan pelanggaran taruna, dan layanan lainnya melalui aplikasi SIAPNDAN." />
+  <meta name="twitter:image" content="<?= base_url('assets/images/logo.png') ?>" />
+
+
   <title><?= esc($title ?? 'Blog Perpustakaan') ?></title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,27 +63,19 @@
   </script>
 </head>
 
-<body class="bg-gray-100 text-gray-800">
-  <div class="bg-gray-500 text-white font-bold !text-[.75rem] mb-2 !relative" style="z-index: 1;">
-    <div class="max-w-screen-xl px-4 mx-auto py-2 !text-center">
-      <p class="!mb-0">✨ Aplikasi dalam pengembangan</p>
-    </div>
-    <!-- /.max-w-screen-xl px-4 mx-auto -->
-  </div>
+<body class="bg-gray-100 text-gray-800" x-data="{ mobileMenuOpen: false, openDropdown: null }">
   <?= $this->include('layouts/partials/header') ?>
   <?= $this->include('layouts/partials/navigation') ?>
-  <header class="bg-blue-700 text-white p-4">
-    <div class="container mx-auto">
-      <h1 class="text-xl font-bold">Blog Perpustakaan</h1>
-    </div>
-  </header>
-
 
   <?= $this->include($content) ?>
 
 
   <?= $this->include('layouts/partials/footer') ?>
+  <script src="<?= base_url('assets/js/frontend.js') ?>"></script>
 
+  <script src="<?= base_url('assets/js/notif.min.js') ?>"></script>
+  <script src="<?= base_url('assets/js/datatables.min.js') ?>"></script>
+  <script src="<?= base_url('assets/js/app.min.js') ?>"></script>
 </body>
 
 </html>
