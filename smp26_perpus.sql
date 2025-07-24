@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 21, 2025 at 11:42 PM
+-- Generation Time: Jul 24, 2025 at 11:01 PM
 -- Server version: 10.11.11-MariaDB-log
 -- PHP Version: 8.3.20
 
@@ -48,6 +48,41 @@ INSERT INTO `artikel` (`id`, `judul`, `slug`, `isi`, `penulis`, `created_at`, `u
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `category_name` varchar(255) NOT NULL,
+  `category_slug` varchar(255) DEFAULT NULL,
+  `category_description` varchar(255) DEFAULT NULL,
+  `category_type` enum('post','file') DEFAULT 'post',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` datetime DEFAULT NULL,
+  `restored_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT 0,
+  `updated_by` bigint(20) DEFAULT 0,
+  `deleted_by` bigint(20) DEFAULT 0,
+  `restored_by` bigint(20) DEFAULT 0,
+  `is_deleted` enum('true','false') DEFAULT 'false'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `category_name`, `category_slug`, `category_description`, `category_type`, `created_at`, `updated_at`, `deleted_at`, `restored_at`, `created_by`, `updated_by`, `deleted_by`, `restored_by`, `is_deleted`) VALUES
+(1, 'Berita', 'berita', 'Berita', 'post', '2023-01-15 21:23:22', '2023-03-05 03:06:23', NULL, NULL, 0, 1, 0, 0, 'false'),
+(2, 'Diktat', 'diktat', 'Diktat/Modul Mata Pelajaran', 'file', '2023-01-15 21:23:22', '2023-03-05 08:23:18', NULL, NULL, 0, 1, 0, 0, 'false'),
+(3, 'Artikel', 'artikel', 'Artikel', 'post', NULL, '2023-03-05 03:06:30', NULL, NULL, 1, 1, 0, 0, 'false'),
+(4, 'Pengumuman', 'pengumuman', 'Pengumuman & Info Karir', 'post', NULL, '2024-01-01 16:05:36', NULL, NULL, 1, 102, 0, 0, 'false'),
+(5, 'Agenda', 'agenda', 'Agenda', 'post', NULL, '2024-01-01 16:05:46', NULL, NULL, 102, 0, 0, 0, 'false'),
+(6, 'foto', 'foto', 'aset untuk gambar', 'file', '2025-02-11 17:23:49', '2025-02-11 10:23:49', NULL, NULL, 101, 0, 0, 0, 'false');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `login_attempts`
 --
 
@@ -73,7 +108,44 @@ INSERT INTO `login_attempts` (`id`, `user_name`, `ip_address`, `user_agent`, `st
 (29, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-17 15:50:58', '2025-07-17 15:50:58'),
 (30, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-17 16:05:29', '2025-07-17 16:05:29'),
 (31, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-21 11:34:54', '2025-07-21 11:34:54'),
-(32, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-21 23:02:55', '2025-07-21 23:02:55');
+(32, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-21 23:02:55', '2025-07-21 23:02:55'),
+(33, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-22 08:53:37', '2025-07-22 08:53:37'),
+(34, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-22 10:31:41', '2025-07-22 10:31:41'),
+(35, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-22 10:36:40', '2025-07-22 10:36:40'),
+(36, 'admin', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'fail', '2025-07-22 11:15:32', '2025-07-22 11:15:32'),
+(37, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-22 11:15:37', '2025-07-22 11:15:37'),
+(38, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-22 22:21:36', '2025-07-22 22:21:36'),
+(39, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-23 10:37:14', '2025-07-23 10:37:14'),
+(40, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-23 14:10:50', '2025-07-23 14:10:50'),
+(41, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-23 22:30:23', '2025-07-23 22:30:23'),
+(42, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-24 11:42:38', '2025-07-24 11:42:38'),
+(43, 'smkn1temon', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36', 'success', '2025-07-24 22:16:41', '2025-07-24 22:16:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menus`
+--
+
+CREATE TABLE `menus` (
+  `id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `icon` varchar(100) DEFAULT NULL,
+  `order_num` int(11) DEFAULT 0,
+  `is_active` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `menus`
+--
+
+INSERT INTO `menus` (`id`, `title`, `url`, `icon`, `order_num`, `is_active`) VALUES
+(1, 'Beranda', '/', NULL, 1, 1),
+(4, 'Opac-Slims', 'opac', NULL, 5, 1),
+(5, 'Profil', '#', NULL, 2, 1),
+(6, 'Galeri', '#', NULL, 4, 1),
+(7, 'Informasi', '#', NULL, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -276,6 +348,47 @@ INSERT INTO `options` (`id`, `option_group`, `option_name`, `created_at`, `updat
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `posts`
+--
+
+CREATE TABLE `posts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `post_title` varchar(255) DEFAULT NULL,
+  `post_content` longtext DEFAULT NULL,
+  `post_image` varchar(100) DEFAULT NULL,
+  `post_author` bigint(20) DEFAULT 0,
+  `post_categories` varchar(255) DEFAULT NULL,
+  `post_type` varchar(50) NOT NULL DEFAULT 'post',
+  `post_status` enum('publish','draft') DEFAULT 'publish',
+  `post_visibility` enum('public','private') DEFAULT 'public',
+  `post_comment_status` enum('open','close') DEFAULT 'open',
+  `post_slug` varchar(255) DEFAULT NULL,
+  `post_tags` varchar(255) DEFAULT NULL,
+  `post_counter` bigint(20) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `restored_at` timestamp NULL DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `updated_by` bigint(20) DEFAULT NULL,
+  `deleted_by` bigint(20) DEFAULT NULL,
+  `restored_by` bigint(20) DEFAULT NULL,
+  `is_deleted` enum('true','false') DEFAULT 'false'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 CHECKSUM=1 COLLATE=utf8mb3_general_ci;
+
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`id`, `post_title`, `post_content`, `post_image`, `post_author`, `post_categories`, `post_type`, `post_status`, `post_visibility`, `post_comment_status`, `post_slug`, `post_tags`, `post_counter`, `created_at`, `updated_at`, `deleted_at`, `restored_at`, `created_by`, `updated_by`, `deleted_by`, `restored_by`, `is_deleted`) VALUES
+(1, 'Tes Posting Awal', '<p>ini hanya untuk tess</p>\r\n<p>&nbsp;</p>\r\n<p><img src=\"http://localhost:8080/media_library/posts/1753289290_5928a079e1cc01812eb9.png\" width=\"30%\" /></p>', 'tes-posting-awal.png', 101, '5', 'post', 'publish', 'public', 'open', 'tes-posting-awal', NULL, 0, '2025-07-23 10:12:00', '2025-07-23 10:12:00', NULL, NULL, NULL, NULL, NULL, NULL, 'false'),
+(4, 'tesss', '<p>ds</p>\r\n<p><img src=\"http://localhost:8080/media_library/posts/1753288783_37760f4b444f50c014e3.png\" alt=\"\" width=\"1547\" height=\"653\" /></p>', 'tesss.png', 101, '3', 'post', 'publish', 'public', 'open', 'tesss', NULL, 0, '2025-07-23 09:58:22', '2025-07-23 09:58:22', NULL, NULL, NULL, NULL, NULL, NULL, 'false'),
+(5, 'tes halaman', '<p>ini untuk halaman</p>', NULL, 101, '', 'page', 'publish', 'public', 'open', 'tes-halaman', NULL, 0, '2025-07-24 15:33:48', '2025-07-24 15:33:48', NULL, NULL, NULL, NULL, NULL, NULL, 'false'),
+(6, 'Visi Misi Perpustakaan', '<p>ini untuk halaman</p>', NULL, 101, '', 'page', 'publish', 'public', 'open', 'visi-misi-perpustakaan', NULL, 0, '2025-07-24 15:36:56', '2025-07-24 15:36:56', NULL, NULL, NULL, NULL, NULL, NULL, 'false');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `settings`
 --
 
@@ -303,19 +416,19 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`id`, `setting_group`, `setting_variable`, `setting_value`, `setting_default_value`, `setting_access_group`, `setting_description`, `created_at`, `updated_at`, `deleted_at`, `restored_at`, `created_by`, `updated_by`, `deleted_by`, `restored_by`, `is_deleted`) VALUES
-(1, 'general', 'site_maintenance', 'false', 'false', 'public', 'Pemeliharaan situs', '2023-01-15 21:23:22', '2025-01-14 06:48:30', NULL, NULL, 0, 101, 0, 0, 'false'),
-(2, 'general', 'site_maintenance_end_date', '2025-01-20', '2022-01-01', 'public', 'Tanggal Berakhir Pemeliharaan Situs', '2023-01-15 21:23:22', '2025-01-14 06:43:50', NULL, NULL, 0, 101, 0, 0, 'false'),
+(1, 'general', 'site_maintenance', 'false', 'false', 'public', 'Pemeliharaan situs', '2023-01-15 21:23:22', '2025-07-22 13:45:33', NULL, NULL, 0, 101, 0, 0, 'false'),
+(2, 'general', 'site_maintenance_end_date', '2025-07-27', '2022-01-01', 'public', 'Tanggal Berakhir Pemeliharaan Situs', '2023-01-15 21:23:22', '2025-07-22 13:50:33', NULL, NULL, 0, 101, 0, 0, 'false'),
 (3, 'general', 'site_cache', 'false', 'false', 'public', 'Cache situs', '2023-01-15 21:23:22', '2024-11-30 12:02:18', NULL, NULL, 0, 101, 0, 0, 'false'),
 (4, 'general', 'site_cache_time', '0', '10', 'public', 'Lama Cache Situs', '2023-01-15 21:23:22', '2024-11-30 12:02:10', NULL, NULL, 0, 101, 0, 0, 'false'),
 (5, 'general', 'meta_description', 'SMK Negeri 1 Temon adalah salah satu sekolah berbasis ketarunaan, Sekolah Menengah Kejuruan yang ada di Kabupaten Kulon Progo, dengan berbagai keahlian seperti Nautika Kapal Penangkap Ikan (NKPI),Teknika Kapal Penangkap Ikan (TKPI), Agribisnis Pengolahan Hasil Perikanan (APHPi), Geologi Pertambangan (GP), dan Teknik Mesin (TM)', 'CMS Sekolahku adalah Content Management System dan PPDB Online gratis untuk SD SMP/Sederajat SMA/Sederajat', 'public', 'Deskripsi Meta', '2023-01-15 21:23:22', '2023-12-22 16:28:15', NULL, NULL, 0, 101, 0, 0, 'false'),
 (6, 'general', 'meta_keywords', 'SMP Islam Al Azhar 26 Yogyakarta', 'CMS, Website Sekolah Gratis, Cara Membuat Website Sekolah, membuat web sekolah, contoh website sekolah, fitur website sekolah, Sekolah, Website, Internet,Situs, CMS Sekolah, Web Sekolah, Website Sekolah Gratis, Website Sekolah, Aplikasi Sekolah, PPDB Online, PSB Online, PSB Online Gratis, Penerimaan Siswa Baru Online, Raport Online, Kurikulum 2013, SD, SMP, SMA, Aliyah, MTs, SMK', 'public', 'Kata Kunci Meta', '2023-01-15 21:23:22', '2025-07-21 23:16:33', NULL, NULL, 0, 1, 0, 0, 'false'),
-(7, 'general', 'map_location', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4945.154997830946!2d110.08752371536539!3d-7.894301480727674!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7ae395e51b55e7%3A0x2bb9b96d5dfd4d64!2sSMK%201%20Temon!5e1!3m2!1sen!2sid!4v1677777525893!5m2!1sen!2sid\" width=\"100%\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '', 'public', 'Lokasi di Google Maps', '2023-01-15 21:23:22', '2023-03-02 17:19:17', NULL, NULL, 0, 1, 0, 0, 'false'),
-(8, 'general', 'favicon', '22563fb0602eed7b102b7ce76d2f96e5.png', '740c0d7117e7d95b8d0491536aa12989.png', 'public', 'Favicon', '2023-01-15 21:23:22', '2023-02-28 15:11:41', NULL, NULL, 0, 0, 0, 0, 'false'),
-(9, 'general', 'header', NULL, 'header.png', 'public', 'Gambar Header', '2023-01-15 21:23:22', '2023-01-15 14:23:22', NULL, NULL, 0, 0, 0, 0, 'false'),
-(10, 'general', 'recaptcha_status', 'disable', 'disable', 'public', 'reCAPTCHA Status', '2023-01-15 21:23:22', '2023-03-02 17:06:27', NULL, NULL, 0, 1, 0, 0, 'false'),
+(7, 'general', 'map_location', '--', '', 'public', 'Lokasi di Google Maps', '2023-01-15 21:23:22', '2025-07-22 11:28:25', NULL, NULL, 0, 1, 0, 0, 'false'),
+(8, 'general', 'favicon', '1753184660_bd4542e35a1873b6a4ef.png', '740c0d7117e7d95b8d0491536aa12989.png', 'public', 'Favicon', '2023-01-15 21:23:22', '2025-07-22 11:44:20', NULL, NULL, 0, 0, 0, 0, 'false'),
+(9, 'general', 'header', '1753185010_e3b1fec0a4dc946a443e.png', 'header.png', 'public', 'Gambar Header', '2023-01-15 21:23:22', '2025-07-22 11:50:10', NULL, NULL, 0, 0, 0, 0, 'false'),
+(10, 'general', 'recaptcha_status', 'disable', 'disable', 'public', 'reCAPTCHA Status', '2023-01-15 21:23:22', '2025-07-22 13:48:05', NULL, NULL, 0, 1, 0, 0, 'false'),
 (11, 'general', 'recaptcha_site_key', '6LcGFMkkAAAAAOvsTcA_Ie--CcuCCxqMnjXIcxrs', '6LeNCTAUAAAAAADTbL1rDw8GT1DF2DUjVtEXzdMu', 'public', 'Recaptcha Site Key', '2023-01-15 21:23:22', '2023-03-02 17:00:49', NULL, NULL, 0, 1, 0, 0, 'false'),
 (12, 'general', 'recaptcha_secret_key', '6LcGFMkkAAAAAGMnRODvrFMZbyz2hfLj2FPpl8r0', '6LeNCTAUAAAAAGq8O0ItkzG8fsA9KeJ7mFMMFF1s', 'public', 'Recaptcha Secret Key', '2023-01-15 21:23:22', '2023-03-02 17:01:06', NULL, NULL, 0, 1, 0, 0, 'false'),
-(13, 'general', 'timezone', NULL, 'Asia/Jakarta', 'public', 'Time Zone', '2023-01-15 21:23:22', '2023-01-15 14:23:22', NULL, NULL, 0, 0, 0, 0, 'false'),
+(13, 'general', 'timezone', 'Asia/Jakarta', 'Asia/Jakarta', 'public', 'Time Zone', '2023-01-15 21:23:22', '2025-07-22 13:48:35', NULL, NULL, 0, 0, 0, 0, 'false'),
 (14, 'media', 'file_allowed_types', 'jpg, jpeg, png, gif, svg', 'jpg, jpeg, png, gif', 'public', 'Tipe file yang diizinkan', '2023-01-15 21:23:22', '2024-01-01 16:19:04', NULL, NULL, 0, 102, 0, 0, 'false'),
 (15, 'media', 'upload_max_filesize', NULL, '0', 'public', 'Maksimal Ukuran File yang Diupload', '2023-01-15 21:23:22', '2023-01-15 14:23:22', NULL, NULL, 0, 0, 0, 0, 'false'),
 (16, 'media', 'thumbnail_size_height', NULL, '100', 'public', 'Tinggi Gambar Thumbnail', '2023-01-15 21:23:22', '2023-01-15 14:23:22', NULL, NULL, 0, 0, 0, 0, 'false'),
@@ -368,15 +481,10 @@ INSERT INTO `settings` (`id`, `setting_group`, `setting_variable`, `setting_valu
 (63, 'mail_server', 'smtp_pass', 'k3l4ut4n', '', 'private', 'SMTP Password', '2023-01-15 21:23:22', '2024-08-03 15:07:17', NULL, NULL, 0, 101, 0, 0, 'false'),
 (64, 'mail_server', 'smtp_port', '465', '', 'public', 'SMTP Port', '2023-01-15 21:23:22', '2024-08-03 15:07:34', NULL, NULL, 0, 101, 0, 0, 'false'),
 (65, 'school_profile', 'npsn', '20402816', '123', 'public', 'NPSN', '2023-01-15 21:23:22', '2023-02-28 15:41:20', NULL, NULL, 0, 1, 0, 0, 'false'),
-(66, 'school_profile', 'school_name', 'SMK Negeri 1 Temon', 'SMA Negeri 9 Kuningan', 'public', 'Nama Sekolah', '2023-01-15 21:23:22', '2023-02-28 15:42:23', NULL, NULL, 0, 1, 0, 0, 'false'),
-(67, 'school_profile', 'headmaster', 'SUKIRNA, S.Pd., M.Pd.', 'Anton Sofyan', 'public', 'Kepala Sekolah', '2023-01-15 21:23:22', '2025-01-14 06:48:07', NULL, NULL, 0, 101, 0, 0, 'false'),
-(68, 'school_profile', 'headmaster_photo', 'de7a0f9c5a6f45f160166f28775cbc2d.jpg', 'headmaster_photo.png', 'public', 'Photo Kepala Sekolah', '2023-01-15 21:23:22', '2025-01-14 06:50:46', NULL, NULL, 0, 0, 0, 0, 'false'),
-(69, 'school_profile', 'school_level', '99', '3', 'public', 'Bentuk Pendidikan', '2023-01-15 21:23:22', '2023-02-28 15:42:13', NULL, NULL, 0, 1, 0, 0, 'false'),
-(70, 'school_profile', 'school_status', NULL, '1', 'public', 'Status Sekolah', '2023-01-15 21:23:22', '2023-01-15 14:23:22', NULL, NULL, 0, 0, 0, 0, 'false'),
-(71, 'school_profile', 'ownership_status', '107', '1', 'public', 'Status Kepemilikan', '2023-01-15 21:23:22', '2023-02-28 15:41:37', NULL, NULL, 0, 1, 0, 0, 'false'),
-(72, 'school_profile', 'decree_operating_permit', '1065', '-', 'public', 'SK Izin Operasional', '2023-01-15 21:23:22', '2023-02-28 15:40:24', NULL, NULL, 0, 1, 0, 0, 'false'),
-(73, 'school_profile', 'decree_operating_permit_date', '2004-04-15', '2023-01-15', 'public', 'Tanggal SK Izin Operasional', '2023-01-15 21:23:22', '2023-02-28 15:40:46', NULL, NULL, 0, 1, 0, 0, 'false'),
-(74, 'school_profile', 'tagline', 'Jalan Glagah, Kalidengen, Temon, Kulon Progo, D.I. Yogyakarta', NULL, 'public', 'Slogan', '2023-01-15 21:23:22', '2023-02-28 15:46:51', NULL, NULL, 0, 1, 0, 0, 'false'),
+(66, 'school_profile', 'school_name', 'SMK Negeri 1 Temon', 'SMKN 1 Temon', 'public', 'Nama Sekolah', '2023-01-15 21:23:22', '2025-07-22 12:13:25', NULL, NULL, 0, 1, 0, 0, 'false'),
+(67, 'school_profile', 'nama_perpus', 'Perpustakaan Adiayatama', 'Perpustakaan', 'public', 'Nama Perpustakaan', NULL, '2025-07-22 12:14:00', NULL, NULL, 0, 0, 0, 0, 'false'),
+(68, 'school_profile', 'npp', '01234', '0123456789', 'public', 'NPP', NULL, '2025-07-22 12:14:54', NULL, NULL, 0, 0, 0, 0, 'false'),
+(74, 'school_profile', 'tagline', 'Jalan Glagah, Kalidengen, Temon, Kulon Progo, D.I. Yogyakarta', 'Kompeten, Berprestasi', 'public', 'Slogan', '2023-01-15 21:23:22', '2025-07-22 12:13:40', NULL, NULL, 0, 1, 0, 0, 'false'),
 (75, 'school_profile', 'rt', '0', '12', 'public', 'RT', '2023-01-15 21:23:22', '2023-02-28 15:42:04', NULL, NULL, 0, 1, 0, 0, 'false'),
 (76, 'school_profile', 'rw', '0', '06', 'public', 'RW', '2023-01-15 21:23:22', '2023-02-28 15:42:08', NULL, NULL, 0, 1, 0, 0, 'false'),
 (77, 'school_profile', 'sub_village', 'Glagah', 'Wage', 'public', 'Dusun', '2023-01-15 21:23:22', '2023-02-28 15:43:13', NULL, NULL, 0, 1, 0, 0, 'false'),
@@ -389,13 +497,31 @@ INSERT INTO `settings` (`id`, `setting_group`, `setting_variable`, `setting_valu
 (84, 'school_profile', 'fax', '-', '0232123456', 'public', 'Fax', '2023-01-15 21:23:22', '2023-02-28 15:41:10', NULL, NULL, 0, 1, 0, 0, 'false'),
 (85, 'school_profile', 'email', 'smkn1temon@yahoo.com', 'info@sman9kuningan.sch.id', 'public', 'Email', '2023-01-15 21:23:22', '2025-01-18 09:51:20', NULL, NULL, 0, 101, 0, 0, 'false'),
 (86, 'school_profile', 'website', 'https://smkn1temon.sch.id/', 'http://www.sman9kuningan.sch.id', 'public', 'Website', '2023-01-15 21:23:22', '2024-01-01 16:18:33', NULL, NULL, 0, 102, 0, 0, 'false'),
-(87, 'school_profile', 'logo', '8dcf6e62312f969fa341c7d161168f23.png', 'logo.png', 'public', 'Logo', '2023-01-15 21:23:22', '2024-01-01 16:23:24', NULL, NULL, 0, 0, 0, 0, 'false'),
-(88, 'admission', 'admission_status', NULL, 'open', 'public', 'Status Penerimaan Peserta Didik Baru', '2023-01-15 21:23:22', '2023-01-15 14:23:22', NULL, NULL, 0, 0, 0, 0, 'false'),
-(89, 'admission', 'admission_year', NULL, '2023', 'public', 'Tahun Penerimaan Peserta Didik Baru', '2023-01-15 21:23:22', '2023-01-15 14:23:22', NULL, NULL, 0, 0, 0, 0, 'false'),
-(90, 'admission', 'admission_start_date', NULL, '2022-01-01', 'public', 'Tanggal Mulai PPDB', '2023-01-15 21:23:22', '2023-01-15 14:23:22', NULL, NULL, 0, 0, 0, 0, 'false'),
-(91, 'admission', 'admission_end_date', '2023-07-08', '2022-12-31', 'public', 'Tanggal Selesai PPDB', '2023-01-15 21:23:22', '2023-03-01 17:44:24', NULL, NULL, 0, 1, 0, 0, 'false'),
-(92, 'admission', 'announcement_start_date', NULL, '2022-01-01', 'public', 'Tanggal Mulai Pengumuman Hasil Seleksi PPDB', '2023-01-15 21:23:22', '2023-01-15 14:23:22', NULL, NULL, 0, 0, 0, 0, 'false'),
-(93, 'admission', 'announcement_end_date', '2023-07-08', '2022-12-31', 'public', 'Tanggal Selesai Pengumuman Hasil Seleksi PPDB', '2023-01-15 21:23:22', '2023-03-01 17:44:03', NULL, NULL, 0, 1, 0, 0, 'false');
+(87, 'school_profile', 'logo', '1753185705_3072a4a125b8be4786b6.png', 'logo.png', 'public', 'Logo', '2023-01-15 21:23:22', '2025-07-22 12:01:45', NULL, NULL, 0, 0, 0, 0, 'false');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `submenus`
+--
+
+CREATE TABLE `submenus` (
+  `id` int(11) NOT NULL,
+  `menu_id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `order_num` int(11) DEFAULT 0,
+  `is_active` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `submenus`
+--
+
+INSERT INTO `submenus` (`id`, `menu_id`, `title`, `url`, `order_num`, `is_active`) VALUES
+(6, 5, 'Visi Misi', 'visi-misi', 1, 1),
+(7, 7, 'Informasi Perpustakaan', 'informasi', 1, 1),
+(8, 7, 'Berita Perpustakaan', 'berita', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -436,7 +562,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `user_name`, `user_password`, `user_full_name`, `user_email`, `user_url`, `user_group_id`, `user_type`, `user_profile_id`, `user_biography`, `user_forgot_password_key`, `user_forgot_password_request_date`, `has_login`, `last_logged_in`, `ip_address`, `created_at`, `updated_at`, `deleted_at`, `restored_at`, `created_by`, `updated_by`, `deleted_by`, `restored_by`, `is_deleted`) VALUES
 (2, 'rutiani', '$2y$10$4F.UwRhQM1ipecB47I3hmOj8.ZoB/JwsMxNe6rwGjzyutPj4cLhdG', 'Rutiani, S.Pd.', 'rutiani58@guru.smk.belajar.id', NULL, 1, 'administrator', NULL, '', NULL, NULL, 'true', '2024-08-03 19:05:45', '125.163.149.96', '2023-10-16 21:08:47', '2024-08-03 12:05:45', NULL, NULL, 1, 0, 0, 0, 'false'),
-(101, 'smkn1temon', '$2y$10$4F.UwRhQM1ipecB47I3hmOj8.ZoB/JwsMxNe6rwGjzyutPj4cLhdG', 'Administrator', 'admin@admin.com', 'sekolahku.web.id', 0, 'super_user', NULL, NULL, NULL, NULL, 'true', '2025-07-21 23:02:55', '::1', '2023-01-15 21:23:22', '2025-07-21 16:02:55', NULL, NULL, 0, 1, 0, 0, 'false'),
+(101, 'smkn1temon', '$2y$10$4F.UwRhQM1ipecB47I3hmOj8.ZoB/JwsMxNe6rwGjzyutPj4cLhdG', 'Administrator', 'admin@admin.com', 'sekolahku.web.id', 0, 'super_user', NULL, NULL, NULL, NULL, 'true', '2025-07-24 22:16:41', '::1', '2023-01-15 21:23:22', '2025-07-24 15:16:41', NULL, NULL, 0, 1, 0, 0, 'false'),
 (102, 'humaskelautan', '$2y$10$4F.UwRhQM1ipecB47I3hmOj8.ZoB/JwsMxNe6rwGjzyutPj4cLhdG', 'Humas SMKN 1 Temon', 'humassmkntemon@gmail.com', NULL, 1, 'super_user', NULL, '', NULL, NULL, 'true', '2024-08-14 19:24:04', '36.80.221.120', '2023-12-21 13:22:54', '2024-08-14 12:24:04', NULL, NULL, 101, 0, 0, 0, 'false'),
 (104, 'hanagri', '$2y$10$3q8O6LrBcoPnrGYTk8fpg.Kg5Xk6Wdm5urNTHM6K/sTGnEZvpFb8u', 'Hanagri Gantyan Wangi, S.Pd.', 'hanagri@smkn1temon.sch.id', NULL, 1, 'administrator', NULL, '', NULL, NULL, 'true', '2024-08-03 23:01:43', '125.163.149.96', '2024-08-03 23:01:10', '2024-08-03 16:01:43', NULL, NULL, 101, 0, 0, 0, 'false'),
 (105, 'rezamahardika', '$2y$10$qKz24iqzy0wdXGHd0Cat3.AP1x4zSLPclqUM88OOwjR1L9C9a.nQy', 'REZA MERDHIKAWATI, S.Pd.', 'rezamahardika@smkn1temon.sch.id', 'https://smkn1temon.sch.id/media_library/employees/110a840e144ae7cba2dc467a16b58c5b.jpg', 1, 'employee', 104, NULL, NULL, NULL, 'true', '2024-11-26 10:17:19', '103.210.35.120', '2024-08-10 21:08:22', '2024-11-26 03:17:19', NULL, NULL, 101, 101, 0, 0, 'false'),
@@ -454,9 +580,21 @@ ALTER TABLE `artikel`
   ADD UNIQUE KEY `slug` (`slug`);
 
 --
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `login_attempts`
 --
 ALTER TABLE `login_attempts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `menus`
+--
+ALTER TABLE `menus`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -466,10 +604,23 @@ ALTER TABLE `options`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `posts`
+--
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `submenus`
+--
+ALTER TABLE `submenus`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `menu_id` (`menu_id`);
 
 --
 -- Indexes for table `users`
@@ -488,10 +639,22 @@ ALTER TABLE `artikel`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `login_attempts`
 --
 ALTER TABLE `login_attempts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT for table `menus`
+--
+ALTER TABLE `menus`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `options`
@@ -500,16 +663,38 @@ ALTER TABLE `options`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 
 --
+-- AUTO_INCREMENT for table `posts`
+--
+ALTER TABLE `posts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
+-- AUTO_INCREMENT for table `submenus`
+--
+ALTER TABLE `submenus`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `submenus`
+--
+ALTER TABLE `submenus`
+  ADD CONSTRAINT `submenus_ibfk_1` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

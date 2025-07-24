@@ -28,6 +28,11 @@ return [
                 'roles' => ['admin', 'super_user']
             ],
             [
+                'title' => 'Halaman',
+                'route' => 'blog/page',
+                'roles' => ['admin', 'super_user']
+            ],
+            [
                 'title' => 'Komentar',
                 'route' => 'blog/comment',
                 'roles' => ['admin', 'super_user']

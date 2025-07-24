@@ -28,19 +28,23 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
         $routes->post("$group/save", "$controller::save");
         $routes->post("$group/upload", "$controller::upload");
     }
-  
+
     $routes->get('menu_admin', 'AdminController::menu');
 });
 $routes->group('blog', ['filter' => 'auth'], function ($routes) {
-    $routes->get('posts', 'Blog\Posts::index');
-    $routes->get('posts/create', 'Blog\Posts::create');
-    $routes->post('posts/store', 'Blog\Posts::store');
-    $routes->get('posts/edit/(:num)', 'Blog\Posts::edit/$1');
-    $routes->get('posts/getpostid/(:num)', 'Blog\Posts::getPostById/$1');
-    $routes->post('posts/upload_image', 'Blog\Posts::imagesUploadHandler');
-    $routes->get('posts/delete/(:num)', 'Blog\Posts::delete/$1');
-    $routes->get('posts/getposts', 'Blog\Posts::getposts');
-    $routes->get('posts/getcategories', 'Blog\Posts::getcategories');
+    $groups = ['posts', 'page'];
+    foreach ($groups as $group) {
+        $controller = 'Blog\\' . ucfirst($group);
+        $routes->get("$group", "$controller::index");
+        $routes->get("$group/create", "$controller::create");
+        $routes->post("$group/store", "$controller::store");
+        $routes->get("$group/edit/(:num)", "$controller::edit/$1");
+        $routes->get("$group/getpostid/(:num)", "$controller::getPostById/$1");
+        $routes->post("$group/upload_image", "$controller::imagesUploadHandler");
+        $routes->get("$group/delete/(:num)", "$controller::delete/$1");
+        $routes->get("$group/getposts", "$controller::getposts");
+        $routes->get("$group/getcategories", "$controller::getcategories");
+    }
 });
 
 

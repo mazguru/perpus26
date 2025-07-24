@@ -25,7 +25,7 @@ class PostsModel extends Model
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
 
-    public function getAllPosts($limit = 0, $offset = 0)
+    public function getAllPosts($type = 'post')
     {
         $builder = $this->db->table($this->table . ' x1');
         $builder->select('
@@ -44,12 +44,8 @@ class PostsModel extends Model
     ');
         $builder->join('users x2', 'x1.post_author = x2.id', 'left');
         $builder->join('categories x3', 'x1.post_categories = x3.id', 'left');
-        $builder->where('x1.post_type', 'post');
+        $builder->where('x1.post_type', $type);
         $builder->where('x1.is_deleted', 'false');
-
-        if ($limit > 0) {
-            $builder->limit($limit, $offset);
-        }
 
         $builder->orderBy('x1.created_at', 'DESC');
 
@@ -110,7 +106,6 @@ class PostsModel extends Model
     ');
         $builder->join('users x2', 'x1.post_author = x2.id', 'left');
         $builder->join('categories x3', 'x1.post_categories = x3.id', 'left');
-        $builder->where('x1.post_type', 'post');
         $builder->where('x1.is_deleted', 'false');
         $builder->where('x1.id', $id);
 
