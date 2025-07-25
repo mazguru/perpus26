@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
+$routes->get('profil/(:segment)', 'Posts::getPage/$1');
 $routes->get('post/(:segment)', 'Home::detail/$1');
 $routes->get('menu_public', 'PublicController::getMenu');
 

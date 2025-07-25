@@ -9,7 +9,7 @@ return [
     ],
     [
         'title' => 'Manajemen Tulisan',
-        'icon'  => 'bi bi-edit',
+        'icon'  => 'bi bi-newspaper',
         'roles' => ['admin', 'super_user'],
         'submenu' => [
             [
@@ -37,6 +37,19 @@ return [
                 'route' => 'blog/comment',
                 'roles' => ['admin', 'super_user']
             ],
+        ]
+    ],
+    [
+        'title' => 'Tampilan',
+        'icon'  => 'bi bi-display',
+        'roles' => ['super_user'],
+        'submenu' => [
+            [
+                'title' => 'Menu',
+                'route' => 'admin/menu',
+                'roles' => ['super_user']
+            ],
+            
         ]
     ],
     

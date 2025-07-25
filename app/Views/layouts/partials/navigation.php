@@ -26,7 +26,7 @@
                 <div class="relative group" x-data="{ hover: false }">
                     <!-- Menu tanpa submenu -->
                     <template x-if="menu.submenus.length === 0">
-                        <a :href="menu.url" class="hover:text-green-600 text-md" x-text="menu.title"></a>
+                        <a :href="_BASEURL + menu.url" class="hover:text-green-600 text-md" x-text="menu.title"></a>
                     </template>
 
                     <!-- Menu dengan submenu -->
@@ -47,7 +47,7 @@
                                 x-show="hover"
                                 x-transition>
                                 <template x-for="sub in menu.submenus" :key="sub.id">
-                                    <a :href="sub.url" class="block px-4 py-2 hover:bg-gray-100" x-text="sub.title"></a>
+                                    <a :href="_BASEURL + sub.url" class="block px-4 py-2 hover:bg-gray-100" x-text="sub.title"></a>
                                 </template>
                             </div>
                         </div>

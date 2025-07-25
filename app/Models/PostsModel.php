@@ -80,7 +80,6 @@ class PostsModel extends Model
     ');
         $builder->join('users x2', 'x1.post_author = x2.id', 'left');
         $builder->join('categories x3', 'x1.post_categories = x3.id', 'left');
-        $builder->where('x1.post_type', 'post');
         $builder->where('x1.is_deleted', 'false');
         $builder->where('x1.post_slug', $slug);
 

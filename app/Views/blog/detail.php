@@ -1,6 +1,3 @@
-<?= $this->extend('layouts/master') ?>
-
-<?= $this->section('content') ?>
 
 <article class="bg-white p-6 rounded shadow">
   <h2 class="text-2xl font-bold mb-2"><?= esc($artikel['post_title']) ?></h2>
@@ -17,4 +14,3 @@
 
 <?= session('post_image_thumbnail_width') ?>
 
-<?= $this->endSection() ?>
