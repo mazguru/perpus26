@@ -79,7 +79,7 @@
                     return `
                 <button class="text-sm bg-yellow-400 px-2 py-1 rounded mr-2 text-white"
                     @click="editData(${row.id})">Edit</button>
-                <a href="${_BASEURL}admin/gallery/upload/${row.id}"
+                <a href="${_BASEURL}media/photos/${row.id}"
                     class="text-sm bg-blue-600 px-2 py-1 rounded text-white">Upload</a>`;
                 }
             }

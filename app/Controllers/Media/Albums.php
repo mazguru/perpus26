@@ -132,7 +132,7 @@ class Albums extends AdminController
         $this->albumModel->update($id, [
             'is_deleted' => 1,
             'deleted_at' => date('Y-m-d H:i:s'),
-            'deleted_by' => user_id()
+            'deleted_by' => session('user_id')
         ]);
 
         return $this->response->setJSON([
@@ -146,7 +146,7 @@ class Albums extends AdminController
         $this->albumModel->update($id, [
             'is_deleted' => 0,
             'restored_at' => date('Y-m-d H:i:s'),
-            'restored_by' => user_id()
+            'restored_by' => session('user_id')
         ]);
 
         return $this->response->setJSON([
@@ -155,7 +155,7 @@ class Albums extends AdminController
         ]);
     }
 
-    public function uploadPhotos($id)
+    public function postUploadImage($id)
     {
         $album = $this->albumModel->find($id);
         if (!$album) {
@@ -177,7 +177,7 @@ class Albums extends AdminController
                     'photo_album_id' => $id,
                     'photo_name'     => $filename,
                     'created_at'     => date('Y-m-d H:i:s'),
-                    'created_by'     => user_id(),
+                    'created_by'     => session('user_id'),
                     'is_deleted'     => 0
                 ]);
             }
