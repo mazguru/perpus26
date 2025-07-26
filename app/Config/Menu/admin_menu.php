@@ -40,6 +40,29 @@ return [
         ]
     ],
     [
+        'title' => 'Media Galeri',
+        'icon'  => 'bi bi-images',
+        'roles' => ['super_user'],
+        'submenu' => [
+            [
+                'title' => 'Foto',
+                'route' => 'media/albums',
+                'roles' => ['super_user']
+            ],
+            [
+                'title' => 'Video',
+                'route' => 'media/galeri-video',
+                'roles' => ['super_user']
+            ],
+            [
+                'title' => 'Tautan',
+                'route' => 'media/tautan',
+                'roles' => ['super_user']
+            ],
+            
+        ]
+    ],
+    [
         'title' => 'Tampilan',
         'icon'  => 'bi bi-display',
         'roles' => ['super_user'],

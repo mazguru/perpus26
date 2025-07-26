@@ -1,11 +1,11 @@
 <?php
-namespace App\Controllers\Admin;
+namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\ArtikelModel;
 
 class Artikel extends BaseController
 {
-    public function index()
+    public function getIndex()
     {
         $model = new ArtikelModel();
         $data['artikel'] = $model->findAll();
