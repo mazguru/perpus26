@@ -27,6 +27,8 @@
     "alpinejs": "^3.14.8",
     "datatables.net": "^2.2.2",
     "datatables.net-responsive": "^3.0.4",
+    "lightgallery": "^2.9.0-beta.1",
+    "swiper": "^11.2.10",
     "toastr": "^2.1.4"
   },
   "name": "perpus26",

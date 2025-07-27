@@ -30,85 +30,10 @@
 </section>
 
 <!-- Berita Section -->
-<section id="berita" class="bg-white py-16">
-    <div class="max-w-screen-xl mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">Berita Terbaru</h2>
-            <div class="w-24 h-1 bg-indigo-600 mx-auto mb-4"></div>
-            <p class="text-gray-600 max-w-2xl mx-auto">Ikuti perkembangan terbaru dari perpustakaan kami, termasuk acara, koleksi baru, dan informasi penting lainnya.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Berita 1 -->
-            <?php foreach ($artikel as $a): ?>
-                <div class="news-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                    <div class="h-48 bg-indigo-100 flex items-center justify-center">
-                        <?php if ($a['post_image']): ?>
-                            <img src="<?= base_url() ?>/media_library/posts/thumbs/<?= $a['post_image'] ?>" class="w-full h-40 object-cover mb-2">
-                        <?php else : ?>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-
-                        <?php endif ?>
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Acara</span>
-                        <h3 class="text-xl font-semibold text-gray-800 mt-2"><?= esc($a['post_title']) ?></h3>
-                        <p class="text-gray-600 mt-3">Bergabunglah dalam diskusi menarik bersama penulis terkenal membahas karya terbaru mereka pada Sabtu, 15 Juni 2023.</p>
-                        <div class="mt-4 flex items-center">
-                            <span class="text-sm text-gray-500">12 Mei 2023</span>
-                            <a href="/post/<?= $a['post_slug'] ?>" class="ml-auto text-indigo-600 hover:text-indigo-800 font-medium">Baca selengkapnya</a>
-                        </div>
-                    </div>
-                </div>
-
-            <?php endforeach ?>
+ <?= $this->include('frontend/home/berita') ?>
 
 
-            <!-- Berita 2 -->
-            <div class="news-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="h-48 bg-indigo-100 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                </div>
-                <div class="p-6">
-                    <span class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Koleksi Baru</span>
-                    <h3 class="text-xl font-semibold text-gray-800 mt-2">100+ Buku Baru Telah Ditambahkan</h3>
-                    <p class="text-gray-600 mt-3">Perpustakaan kami baru saja menambahkan lebih dari 100 judul buku baru dari berbagai genre untuk Anda nikmati.</p>
-                    <div class="mt-4 flex items-center">
-                        <span class="text-sm text-gray-500">5 Mei 2023</span>
-                        <a href="#" class="ml-auto text-indigo-600 hover:text-indigo-800 font-medium">Baca selengkapnya</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Berita 3 -->
-            <div class="news-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
-                <div class="h-48 bg-indigo-100 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                    </svg>
-                </div>
-                <div class="p-6">
-                    <span class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Pengumuman</span>
-                    <h3 class="text-xl font-semibold text-gray-800 mt-2">Perpanjangan Jam Operasional</h3>
-                    <p class="text-gray-600 mt-3">Mulai bulan Juni, perpustakaan akan buka lebih lama pada hari Jumat dan Sabtu untuk mengakomodasi pengunjung di akhir pekan.</p>
-                    <div class="mt-4 flex items-center">
-                        <span class="text-sm text-gray-500">28 April 2023</span>
-                        <a href="#" class="ml-auto text-indigo-600 hover:text-indigo-800 font-medium">Baca selengkapnya</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="text-center mt-10">
-            <a href="#" class="inline-block bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-medium py-3 px-6 rounded-lg transition duration-300">Lihat Semua Berita</a>
-        </div>
-    </div>
-</section>
-
+<?= $this->include('frontend/home/galery') ?>
 <!-- Layanan Section -->
 <section id="layanan" class="bg-gray-50 py-16">
     <div class="max-w-screen-xl mx-auto px-4">

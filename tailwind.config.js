@@ -51,6 +51,7 @@ module.exports = {
         primary: '#3C50E0',
         secondary: '#80CAEE',
         stroke: '#E2E8F0',
+        primarylight: '#f1f4ff',
         gray: {
           ...colors.gray,
           DEFAULT: '#EFF4FB',

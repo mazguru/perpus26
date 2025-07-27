@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('profil/(:segment)', 'Posts::getPage/$1');
-$routes->get('post/(:segment)', 'Home::detail/$1');
+$routes->get('post/(:segment)', 'Posts::getPage/$1');
 $routes->get('menu_public', 'PublicController::getMenu');
 
 $routes->get('login', 'Login::index');

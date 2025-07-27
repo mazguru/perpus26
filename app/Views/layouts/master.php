@@ -35,6 +35,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
+
+  <!-- STYLESHEETS -->
+  <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/swiper/swiper-bundle.min.css') ?>">
+  <link href="<?= base_url('assets/plugins/owl-carousel/owl.carousel.css') ?>" rel="stylesheet">
+  <link href="<?= base_url('assets/plugins/lightgallery/css/lightgallery.css') ?>" rel="stylesheet">
+  
+  <link href="<?= base_url('assets/plugins/animate/animate.css') ?>" rel="stylesheet">
+  <link href="<?= base_url('assets/plugins/swiper/swiper-bundle.min.css') ?>" rel="stylesheet">
+
   <link rel="stylesheet" href="<?= base_url('assets/css/styles.css'); ?>">
   <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap-icons.css'); ?>">
   <style>
@@ -76,6 +85,12 @@
   <script src="<?= base_url('assets/js/notif.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/datatables.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/app.min.js') ?>"></script>
+
+  <!-- LIGHTGALLERY -->
+  <script src="<?= base_url('assets/plugins/jquery/jquery.min.js') ?>"></script>
+  <script src="<?= base_url('assets/plugins/lightgallery/js/lightgallery-all.min.js') ?>"></script>
+  <script src="<?= base_url('assets/plugins/swiper/swiper-bundle.min.js') ?>"></script><!-- swiper -->
+
 </body>
 
 </html>
