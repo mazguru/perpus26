@@ -8,7 +8,7 @@ use App\Models\PostsModel;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
-class Posts extends AdminController
+class Page extends AdminController
 {
     protected $m_posts;
     protected $m_categories;
@@ -19,35 +19,35 @@ class Posts extends AdminController
         $this->m_categories = new PostCategoriesModel();
     }
 
-    public function getIndex(): string
+    public function index(): string
     {
         $data = [
-            'title' => 'Tulisan',
-            'content' => 'admin/posts/index',
+            'title' => 'Halaman',
+            'content' => 'admin/page/index',
         ];
         return view('layouts/master_admin', $data);
     }
     public function create($id = null): string
     {
         $data = [
-            'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
-            'content' => 'admin/posts/create'
+            'title' => $id ? 'Edit halaman' : 'Tambah halaman',
+            'content' => 'admin/page/create'
         ];
         return view('layouts/master_admin', $data);
     }
-    public function getEdit($id = null): string
+    public function edit($id = null): string
     {
         $data = [
-            'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
+            'title' => $id ? 'Edit halaman' : 'Tambah halaman',
             'post_id' => $id,
-            'content' => 'admin/posts/create'
+            'content' => 'admin/page/create'
         ];
         return view('layouts/master_admin', $data);
     }
 
-    public function getList()
+    public function getposts()
     {
-        $posts = $this->m_posts->getAllPosts();
+        $posts = $this->m_posts->getAllPosts('page');
         $results = [];
 
         foreach ($posts as $post) {
@@ -57,15 +57,14 @@ class Posts extends AdminController
                 'author' => $post['post_author'],
                 'status' => $post['post_status'],
                 'created_at' => $post['created_at'],
-                'is_deleted' => $post['is_deleted'],
             ];
         }
 
         return $this->response->setJSON($results);
     }
-    public function getCategories()
+    public function getcategories()
     {
-        $categories = $this->m_categories->getCategories('post');
+        $categories = $this->m_categories->getCategories('page');
         $data = [
             'categories' => $categories,
         ];
@@ -73,12 +72,14 @@ class Posts extends AdminController
     }
 
 
-    public function getPostid($id){
+    
+
+    public function getPostById($id){
         $posts = $this->m_posts->getPostsId($id);
 
         return $this->response->setJSON($posts);
     }
-    public function postStore()
+    public function store()
     {
         if (!$this->request->isAJAX()) {
             return $this->response->setJSON([
@@ -93,7 +94,6 @@ class Posts extends AdminController
             'post_slug' => 'required|alpha_dash',
             'post_content' => 'required',
             'post_status' => 'required|in_list[draft,publish]',
-            'post_categories' => 'required',
         ];
 
         $postId = $this->request->getPost('id'); // Jika ada berarti update
@@ -126,7 +126,7 @@ class Posts extends AdminController
             'post_content' => $this->request->getPost('post_content'),
             'post_categories' => $this->request->getPost('post_categories'),
             'post_status' => $this->request->getPost('post_status'),
-            'post_type' => 'post',
+            'post_type' => 'page',
             'post_author' => session('user_id'),
             'created_at' => date('Y-m-d H:i:s'),
         ];

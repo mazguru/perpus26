@@ -184,7 +184,7 @@ function DM(config) {
         optionsUrl: _BASEURL + `${config.controller}/options`,
         deletePermanentlyUrl: _BASEURL + `${config.controller}/delete_permanently`,
 
-        apiUrl : _BASEURL + `${config.controller}/list/`,
+        apiUrl: _BASEURL + `${config.controller}/list/`,
         get formattedDateLahir() {
             if (!this.tableData.tanggal_lahir) return '';
             let [year, month, day] = this.tableData.tanggal_lahir.split('-');
@@ -564,3 +564,348 @@ function DM(config) {
     };
 }
 
+function mgrData(config) {
+    return {
+        showModal: false,
+        modalTitle: 'Tambah Album',
+        modalType: 'create',
+        form: {},
+        tableData: [],
+        previewFile: null,
+        dataTableInstance: null,
+        errorData: '',
+        selectedId: [],
+        async fetchData(url, method = 'GET', body = null) {
+            try {
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                const isFormData = body instanceof FormData;
+
+                if (!isFormData) headers['Content-Type'] = 'application/json';
+
+                const response = await fetch(url, {
+                    method,
+                    headers,
+                    body: body ? (isFormData ? body : JSON.stringify(body)) : null
+                });
+
+                // Handle status error
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP Error', response.status, errorText);
+                    return null; // fetchData akan return null => tangani di pemanggil
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                return null;
+            }
+        },
+        async loadData() {
+            const response = await this.fetchData(_BASEURL + `${config.controller}/list`);
+            console.log(response);
+            if (response) {
+                this.tableData = response.alldata;
+                this.renderDataTable();
+            } else {
+                Notifier.show('Error', 'Gagal memuat data.', 'error');
+            }
+        },
+
+        renderDataTable() {
+            const table = document.querySelector('#table-data');
+            if (this.dataTableInstance) {
+                this.dataTableInstance.clear().rows.add(this.tableData).draw();
+            } else {
+                this.dataTableInstance = new DataTable(table, {
+                    data: this.tableData,
+                    columns: [{
+                        title: 'No',
+                        data: 'id',
+                        render: (_, __, row, meta) => meta.row + 1
+                    },
+                    ...config.columns.map(col => ({
+                        data: col.key,
+                        title: col.label,
+                        orderable: col.orderable ?? true,
+                        responsivePriority: col.priority ?? 10,
+                        render: col.render || ((data) => data)
+                    })),
+                    ],
+                    pageLength: 25,
+                    language: {
+                        search: '_INPUT_',
+                        searchPlaceholder: 'Cari...'
+                    },
+                    responsive: true,
+                    dom: '<"md:flex justify-between mb-2"<"search-box mb-2"f><"info-box"l>>t<"md:flex justify-between mt-2"<"info-box mb-2"i><"pagination"p>>',
+                    rowCallback: function (row, data) {
+                        if (data.is_deleted == 'true') {
+                            row.classList.add("text-red-700"); // Warna merah untuk baris
+                            row.style.textDecoration = "line-through";
+                        }
+                    },
+                });
+            }
+        },
+        openModal(type, id = null) {
+            this.modalType = type;
+            this.showModal = true;
+        },
+
+        closeModal() {
+            this.showModal = false;
+            this.resetForm();
+        },
+
+        resetForm() {
+            this.form = {};
+        },
+
+        generateSlug(str) {
+            return str
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+        },
+
+        handleCoverUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                this.form.image_cover = file;
+                this.previewFile = URL.createObjectURL(file);
+            }
+        },
+
+        editData(id) {
+            const item = this.tableData.find(m => m.id == id); // gunakan == agar type fleksibel
+
+            if (item) {
+                this.form = {
+                    ...item
+                };
+                this.previewFile = item.image_cover ?
+                    _BASEURL + `upload/image/${item.image_cover}` :
+                    null;
+
+                this.modalType = 'edit';
+                this.showModal = true;
+            } else {
+                Notifier.show('Error', 'Data tidak ditemukan', 'error');
+            }
+        },
+
+        confirmDelete(id) {
+            const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?');
+            if (!confirmDelete) return;
+            this.deleteData([id]);
+        },
+
+        confirmDeleteMultiple() {
+            const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?');
+            if (!confirmDelete) return;
+            this.deleteData(this.selectedId);
+        },
+        async deleteData(ids) {
+
+            const response = await this.fetchData(_BASEURL + `${config.controller}/delete`, 'POST', {
+                id: ids
+            });
+
+            if (response && response.status === 'success') {
+                Notifier.show('Berhasil!', response.message, 'success');
+                this.loadData();
+                this.selectedId = [];
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            } else {
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+            }
+        },
+
+        confirmDeletepermanent(id) {
+            const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?');
+            if (!confirmDelete) return;
+            this.deleteDataPermanent([id]);
+        },
+        async deleteDataPermanent(ids) {
+            const response = await this.fetchData(_BASEURL + `${config.controller}/deletepermanent`, 'POST', {
+                id: ids
+            });
+
+            if (response && response.status === 'success') {
+                Notifier.show('Berhasil!', response.message, 'success');
+                this.loadData();
+                this.selectedId = [];
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            } else {
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+            }
+        },
+        confirmRestore(id) {
+            const confirmDelete = confirm('Apakah Anda yakin ingin mengembalikan data ini?');
+            if (!confirmDelete) return;
+            this.restoreData([id]);
+        },
+        confirmRestoreMultiple() {
+            const confirmDelete = confirm('Apakah Anda yakin ingin mengembalikan data ini?');
+            if (!confirmDelete) return;
+            this.restoreData(this.selectedId);
+        },
+        async restoreData(ids) {
+            const response = await this.fetchData(_BASEURL + `${config.controller}/restore`, 'POST', {
+                id: ids
+            });
+            if (response && response.status === 'success') {
+                Notifier.show('Berhasil!', response.message, 'success');
+                this.loadData();
+                this.selectedId = [];
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            } else {
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+            }
+        },
+
+        selectAll(event) {
+            const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+            this.selectedId = event.target.checked ?
+                Array.from(checkboxes).map((checkbox) => checkbox.value) : [];
+            checkboxes.forEach((checkbox) => (checkbox.checked = event.target.checked));
+        },
+
+        async submitForm() {
+            let url = this.form.id ?
+                _BASEURL + `${config.controller}/update/${this.form.id}` :
+                _BASEURL + `${config.controller}/create`;
+
+            const formData = new FormData();
+            for (const key in this.form) {
+                formData.append(key, this.form[key]);
+            }
+
+            // Pastikan elemen file dimasukkan (gunakan ref atau cara lain)
+            const imageInput = document.querySelector('input[name="image_cover"]');
+            if (imageInput && imageInput.files.length > 0) {
+                formData.append('image_cover', imageInput.files[0]);
+            }
+
+            const res = await this.fetchData(url, 'POST', formData);
+            if (res && res.status === 'success') {
+                this.showModal = false;
+                Notifier.show('Berhasil', res.message, 'success');
+                this.loadData();
+            } else {
+                Notifier.show('Error', res?.message || 'Gagal menyimpan data', 'error');
+            }
+        },
+
+        goLink(url) {
+            window.location.href = url
+        }
+
+    };
+}
+
+function postingan(config) {
+    return {
+        baseUrl: _BASEURL + config.dirUpload,
+        tableData: '',
+        isModalOpen: false,
+        editIndex: null,
+        editItem: {
+            setting_description: '',
+            setting_variable: '',
+            setting_value: ''
+        },
+        selectedFile: null,
+        errorData: '',
+        async fetchData(url, method = 'GET', body = null) {
+            try {
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                const isFormData = body instanceof FormData;
+
+                if (!isFormData) headers['Content-Type'] = 'application/json';
+
+                const response = await fetch(url, {
+                    method,
+                    headers,
+                    body: body ? (isFormData ? body : JSON.stringify(body)) : null
+                });
+
+                // Handle status error
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP Error', response.status, errorText);
+                    return null; // fetchData akan return null => tangani di pemanggil
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                return null;
+            }
+        },
+        async loadPosts() {
+            const response = await this.fetchData(_BASEURL + `${config.controller}/list`);
+            console.log(response);
+            if (response) {
+                this.tableData = response;
+                this.renderDataTable();
+            } else {
+                Swal.fire('Error', 'Gagal memuat data.', 'error');
+            }
+        },
+
+        renderDataTable() {
+            const table = document.querySelector('#table-posts');
+            if (this.dataTableInstance) {
+                this.dataTableInstance.clear().rows.add(this.tableData).draw();
+            } else {
+                this.dataTableInstance = new DataTable(table, {
+                    data: this.tableData,
+                    columns: [{
+                        title: 'No',
+                        data: 'id',
+                        responsivePriority: 1,
+                        render: (_, __, row, meta) => meta.row + 1
+                    },
+                    ...config.columns.map(col => ({
+                        data: col.key,
+                        title: col.label,
+                        orderable: col.orderable ?? true,
+                        responsivePriority: col.priority ?? 10,
+                        render: col.render || ((data) => data)
+                    })),
+                    ],
+                    pageLength: 25,
+                    language: {
+                        search: '_INPUT_',
+                        searchPlaceholder: 'Cari...'
+                    },
+                    responsive: true,
+                    dom: '<"md:flex justify-between mb-2"<"search-box mb-2"f><"info-box"l>>t<"md:flex justify-between mt-2"<"info-box mb-2"i><"pagination"p>>',
+                    rowCallback: function (row, data) {
+                        if (data.is_deleted == 1) {
+                            row.classList.add("text-red-700"); // Warna merah untuk baris
+                            row.style.textDecoration = "line-through";
+                        }
+                    },
+                });
+            }
+        },
+        editPost(id) {
+            window.location.href = _BASEURL + config.controller + '/edit/' + id
+        }
+
+    };
+}

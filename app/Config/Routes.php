@@ -33,19 +33,6 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('menu_admin', 'AdminController::menu');
 });
 $routes->group('blog', ['filter' => 'auth'], function ($routes) {
-    $groups = ['posts', 'page'];
-    foreach ($groups as $group) {
-        $controller = 'Blog\\' . ucfirst($group);
-        $routes->get("$group", "$controller::index");
-        $routes->get("$group/create", "$controller::create");
-        $routes->post("$group/store", "$controller::store");
-        $routes->get("$group/edit/(:num)", "$controller::edit/$1");
-        $routes->get("$group/getpostid/(:num)", "$controller::getPostById/$1");
-        $routes->post("$group/upload_image", "$controller::imagesUploadHandler");
-        $routes->get("$group/delete/(:num)", "$controller::delete/$1");
-        $routes->get("$group/getposts", "$controller::getposts");
-        $routes->get("$group/getcategories", "$controller::getcategories");
-    }
 });
 
 

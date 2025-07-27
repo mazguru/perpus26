@@ -1,30 +1,27 @@
 <?php
 
-namespace App\Controllers\Media;
+namespace App\Controllers\Blog;
 
 use App\Controllers\AdminController;
-use App\Models\AlbumModel;
-use App\Models\PhotoModel;
+use App\Models\PostCategoriesModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class Albums extends AdminController
+class Category extends AdminController
 {
-    protected $albumModel;
-    protected $photoModel;
+    protected $m_category;
 
     public function __construct()
     {
-        $this->albumModel = new AlbumModel();
-        $this->photoModel = new PhotoModel();
+        $this->m_category = new PostCategoriesModel();
     }
 
     public function getIndex(): string
     {
         $data = [
-            'title' => 'Album Media',
+            'title' => 'category Media',
             'media' => true,
-            'albums' => true,
-            'content' => 'admin/media/albums',
+            'categorys' => true,
+            'content' => 'admin/posts/category',
         ];
         return view('layouts/master_admin', $data);
     }
@@ -32,10 +29,11 @@ class Albums extends AdminController
     public function getList()
     {
         $data = [
-            'data' => $this->albumModel
+            'data' => $this->m_category
                 ->where('is_deleted', 'false')
                 ->findAll(),
-            'alldata' => $this->albumModel
+            'alldata' => $this->m_category
+            ->orderBy('category_type','ASC')
                 ->findAll()
         ];
 
@@ -54,58 +52,53 @@ class Albums extends AdminController
         $validation = \Config\Services::validation();
 
         $rules = [
-            'album_title' => 'required|min_length[3]',
-            'album_description' => 'permit_empty|string',
-            'image_cover' => 'uploaded[image_cover]|is_image[image_cover]|max_size[image_cover,2048]'
+            'category_name' => 'required|min_length[3]',
+            'category_description' => 'permit_empty|string'
         ];
 
         if (!$this->validate($rules)) {
             return $this->failValidationErrors($validation->getErrors());
         }
 
-        $cover = $this->request->getFile('image_cover');
-        $filename = $cover->getRandomName();
-        $cover->move('upload/image/', $filename);
+        $slug = url_title($this->request->getPost('category_name'), '-', true);
 
-        $slug = url_title($this->request->getPost('album_title'), '-', true);
-
-        $this->albumModel->insert([
-            'album_title'       => $this->request->getPost('album_title'),
-            'album_description' => $this->request->getPost('album_description'),
-            'album_slug'        => $slug,
-            'image_cover'       => $filename,
+        $this->m_category->insert([
+            'category_name'       => $this->request->getPost('category_name'),
+            'category_description' => $this->request->getPost('category_description'),
+            'category_type' => $this->request->getPost('category_type'),
+            'category_slug'        => $slug,
             'created_at'        => date('Y-m-d H:i:s'),
             'created_by'        => session('user_id'),
         ]);
 
         return $this->response->setJSON([
             'status'  => 'success',
-            'message' => 'Album berhasil ditambahkan.'
+            'message' => 'category berhasil ditambahkan.'
         ]);
     }
 
     public function edit($id)
     {
-        $album = $this->albumModel->find($id);
-        if (!$album) {
-            return $this->failNotFound('Album tidak ditemukan');
+        $category = $this->m_category->find($id);
+        if (!$category) {
+            return $this->failNotFound('category tidak ditemukan');
         }
 
-        return $this->response->setJSON($album);
+        return $this->response->setJSON($category);
     }
 
     public function postUpdate($id)
     {
         helper(['form', 'text']);
-        $album = $this->albumModel->find($id);
-        if (!$album) {
-            return $this->failNotFound('Album tidak ditemukan');
+        $category = $this->m_category->find($id);
+        if (!$category) {
+            return $this->failNotFound('category tidak ditemukan');
         }
 
         $data = [
-            'album_title'       => $this->request->getPost('album_title'),
-            'album_description' => $this->request->getPost('album_description'),
-            'album_slug'        => url_title($this->request->getPost('album_title'), '-', true),
+            'category_name'       => $this->request->getPost('category_name'),
+            'category_description' => $this->request->getPost('category_description'),
+            'category_slug'        => url_title($this->request->getPost('category_name'), '-', true),
             'updated_at'        => date('Y-m-d H:i:s'),
             'updated_by'        => session('user_id'),
         ];
@@ -117,16 +110,16 @@ class Albums extends AdminController
             $data['image_cover'] = $newName;
 
             // Hapus cover lama jika ada
-            if ($album['image_cover'] && file_exists(FCPATH . 'upload/image/' . $album['image_cover'])) {
-                unlink(FCPATH . 'upload/image/' . $album['image_cover']);
+            if ($category['image_cover'] && file_exists(FCPATH . 'upload/image/' . $category['image_cover'])) {
+                unlink(FCPATH . 'upload/image/' . $category['image_cover']);
             }
         }
 
-        $this->albumModel->update($id, $data);
+        $this->m_category->update($id, $data);
 
         return $this->response->setJSON([
             'status'  => 'success',
-            'message' => 'Album berhasil diperbarui.'
+            'message' => 'category berhasil diperbarui.'
         ]);
     }
 
@@ -151,7 +144,7 @@ class Albums extends AdminController
             ]);
         }
 
-        $this->albumModel->update($id, [
+        $this->m_category->update($id, [
             'is_deleted' => 'true',
             'deleted_at' => date('Y-m-d H:i:s'),
             'deleted_by' => session('user_id')
@@ -159,7 +152,7 @@ class Albums extends AdminController
 
         return $this->response->setJSON([
             'status'  => 'success',
-            'message' => 'Album berhasil dihapus.'
+            'message' => 'category berhasil dihapus.'
         ]);
     }
     public function postDeletepermanent()
@@ -182,19 +175,19 @@ class Albums extends AdminController
         }
 
         foreach ($ids as $id) {
-            $album = $this->albumModel->find($id);
-            if (!$album) continue;
+            $category = $this->m_category->find($id);
+            if (!$category) continue;
 
-            // Hapus file cover album
-            if (!empty($album['image_cover'])) {
-                $coverPath = FCPATH . 'upload/image/' . $album['image_cover'];
+            // Hapus file cover category
+            if (!empty($category['image_cover'])) {
+                $coverPath = FCPATH . 'upload/image/' . $category['image_cover'];
                 if (file_exists($coverPath)) {
                     unlink($coverPath);
                 }
             }
 
-            // Ambil dan hapus semua foto dari album
-            $photos = $this->photoModel->where('photo_album_id', $id)->findAll();
+            // Ambil dan hapus semua foto dari category
+            $photos = $this->photoModel->where('photo_category_id', $id)->findAll();
             foreach ($photos as $photo) {
                 if (!empty($photo['photo_name'])) {
                     $photoPath = FCPATH . 'uploads/photos/' . $photo['photo_name'];
@@ -206,13 +199,13 @@ class Albums extends AdminController
                 $this->photoModel->delete($photo['id']);
             }
 
-            // Hapus album
-            $this->albumModel->delete($id);
+            // Hapus category
+            $this->m_category->delete($id);
         }
 
         return $this->response->setJSON([
             'status' => 'success',
-            'message' => 'Semua album dan foto berhasil dihapus.'
+            'message' => 'Semua category dan foto berhasil dihapus.'
         ]);
     }
 
@@ -235,7 +228,7 @@ class Albums extends AdminController
                 'message' => 'ID tidak ditemukan dalam permintaan.'
             ]);
         }
-        $this->albumModel->update($id, [
+        $this->m_category->update($id, [
             'is_deleted' => 'false',
             'restored_at' => date('Y-m-d H:i:s'),
             'restored_by' => session('user_id')
@@ -243,15 +236,15 @@ class Albums extends AdminController
 
         return $this->response->setJSON([
             'status'  => 'success',
-            'message' => 'Album berhasil dipulihkan.'
+            'message' => 'category berhasil dipulihkan.'
         ]);
     }
 
     public function postUploadImage($id)
     {
-        $album = $this->albumModel->find($id);
-        if (!$album) {
-            return $this->failNotFound('Album tidak ditemukan');
+        $category = $this->m_category->find($id);
+        if (!$category) {
+            return $this->failNotFound('category tidak ditemukan');
         }
 
         $files = $this->request->getFiles();
@@ -266,7 +259,7 @@ class Albums extends AdminController
                 $photo->move('upload/image/', $filename);
 
                 $this->photoModel->insert([
-                    'photo_album_id' => $id,
+                    'photo_category_id' => $id,
                     'photo_name'     => $filename,
                     'created_at'     => date('Y-m-d H:i:s'),
                     'created_by'     => session('user_id'),

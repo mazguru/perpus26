@@ -214,7 +214,7 @@
                 }
             },
             async loadCategories() {
-                const response = await this.fetchData(_BASEURL + `${config.controller}/getcategories`);
+                const response = await this.fetchData(_BASEURL + `${config.controller}/categories`);
                 console.log(response);
                 if (response) {
                     this.categories = response.categories;
@@ -224,7 +224,7 @@
             },
 
             async loadPostById(id) {
-                const response = await this.fetchData(_BASEURL + `${config.controller}/getpostid/${this.postId}`);
+                const response = await this.fetchData(_BASEURL + `${config.controller}/postid/${this.postId}`);
                 console.log(response);
                 if (response) {
                     this.form = response;

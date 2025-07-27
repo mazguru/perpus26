@@ -23,11 +23,6 @@ return [
                 'roles' => ['admin', 'super_user']
             ],
             [
-                'title' => 'Kategori Tulisan',
-                'route' => 'blog/category',
-                'roles' => ['admin', 'super_user']
-            ],
-            [
                 'title' => 'Halaman',
                 'route' => 'blog/page',
                 'roles' => ['admin', 'super_user']
@@ -38,6 +33,29 @@ return [
                 'roles' => ['admin', 'super_user']
             ],
         ]
+    ],
+    [
+        'title' => 'Manajemen Halaman',
+        'icon'  => 'bi bi-newspaper',
+        'roles' => ['admin', 'super_user'],
+        'submenu' => [
+            [
+                'title' => 'Semua Halaman',
+                'route' => 'blog/page',
+                'roles' => ['admin', 'super_user']
+            ],
+            [
+                'title' => 'Tambah Halaman',
+                'route' => 'blog/page/create',
+                'roles' => ['admin', 'super_user']
+            ],
+        ]
+    ],
+    [
+        'title' => 'Kategori',
+        'icon'  => 'bi bi-house',
+        'route' => 'blog/category',
+        'roles' => ['admin', 'super_user']
     ],
     [
         'title' => 'Media Galeri',

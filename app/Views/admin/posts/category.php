@@ -21,28 +21,29 @@
                 <h2 class="text-xl font-semibold mb-4" x-text="modalType === 'create' ? 'Tambah Album' : 'Edit Album'"></h2>
                 <form @submit.prevent="submitForm" enctype="multipart/form-data">
                     <div class="mb-4">
-                        <label class="block text-xs font-semibold mb-1">Judul</label>
-                        <input type="text" x-model="form.album_title" @input="generateSlug"
+                        <label class="block text-xs font-semibold mb-1">Nama</label>
+                        <input type="text" x-model="form.category_name" @input="modalType === 'create' && (form[config.field.slug] = generateSlug(form[config.field.name]))"
                             class="w-full border rounded px-3 py-2" required>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-xs font-semibold mb-1">Slug</label>
-                        <input type="text" x-model="form.album_slug" class="w-full border rounded px-3 py-2 bg-gray-100" readonly>
+                        <input type="text" x-model="form.category_slug" class="w-full border rounded px-3 py-2 bg-gray-100" readonly>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-xs font-semibold mb-1">Deskripsi</label>
-                        <textarea x-model="form.album_description" class="w-full border rounded px-3 py-2"></textarea>
+                        <textarea x-model="form.category_description" class="w-full border rounded px-3 py-2"></textarea>
                     </div>
-
                     <div class="mb-4">
-                        <label class="block text-xs font-semibold mb-1">Cover</label>
-                        <input name="image_cover" type="file" @change="handleCoverUpload" accept="image/*"
-                            class="w-full border rounded px-3 py-2">
-                        <template x-if="previewFile">
-                            <img :src="previewFile" class="mt-2 w-32 h-32 object-cover rounded">
-                        </template>
+                        <label class="block text-xs font-semibold mb-1">Tipe</label>
+                        <select id="role" name="role" x-model="form.category_type" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                            <option value="post">Post</option>
+                            <option value="page">Page</option>
+                            <option value="profil">Profil</option>
+                            <option value="layanan">Layanan</option>
+                            <option value="file">File</option>
+                        </select>
                     </div>
 
                     <div class="flex justify-end space-x-2">
@@ -60,16 +61,24 @@
 </div>
 <script>
     const config = {
-        controller: 'media/albums',
+        controller: 'blog/category',
+        field: {
+            name: 'category_name',
+            slug: 'category_slug',
+        },
         dirUpload: 'upload/image/',
         columns: [{
-                key: 'album_title',
-                label: 'Judul',
+                key: 'category_name',
+                label: 'Nama',
                 priority: 1,
             },
             {
-                key: 'album_description',
+                key: 'category_description',
                 label: 'Keterangan'
+            },
+            {
+                key: 'category_type',
+                label: 'Tipe Kategori'
             },
             {
                 label: 'Aksi',
@@ -94,14 +103,11 @@
                         </button>
                         </div>`
                     : `<div class="flex"><button class="text-xs bg-yellow-400 px-2 py-1 rounded mr-2 text-white" @click="editData(${row.id})">Edit</button>
-                        <button class="text-xs bg-red-400 px-2 py-1 rounded mr-2 text-white" @click="deleteData(${row.id})">Hapus</button>
-                        <button class="text-xs bg-blue-600 px-2 py-1 rounded text-white" @click="goLink('${_BASEURL}media/photos/${row.id}')">Upload</button></div>`
+                        <button class="text-xs bg-red-400 px-2 py-1 rounded mr-2 text-white" @click="deleteData(${row.id})">Hapus</button></div>`
                                     }
                 `;
                 }
             }
         ],
     }
-
-    
 </script>

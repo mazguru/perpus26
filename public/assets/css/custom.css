@@ -1,0 +1,60 @@
+@font-face {
+	font-family: "Glyphicons Halflings";
+	src: url("../fonts/glyphicons-halflings-regular.woff2") format("woff2");
+}
+
+
+table.dataTable thead > tr > th.dt-orderable-asc,
+table.dataTable thead > tr > th.dt-orderable-desc,
+table.dataTable thead > tr > th.dt-orderable,
+table.dataTable thead > tr > td.dt-orderable-asc,
+table.dataTable thead > tr > td.dt-orderable-desc,
+table.dataTable thead > tr > td.dt-orderable {
+	padding-right: 30px;
+}
+
+table.dataTable thead > tr > th:active,
+table.dataTable thead > tr > td:active {
+	outline: none;
+}
+
+table.dataTable thead .dt-orderable,
+table.dataTable thead .dt-orderable-asc,
+table.dataTable thead .dt-orderable-desc,
+table.dataTable thead .dt-orderable-asc_disabled,
+table.dataTable thead .dt-orderable-desc_disabled {
+	cursor: pointer;
+	position: relative;
+}
+
+table.dataTable thead .dt-orderable:after,
+table.dataTable thead .dt-orderable-asc:after,
+table.dataTable thead .dt-orderable-desc:after,
+table.dataTable thead .dt-orderable-asc_disabled:after,
+table.dataTable thead .dt-orderable-desc_disabled:after {
+	position: absolute;
+	right: 8px;
+	top: 8px;
+	font-family: "Glyphicons Halflings";
+}
+
+table.dataTable thead .dt-orderable-asc:after {
+	opacity: 0.2;
+	content: "\e150";
+}
+
+table.dataTable thead .dt-orderable-none:after {
+	content: ""!important;
+}
+
+table.dataTable thead .dt-ordering-asc:after {
+	content: "\e155";
+}
+
+table.dataTable thead .dt-ordering-desc:after {
+	content: "\e156";
+}
+
+table.dataTable thead .disabled:after {
+	color: #eee;
+}

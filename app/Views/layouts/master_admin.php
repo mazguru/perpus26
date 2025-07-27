@@ -42,7 +42,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url('assets/css/custom.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/styles.css'); ?>">
+
     <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap-icons.css'); ?>">
 
     <script>
@@ -86,14 +88,14 @@
                 </div>
                 <div class="mx-auto max-w-(--breakpoint-2xl) p-4 md:p-6">
                     <?= $this->renderSection('content') ?>
-                    <?php if(isset($content)){ ?>
-                    <?= $this->include($content) ?>
-                    <?php }?>
+                    <?php if (isset($content)) { ?>
+                        <?= $this->include($content) ?>
+                    <?php } ?>
                 </div>
 
             </main>
-            <?= $this->include('layouts/partials/footer') ?>
 
+            <?= $this->include('layouts/admin/footer') ?>
         </div>
 
     </div>

@@ -14,7 +14,7 @@ class Home extends BaseController
         $photos = new PhotoModel();
         $albumModel = new AlbumModel();
 
-        $albums = $albumModel->where('is_deleted', 0)->findAll();
+        $albums = $albumModel->where('is_deleted', 'false')->findAll();
 
         foreach ($albums as &$album) {
             $album['photos'] = $photos
