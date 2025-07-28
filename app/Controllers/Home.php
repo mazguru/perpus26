@@ -31,4 +31,9 @@ class Home extends PublicController
 
         return view('layouts/master', $data);
     }
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/login')->with('message', 'Kamu telah logout');
+    }
 }

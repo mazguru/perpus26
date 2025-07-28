@@ -54,6 +54,7 @@
         </div>
     </template>
 </aside>
+<?=session('user_role')?>
 
 <script>
 function menuManager() {
@@ -66,6 +67,7 @@ function menuManager() {
             try {
                 const res = await fetch(this.base_url + 'menu/menuadmin');
                 const data = await res.json();
+                console.log(data);
 
                 this.menus = data.map(menu => {
                     const fullMenuPath = this.base_url.replace(location.origin, '') + menu.route;

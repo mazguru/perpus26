@@ -33,7 +33,7 @@ class Login extends BaseController
         return view('admin/login', $data);
     }
 
-    public function verify()
+    public function postVerify()
     {
 
         if ($this->request->isAJAX()) {

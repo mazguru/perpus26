@@ -7,19 +7,23 @@ use Config\AdminMenu;
 
 class Menu extends AdminController
 {
-    protected $auth;
+    protected $userModel;
+    protected $employeeModel;
 
-    public function __construct()
-    {
-        helper(['url', 'form']);
-        $this->auth = new Auth();
+    public function initController(
+        \CodeIgniter\HTTP\RequestInterface $request,
+        \CodeIgniter\HTTP\ResponseInterface $response,
+        \Psr\Log\LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
+
+        
+        helper(['form', 'url', 'menu']);
     }
-
     public function getMenuadmin()
     {
         $role = session('user_role') ?? 'guest';
-
-        $rawMenus = (new AdminMenu())->menu;
+        $rawMenus = menuadmin();
         $filtered = array_filter($rawMenus, function ($item) use ($role) {
             return in_array($role, $item['roles'] ?? []);
         });

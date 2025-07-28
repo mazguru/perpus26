@@ -94,7 +94,7 @@
         },
         async login() {
           this.errorMessage = '';
-          const url = '/login/verify';
+          const url = _BASEURL + '/login/verify';
           const method = 'POST';
           const response = await this.fetchData(url, method, this.form);
           console.log(response);
