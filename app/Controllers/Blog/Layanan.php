@@ -8,7 +8,7 @@ use App\Models\PostsModel;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
-class Page extends AdminController
+class Layanan extends AdminController
 {
     protected $m_posts;
     protected $m_categories;
@@ -45,9 +45,9 @@ class Page extends AdminController
         return view('layouts/master_admin', $data);
     }
 
-    public function getposts()
+    public function getList()
     {
-        $posts = $this->m_posts->getAllPosts('page');
+        $posts = $this->m_posts->getAllPosts('layanan');
         $results = [];
 
         foreach ($posts as $post) {
@@ -57,10 +57,15 @@ class Page extends AdminController
                 'author' => $post['post_author'],
                 'status' => $post['post_status'],
                 'created_at' => $post['created_at'],
+                'url' => 'layanan/' . $post['post_slug'],
             ];
         }
 
-        return $this->response->setJSON($results);
+        $data = [
+            'data' => $results
+        ];
+
+        return $this->response->setJSON($data);
     }
     public function getcategories()
     {
@@ -72,9 +77,10 @@ class Page extends AdminController
     }
 
 
-    
 
-    public function getPostById($id){
+
+    public function getPostById($id)
+    {
         $posts = $this->m_posts->getPostsId($id);
 
         return $this->response->setJSON($posts);

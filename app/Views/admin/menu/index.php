@@ -19,11 +19,11 @@
     <!-- Konten -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         <!-- Daftar Halaman -->
-        <div>
-            <div class="bg-white border rounded-md" x-data="{ hover: false }">
+        <div class="space-y-2">
+            <div class="bg-white border  rounded-md" x-data="{ hover: false }">
                 <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
                     <button @click="btnLoadprofil = !btnLoadprofil" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
-                        <span class="font-bold">Load Halaman</span>
+                        <span class="font-bold">Load Halaman Profil</span>
                         <!-- Chevron down icon -->
                         <svg class="w-4 h-4 transition-transform duration-200"
                             :class="btnLoadprofil ? 'rotate-180' : ''"
@@ -38,7 +38,7 @@
                         <div class="border-x p-4 bg-white">
                             <div class="font-bold text-gray-800" x-text="profil.title"></div>
                             <div class="text-sm text-gray-600" x-text="'URL: ' + profil.url"></div>
-                            <button @click="openModal('from-page'); setFromPage(profil.id)" class="text-blue-600 text-sm mt-2 hover:underline">
+                            <button @click="openModal('from-page'); setFromProfil(profil.id)" class="text-blue-600 text-sm mt-2 hover:underline">
                                 + Tambahkan ke Menu
                             </button>
                         </div>
@@ -48,7 +48,7 @@
             <div class="bg-white border rounded-md" x-data="{ hover: false }">
                 <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
                     <button @click="btnLoadlayanan = !btnLoadlayanan" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
-                        <span class="font-bold">Load Halaman</span>
+                        <span class="font-bold">Load Halaman Layanan</span>
                         <!-- Chevron down icon -->
                         <svg class="w-4 h-4 transition-transform duration-200"
                             :class="btnLoadlayanan ? 'rotate-180' : ''"
@@ -63,7 +63,7 @@
                         <div class="border-x p-4 bg-white">
                             <div class="font-bold text-gray-800" x-text="layanan.title"></div>
                             <div class="text-sm text-gray-600" x-text="'URL: ' + layanan.url"></div>
-                            <button @click="openModal('from-page'); setFromPage(layanan.id)" class="text-blue-600 text-sm mt-2 hover:underline">
+                            <button @click="openModal('from-page'); setFromLayanan(layanan.id)" class="text-blue-600 text-sm mt-2 hover:underline">
                                 + Tambahkan ke Menu
                             </button>
                         </div>
@@ -73,7 +73,7 @@
             <div class="bg-white border rounded-md" x-data="{ hover: false }">
                 <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
                     <button @click="btnLoadPage = !btnLoadPage" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
-                        <span class="font-bold">Load Halaman</span>
+                        <span class="font-bold">Load Halaman Lainnya</span>
                         <!-- Chevron down icon -->
                         <svg class="w-4 h-4 transition-transform duration-200"
                             :class="btnLoadPage ? 'rotate-180' : ''"
@@ -133,20 +133,11 @@
                 <h2 class="text-lg font-semibold mb-4"
                     x-text="modalType === 'create-menu' ? 'Tambah Menu Utama' :
                              (modalType === 'create-submenu' ? 'Tambah Submenu' :
-                             (modalType === 'from-page' ? 'Tambahkan Halaman ke Menu' : 'Edit Menu'))">
+                             (modalType === 'edit-submenu' ? 'Edit Submenu' :
+                             (modalType === 'from-page' ? 'Tambahkan Halaman ke Menu' : 'Edit Menu')))">
                 </h2>
 
                 <form @submit.prevent="submitMenu">
-                    <!-- Dropdown Pilih Halaman -->
-                    <div class="mb-4" x-show="modalType === 'from-page'">
-                        <label class="text-sm font-medium text-gray-700">Pilih Halaman</label>
-                        <select class="w-full border p-2 rounded" @change="setFromPage($event.target.value)">
-                            <option value="">-- Pilih Halaman --</option>
-                            <template x-for="page in pageData" :key="page.id">
-                                <option :value="page.id" x-text="page.title"></option>
-                            </template>
-                        </select>
-                    </div>
 
                     <!-- Input Nama Menu -->
                     <div class="mb-4">
@@ -179,11 +170,12 @@
 
                     <!-- Aktif -->
                     <div class="mb-4">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="form-checkbox" x-model="formData.is_active"
-                                @change="formData.is_active = $event.target.checked ? 1 : 0">
-                            <span class="ml-2 text-sm text-gray-700">Aktif</span>
-                        </label>
+                        <label class="block text-sm font-medium text-gray-700">Aktif</label>
+                        <select class="w-full border p-2 rounded" x-model="formData.is_active">
+                            <option value="">--Pilih--</option>
+                            <option value="1">Ya</option>
+                            <option value="0">Tidak</option>
+                        </select>
                     </div>
 
                     <!-- Tombol -->
@@ -208,8 +200,7 @@
                 title: '',
                 url: '',
                 order_num: 99,
-                menu_id: null,
-                is_active: 1
+                menu_id: '',
             },
             menuData: [],
             pageData: [],
@@ -235,10 +226,25 @@
 
             closeModal() {
                 this.showModal = false;
+                this.form={};
             },
 
             setFromPage(id) {
                 const page = this.pageData.find(p => p.id == id);
+                if (page) {
+                    this.formData.title = page.title;
+                    this.formData.url = page.url;
+                }
+            },
+            setFromProfil(id) {
+                const page = this.profilData.find(p => p.id == id);
+                if (page) {
+                    this.formData.title = page.title;
+                    this.formData.url = page.url;
+                }
+            },
+            setFromLayanan(id) {
+                const page = this.layananData.find(p => p.id == id);
                 if (page) {
                     this.formData.title = page.title;
                     this.formData.url = page.url;
@@ -262,7 +268,8 @@
                     this.modalType = 'edit';
                     this.showModal = true;
                     this.formData = {
-                        ...item
+                        ...item,
+                        
                     };
                 }
             },
@@ -270,11 +277,12 @@
             editsubMenu(id) {
                 const item = this.submenuData.find(m => m.id === id);
                 if (item) {
-                    this.modalType = 'edit';
-                    this.showModal = true;
+                    
                     this.formData = {
                         ...item
                     };
+                    this.modalType = 'edit-submenu';
+                    this.showModal = true;
                 }
             },
 
@@ -315,6 +323,7 @@
 
             async loadMenus() {
                 const res = await this.fetchData('/admin/menu/list');
+                console.log(res);
                 if (res) {
                     this.menuData = res.menus || [];
                     this.submenuData = res.submenus || [];
