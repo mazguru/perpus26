@@ -1,20 +1,18 @@
-<?= $this->extend('layouts/master') ?>
+ <!-- Main Content with Sidebar -->
+ <div class="container mx-auto px-4 py-8">
+   <div class="flex flex-col md:flex-row gap-8">
+     <!-- Main Content -->
+     <main class="w-full md:w-2/3">
+       
 
-<?= $this->section('content') ?>
+       <!-- Artikel -->
+       <?= $this->include('frontend/read/detail') ?>
+       <!-- Related Post -->
+       <?= $this->include('frontend/read/related-post') ?>
+       <!-- Comments Section -->
+       <?= $this->include('frontend/read/comment') ?>
+     </main>
 
-<h2 class="text-xl font-semibold mb-4">Daftar Artikel</h2>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-  <?php foreach ($artikel as $a): ?>
-    <div class="bg-white p-4 shadow rounded">
-      <?php if ($a['post_image']): ?>
-        <img src="<?= base_url()?>/media_library/posts/thumbs/<?= $a['post_image'] ?>" class="w-full h-40 object-cover mb-2">
-      <?php endif ?>
-      <h3 class="text-lg font-bold"><?= esc($a['post_title']) ?></h3>
-      <p class="text-sm text-gray-600 mb-2">by <?= esc($a['post_author']) ?></p>
-      <a href="/post/<?= $a['post_slug'] ?>" class="text-blue-600 hover:underline">Baca Selengkapnya</a>
-    </div>
-  <?php endforeach ?>
-</div>
-
-<?= $this->endSection() ?>
+     <?= $this->include('frontend/read/sidebar') ?>
+   </div>
+ </div>

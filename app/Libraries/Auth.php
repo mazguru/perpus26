@@ -100,4 +100,12 @@ class Auth
     {
         return (bool) $this->session->get('logged_in');
     }
+
+    public function restrict(): void
+    {
+        if (! $this->has_login()) {
+            redirect()->to(base_url('login'))->send();
+            exit;
+        }
+    }
 }

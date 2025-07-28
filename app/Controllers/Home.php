@@ -6,9 +6,9 @@ use App\Models\AlbumModel;
 use App\Models\PhotoModel;
 use App\Models\PostsModel;
 
-class Home extends BaseController
+class Home extends PublicController
 {
-    public function index()
+    public function getIndex()
     {
         $model = new PostsModel();
         $photos = new PhotoModel();
@@ -30,21 +30,5 @@ class Home extends BaseController
         ];
 
         return view('layouts/master', $data);
-    }
-
-
-    public function detail($slug)
-    {
-        $model = new PostsModel();
-        $artikel = $model->getPostsSlug($slug);
-
-        if (!$artikel) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException("Artikel tidak ditemukan");
-        }
-
-        return view('blog/detail', [
-            'title' => $artikel['post_title'],
-            'artikel' => $artikel
-        ]);
     }
 }

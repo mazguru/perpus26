@@ -99,7 +99,7 @@
             base_url: _BASEURL,
             async fetchMenu() {
                 try {
-                    const res = await fetch(this.base_url + 'menu_public');
+                    const res = await fetch(this.base_url + 'menupublic');
                     const data = await res.json();
                     console.log(data);
 

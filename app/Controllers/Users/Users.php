@@ -10,9 +10,18 @@ class Users extends AdminController
     protected $userModel;
     protected $employeeModel;
 
-    public function __construct()
-    {
+    public function initController(
+        \CodeIgniter\HTTP\RequestInterface $request,
+        \CodeIgniter\HTTP\ResponseInterface $response,
+        \Psr\Log\LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
+
         $this->userModel = new UserModel();
+        // 🔑 Inisialisasi Primary Key & Table
+        $this->pk = 'id';            // Ganti dengan nama kolom PK sebenarnya
+        $this->table = 'users';      // Nama tabel
+        $this->model = new \App\Models\GenericModel($this->table, $this->pk);
         helper(['form', 'url']);
     }
 
@@ -37,13 +46,11 @@ class Users extends AdminController
     public function postCreate()
     {
         $input = $this->request->getJSON(true);
-        return $this->response->setJSON([
-            'status' => 'error',
-            'errors' => 'inpu ajax json'
-        ]);
+
         if (!$this->validate($this->_rules($input))) {
             return $this->response->setJSON([
                 'status' => 'error',
+                'message' => 'data salah',
                 'errors' => $this->validator->getErrors()
             ]);
         }
@@ -57,6 +64,7 @@ class Users extends AdminController
 
         $input['user_password'] = password_hash($input['user_password'], PASSWORD_BCRYPT);
         unset($input['user_password2']);
+        $input['created_by'] = session('user_id');
 
         if ($this->userModel->insert($input)) {
             return $this->response->setJSON([
@@ -71,7 +79,7 @@ class Users extends AdminController
         ]);
     }
 
-    public function edit($id = null)
+    public function postEdit($id = null)
     {
         $user = $this->userModel->find($id);
         if (!$user) {
@@ -133,9 +141,9 @@ class Users extends AdminController
                 'label' => 'Email',
                 'rules' => 'required|valid_email|is_unique[users.user_email,id,' . $id . ']'
             ],
-            'role' => [
+            'user_type' => [
                 'label' => 'Role',
-                'rules' => 'required|in_list[administrator,waka,student,guru,batalyon,danton]'
+                'rules' => 'required|in_list[super_admin,administrator,employee,student]'
             ]
         ];
 
@@ -152,4 +160,5 @@ class Users extends AdminController
 
         return $rules;
     }
+
 }

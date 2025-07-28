@@ -27,4 +27,12 @@ class Services extends BaseService
 
         return new \App\Libraries\Auth();
     }
+    public static function token(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('token');
+        }
+
+        return new \App\Libraries\Token();
+    }
 }

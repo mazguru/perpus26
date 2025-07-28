@@ -11,8 +11,6 @@ class UserModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
 
-    // Aktifkan soft deletes
-    protected $useSoftDeletes   = true;
 
     protected $allowedFields = [
         'user_name',
@@ -32,6 +30,7 @@ class UserModel extends Model
         'created_by',
         'updated_by',
         'deleted_by',
+        'deleted_at',
         'restored_by',
         'restored_at',
         'is_deleted',
@@ -40,7 +39,6 @@ class UserModel extends Model
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
 
     // Tambahan: Ambil user berdasarkan username (untuk login)
     public function getByUsername($username)
@@ -51,7 +49,7 @@ class UserModel extends Model
 
     public function getUsers()
     {
-        return $this->where('is_deleted', 'false')->findAll(); // contoh filter
+        return $this->where('is_deleted', 0)->findAll(); // contoh filter
     }
 
     public function getAllUsers()

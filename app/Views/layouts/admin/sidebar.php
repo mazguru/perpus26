@@ -64,7 +64,7 @@ function menuManager() {
 
         async fetchMenu() {
             try {
-                const res = await fetch(this.base_url + 'admin/menu_admin');
+                const res = await fetch(this.base_url + 'menu/menuadmin');
                 const data = await res.json();
 
                 this.menus = data.map(menu => {

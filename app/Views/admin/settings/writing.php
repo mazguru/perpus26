@@ -1,7 +1,3 @@
-<?= $this->extend('layouts/master_admin') ?>
-
-<?= $this->section('content') ?>
-
 <?= $this->include('admin/settings/index') ?>
 
 
@@ -13,6 +9,3 @@
 
     
 </script>
-
-
-<?= $this->endSection() ?>

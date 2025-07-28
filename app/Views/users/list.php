@@ -1,4 +1,4 @@
-<div x-data="mgrData(config)" x-init="loadData">
+<div x-data="DM(config)" x-init="loadData">
     <div class="p-4 bg-white dark:bg-boxdark shadow-md block sm:flex items-center justify-between border-b border-gray-200">
         <div class="mb-1 w-full">
 
@@ -37,7 +37,7 @@
                 <i class="bi bi-trash3-fill mr-2"></i>
                 Hapus
             </button>
-            <button @click="confirmDeletePermanently()"
+            <button @click="confirmDeletepermanent()"
                 :disabled="selectedId.length === 0" class="px-3 py-2 text-xs font-medium text-center focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 text-white hover:bg-red-600 rounded-md inline-flex justify-center bg-red-500"
                 :class="{'opacity-50 cursor-not-allowed': selectedId.length === 0}">
                 <i class="bi bi-trash3-fill mr-2"></i>
@@ -63,26 +63,26 @@
                 <div class="mb-4">
                     <label for="user_name" class="block text-sm font-medium text-gray-700">Username</label>
                     <input type="text" id="user_name" name="user_name" x-model="form.user_name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" :disabled="modalType=='edit'">
-                    <span id="error_user_name" class="text-red-600 text-sm" x-text="errorData.user_name"></span>
+                    <span id="error_user_name" class="text-red-600 text-sm" x-text="errors.user_name"></span>
                 </div>
 
                 <div class="mb-4">
                     <label for="user_email" class="block text-sm font-medium text-gray-700">Email</label>
                     <input type="email" id="user_email" name="user_email" x-model="form.user_email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    <span id="error_user_email" class="text-red-600 text-sm" x-text="errorData.user_email"></span>
+                    <span id="error_user_email" class="text-red-600 text-sm" x-text="errors.user_email"></span>
                 </div>
 
                 <div class="mb-4">
                     <label for="user_password" class="block text-sm font-medium text-gray-700">Password</label>
                     <input type="password" id="user_password" name="user_password" x-model="form.user_password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    <span id="error_user_password" class="text-red-600 text-sm" x-text="errorData.user_password"></span>
+                    <span id="error_user_password" class="text-red-600 text-sm" x-text="errors.user_password"></span>
                 </div>
 
                 <div class="mb-4">
                     <label for="user_password2" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
                     <input type="password" id="user_password2" na
                         me="user_password2" x-model="form.user_password2" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    <span id="error_user_password2" class="text-red-600 text-sm" x-text="errorData.user_password2"></span>
+                    <span id="error_user_password2" class="text-red-600 text-sm" x-text="errors.user_password2"></span>
                 </div>
 
                 <div class="mb-4">
@@ -93,7 +93,7 @@
                         <option value="employee">Guru</option>
                         <option value="student">Student</option>
                     </select>
-                    <span id="error_user_type" class="text-red-600 text-sm" x-text="errorData.user_type"></span>
+                    <span id="error_user_type" class="text-red-600 text-sm" x-text="errors.user_type"></span>
                 </div>
 
 

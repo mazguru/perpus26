@@ -15,7 +15,7 @@ class Login extends BaseController
         $this->auth = new Auth();
     }
 
-    public function index()
+    public function getIndex()
     {
         if (session()->get('logged_in')) {
             header("Location: " . base_url('dashboard'));

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers\Settings;
 
 use App\Controllers\AdminController;
@@ -13,16 +14,18 @@ class General extends AdminController
         $this->settingsModel = new SettingsModel();
     }
 
-    public function index()
+    public function getIndex()
     {
-        return view('admin/settings/general', [
+        $data = [
+            'content' => 'admin/settings/general',
             'title' => 'Pengaturan Umum',
             'settings' => true,
             'general_settings' => true
-        ]);
+        ];
+        return view('layouts/master_admin', $data);
     }
 
-    public function getSettings()
+    public function getList()
     {
         $settings = $this->settingsModel->getSettingGroupValues('general');
         $results = [];
@@ -32,13 +35,17 @@ class General extends AdminController
                 'id' => $description['id'],
                 'setting_variable' => $key,
                 'setting_description' => $description['setting_description'],
-                'setting_value' => $value
+                'setting_value' => $value,
+                
             ];
         }
-        return $this->response->setJSON($results);
+        $data = [
+            'data' => $results
+        ];
+        return $this->response->setJSON($data);
     }
 
-    public function save()
+    public function postSave()
     {
         if (!$this->request->isAJAX()) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Request bukan AJAX.']);
@@ -66,7 +73,7 @@ class General extends AdminController
         ]);
     }
 
-    public function upload()
+    public function postUpload()
     {
         if (!$this->request->isAJAX()) return;
 
@@ -101,14 +108,12 @@ class General extends AdminController
     private function imageResize($path, $fileName, $key)
     {
         $settings = [
-            'headmaster_photo_width' => session('headmaster_photo_width') ?? 252,
-            'headmaster_photo_height' => session('headmaster_photo_height') ?? 344,
             'logo_width' => session('logo_width') ?? 120,
             'logo_height' => session('logo_height') ?? 120,
             'favicon_width' => session('favicon_width') ?? 50,
             'favicon_height' => session('favicon_height') ?? 50,
             'header_width' => session('header_width') ?? 240,
-			'header_height' => session('header_height') ?? 32
+            'header_height' => session('header_height') ?? 32
         ];
 
         $service = \Config\Services::image()

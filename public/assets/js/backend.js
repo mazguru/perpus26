@@ -49,9 +49,9 @@ function settingsApp(config) {
             }
         },
         async loadSettings() {
-            const response = await this.fetchData(_BASEURL + `${config.controller}/get_settings`);
+            const response = await this.fetchData(_BASEURL + `${config.controller}/list`);
             if (response) {
-                this.data = response;
+                this.data = response.data;
             } else {
                 Notifier.show('Error', 'Gagal memuat data.', 'error');
             }
@@ -74,10 +74,16 @@ function settingsApp(config) {
             return ['meta_description', 'meta_keywords'].includes(settingVariable);
         },
         isOptions(settingVariable) {
-            return ['site_maintenance', 'cooming_soon', 'timezone', 'recaptcha_status', 'site_cache'].includes(settingVariable);
+            return ['site_maintenance', 'cooming_soon', 'timezone', 'recaptcha_status', 'site_cache', 'default_post_status', 'default_post_visibility','default_post_discussion','comment_order','comment_registration','comment_moderation'].includes(settingVariable);
         },
         optionSources: {
+            default_post_status: { publish: "Diterbitkan", draft: "Konsep" },
+            default_post_visibility: { public: "Publik", private: "Private" },
+            default_post_discussion: { open: "Dibuka", close: "Ditutup" },
+            comment_order: { asc: "Ascending", desc: "Descending" },
             site_maintenance: { true: 'Ya', false: 'Tidak' },
+            comment_moderation: { true: 'Ya', false: 'Tidak' },
+            comment_registration: { true: 'Ya', false: 'Tidak' },
             site_cache: { true: 'Ya', false: 'Tidak' },
             timezone: {
                 'Asia/Jakarta': 'Asia/Jakarta',
@@ -163,15 +169,13 @@ function settingsApp(config) {
 
 function DM(config) {
     return {
-        isModalOpen: false,
-        isMove: config.is_move ?? false,
-        isAddUser: config.is_add_user ?? false,
+
         modalType: 'create',
         tableData: [],
         form: {},
         errors: {},
         dataTableInstance: null,
-
+        showModal: false,
         //option
         optionsData: [],
 
@@ -185,15 +189,6 @@ function DM(config) {
         deletePermanentlyUrl: _BASEURL + `${config.controller}/delete_permanently`,
 
         apiUrl: _BASEURL + `${config.controller}/list/`,
-        get formattedDateLahir() {
-            if (!this.tableData.tanggal_lahir) return '';
-            let [year, month, day] = this.tableData.tanggal_lahir.split('-');
-            let months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            return `${parseInt(day)} ${months[parseInt(month) - 1]} ${year}`;
-        },
-
-        //button
-        add_button: config.add_button ?? false,
 
         async fetchData(url, method = 'GET', body = null) {
             showLoading();
@@ -215,7 +210,7 @@ function DM(config) {
             }
         },
 
-        async loadDataTable() {
+        async loadData() {
             const response = await this.fetchData(this.apiUrl);
             console.log(response);
             if (response && response.alldata) {
@@ -233,7 +228,7 @@ function DM(config) {
         },
 
         renderDataTable() {
-            const table = document.querySelector('#table-reference');
+            const table = document.querySelector('#table-data');
 
             if (this.dataTableInstance) {
                 this.dataTableInstance.clear().rows.add(this.tableData).draw();
@@ -314,7 +309,7 @@ function DM(config) {
                     responsive: true,
                     dom: '<"md:flex justify-between mb-2"<"search-box mb-2"f><"info-box"l>>t<"md:flex justify-between mt-2"<"info-box mb-2"i><"pagination"p>>',
                     rowCallback: function (row, data) {
-                        if (data.is_deleted == 1) {
+                        if (data.is_deleted == 'true') {
                             row.classList.add("text-red-700"); // Warna merah untuk baris
                             row.style.textDecoration = "line-through";
                         }
@@ -326,7 +321,7 @@ function DM(config) {
 
         openModal(type, id = null) {
             this.modalType = type;
-            this.isModalOpen = true;
+            this.showModal = true;
 
             if (type === 'edit' && id) {
                 // Konversi id ke Number jika perlu
@@ -345,7 +340,7 @@ function DM(config) {
 
 
         closeModal() {
-            this.isModalOpen = false;
+            this.showModal = false;
             this.resetForm();
         },
 
@@ -360,80 +355,61 @@ function DM(config) {
             const response = await this.fetchData(url, method, this.form);
             if (response && response.status === 'success') {
                 Notifier.show('Berhasil!', response.message, 'success');
-                this.loadDataTable();
+                this.loadData();
                 this.closeModal();
             } else {
                 this.errors = response.errors ? response.errors : [];
                 Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
             }
         },
-
-        async deleteData(ids) {
-            const response = await this.fetchData(`${this.deleteUrl}`, 'DELETE', { id: ids });
-            if (response && response.status === 'success') {
-                Notifier.show('Berhasil!', response.message, 'success');
-                this.loadDataTable();
-                this.selectedId = [];
-                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-            } else {
-                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
-            }
+        selectAll(event) {
+            const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+            this.selectedId = event.target.checked ?
+                Array.from(checkboxes).map((checkbox) => checkbox.value) : [];
+            checkboxes.forEach((checkbox) => (checkbox.checked = event.target.checked));
         },
-        async deletePermanently(ids) {
-            const response = await this.fetchData(`${this.deletePermanentlyUrl}`, 'DELETE', { id: ids });
-            if (response && response.status === 'success') {
-                Notifier.show('Berhasil!', response.message, 'success');
-                this.loadDataTable();
-                this.selectedId = [];
-                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-            } else {
-                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
-            }
-        },
-
         confirmDelete(id) {
-            Notifier.show({
-                title: 'Yakin ingin menghapus?',
-                text: 'Data yang dihapus tidak dapat dikembalikan!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, hapus!',
-            }).then((result) => {
-                if (result.isConfirmed) this.deleteData([id]);
-                this.loadDataTable();
-            });
+            const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?');
+            if (!confirmDelete) return;
+            this.deleteData([id]);
         },
+
         confirmDeleteMultiple() {
-            Notifier.show({
-                title: 'Yakin ingin menghapus?',
-                text: 'Data yang dihapus kemungkinan tidak dapat dikembalikan!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, hapus!',
-            }).then((result) => {
-                if (result.isConfirmed) this.deleteData(this.selectedId);
-            });
+            const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?');
+            if (!confirmDelete) return;
+            this.deleteData(this.selectedId);
         },
-        confirmDeletePermanently() {
-            Notifier.show({
-                title: 'Yakin ingin menghapus?',
-                text: 'Data yang dihapus kemungkinan tidak dapat dikembalikan!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, hapus!',
-            }).then((result) => {
-                if (result.isConfirmed) this.deletePermanently(this.selectedId);
+        async deleteData(ids) {
+
+            const response = await this.fetchData(_BASEURL + `${config.controller}/delete`, 'POST', {
+                id: ids
             });
-        },
-        async restoreData(ids) {
-            const response = await this.fetchData(`${this.restoreUrl}`, 'POST', { id: ids });
+
             if (response && response.status === 'success') {
                 Notifier.show('Berhasil!', response.message, 'success');
-                this.loadDataTable();
+                this.loadData();
+                this.selectedId = [];
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            } else {
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+            }
+        },
+
+        confirmDeletepermanent(id) {
+            const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?');
+            if (!confirmDelete) return;
+            this.deleteDataPermanent([id]);
+        },
+        async deleteDataPermanent(ids) {
+            const response = await this.fetchData(_BASEURL + `${config.controller}/deletepermanent`, 'POST', {
+                id: ids
+            });
+
+            if (response && response.status === 'success') {
+                Notifier.show('Berhasil!', response.message, 'success');
+                this.loadData();
                 this.selectedId = [];
                 document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                     checkbox.checked = false;
@@ -443,126 +419,31 @@ function DM(config) {
             }
         },
         confirmRestore(id) {
-            Notifier.show({
-                title: 'Yakin ingin mengembalikan?',
-                text: 'Data ini akan didikembalikan.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Kembalikan!',
-                cancelButtonText: 'Batal',
-            }).then((result) => {
-                if (result.isConfirmed) this.restoreData([id]);
-                this.loadDataTable();
-            });
+            const confirmDelete = confirm('Apakah Anda yakin ingin mengembalikan data ini?');
+            if (!confirmDelete) return;
+            this.restoreData([id]);
         },
         confirmRestoreMultiple() {
-            Notifier.show({
-                title: 'Yakin ingin mengembalikan?',
-                text: 'Data ini akan didikembalikan.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Kembalikan!',
-                cancelButtonText: 'Batal',
-            }).then((result) => {
-                if (result.isConfirmed) this.restoreData(this.selectedId);
+            const confirmDelete = confirm('Apakah Anda yakin ingin mengembalikan data ini?');
+            if (!confirmDelete) return;
+            this.restoreData(this.selectedId);
+        },
+        async restoreData(ids) {
+            const response = await this.fetchData(_BASEURL + `${config.controller}/restore`, 'POST', {
+                id: ids
             });
-        },
-        selectAll(event) {
-            const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
-            this.selectedId = event.target.checked ?
-                Array.from(checkboxes).map((checkbox) => checkbox.value) : [];
-            checkboxes.forEach((checkbox) => (checkbox.checked = event.target.checked));
-        },
-        //Untuk pindah students//
-        classId: '',
-        academicYearsMove: null,
-        isModalMoveStudents: false,
-        classes: [],
-        openMoveModal() {
-            if (!this.selectedId.length) {
-                Notifier.show('Warning', 'Silakan pilih setidaknya satu siswa.', 'warning');
-                return;
-            }
-            this.loadOptions();
-            this.openModalMoveStudents();
-
-        },
-
-        openModalMoveStudents() {
-            this.isModalMoveStudents = true;
-        },
-
-        closeModalMoveStudents() {
-            this.isModalMoveStudents = false;
-            this.selectedId = [];
-        },
-
-        filterClasses() {
-            const allClasses = this.optionsData.classes;
-            this.classes = allClasses.filter(
-                (cls) => cls.academic_year_id == this.academicYearsMove
-            );
-
-            console.log('Tahun ajaran yang dipilih:', this.academicYearsMove);
-            console.log('Semua kelas tersedia:', allClasses);
-            console.log('Kelas setelah difilter:', this.classes);
-        },
-        async submitMoveStudent() {
-            if (!this.academicYearsMove || !this.classId) {
-                Notifier.show('Warning', 'Silakan pilih tahun ajaran dan kelas.', 'warning');
-                return;
-            }
-
-            const response = await this.fetchData(_BASEURL + `${config.controller}/move_to_class`,
-                'POST', {
-                student_ids: this.selectedId,
-                academic_year: this.academicYearsMove,
-                class_id: this.classId
-            });
-
-            if (response?.status === 'success') {
+            if (response && response.status === 'success') {
                 Notifier.show('Berhasil!', response.message, 'success');
-
-                this.closeModalMoveStudents(); // Harus pakai ()
-                this.loadDataTable(); // Harus pakai ()
+                this.loadData();
+                this.selectedId = [];
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
             } else {
-                Notifier.show('Gagal!', response?.message || 'Kesalahan tidak diketahui.', 'red');
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
             }
         },
 
-
-        //end pindah students
-
-        async addUsersData(sIds) {
-            const response = await this.fetchData(_BASEURL + `${config.controller}/add_users`,
-                'POST', {
-                ids: sIds
-            }
-            );
-
-            if (response?.status === 'success') {
-                Notifier.show('Berhasil!', response.message, 'success');
-                this.closeModal();
-                this.loadDataTable();
-            } else {
-                Notifier.show('Gagal!', response?.message || 'Kesalahan tidak diketahui.', 'error');
-            }
-        },
-
-        // Fungsi untuk konversi data siswa terpilih menjadi pengguna
-        confirmAddUsersMultiple() {
-            if (this.selectedId.length === 0) {
-                SwalUtils.warning('Silakan pilih setidaknya satu siswa.', 'Tidak Ada Siswa Dipilih');
-                return;
-            }
-
-            SwalUtils.confirm(
-                'Yakin ingin mengonversi data siswa terpilih menjadi pengguna?', 'Konfirmasi',
-                () => {
-                    this.addUsersData(this.selectedId); // Mengirimkan array ID siswa terpilih
-                }
-            );
-        },
     };
 }
 
@@ -805,6 +686,7 @@ function mgrData(config) {
                 Notifier.show('Berhasil', res.message, 'success');
                 this.loadData();
             } else {
+                this.errorData = res?.errors || ''
                 Notifier.show('Error', res?.message || 'Gagal menyimpan data', 'error');
             }
         },

@@ -6,7 +6,7 @@ use App\Models\PostsModel;
 
 class Posts extends PublicController
 {
-    public function index()
+    public function getndex()
     {
         $model = new PostsModel();
         $data = [

@@ -6,7 +6,7 @@ use App\Controllers\AdminController;
 
 class Dashboard extends AdminController
 {
-    public function index()
+    public function getIndex()
     {
         // Cek apakah user sudah login
         if (!session()->has('user_name')) {
