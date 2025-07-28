@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers\Admin;
+namespace App\Controllers\Users;
 
-use App\Controllers\BaseController;
+use App\Controllers\AdminController;
 use App\Models\UserModel;
 
-class Users extends BaseController
+class Users extends AdminController
 {
     protected $userModel;
     protected $employeeModel;
@@ -16,7 +16,7 @@ class Users extends BaseController
         helper(['form', 'url']);
     }
 
-    public function index()
+    public function getIndex()
     {
         $data = [
             'title' => 'Daftar Pengguna',
@@ -27,17 +27,20 @@ class Users extends BaseController
         return view('layouts/master_admin', $data);
     }
 
-    public function list()
+    public function getList()
     {
         $users = $this->userModel->getUsers();
         $allUsers = $this->userModel->getAllUsers();
         return $this->response->setJSON(['data' => $users, 'alldata' => $allUsers]);
     }
 
-    public function create()
+    public function postCreate()
     {
         $input = $this->request->getJSON(true);
-
+        return $this->response->setJSON([
+            'status' => 'error',
+            'errors' => 'inpu ajax json'
+        ]);
         if (!$this->validate($this->_rules($input))) {
             return $this->response->setJSON([
                 'status' => 'error',

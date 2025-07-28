@@ -1,4 +1,4 @@
-<div x-data="DM(config)" x-init="loadDataTable">
+<div x-data="mgrData(config)" x-init="loadData">
     <div class="p-4 bg-white dark:bg-boxdark shadow-md block sm:flex items-center justify-between border-b border-gray-200">
         <div class="mb-1 w-full">
 
@@ -22,9 +22,37 @@
             </div>
         </div>
     </div>
-    <?= $this->include('references/table_references') ?>
+    <div class="bg-white dark:bg-boxdark shadow-md rounded-b border-b p-4 table-striped table-hover">
+        <table id="table-data" class="table-auto w-full border-collapse border">
+        </table>
+        <div class="mb-4">
+            <p class="text-gray-600">
+                <strong x-text="selectedId.length"></strong> data dipilih
+            </p>
+        </div>
+        <div class="md:flex space-x-1 space-y-1 pl-0 sm:pl-2 mt-3 sm:mt-0 gap-4">
+            <button @click="confirmDeleteMultiple()"
+                :disabled="selectedId.length === 0" class="px-3 py-2 text-xs font-medium text-center focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 text-white hover:bg-red-600 rounded-md inline-flex justify-center bg-red-500"
+                :class="{'opacity-50 cursor-not-allowed': selectedId.length === 0}">
+                <i class="bi bi-trash3-fill mr-2"></i>
+                Hapus
+            </button>
+            <button @click="confirmDeletePermanently()"
+                :disabled="selectedId.length === 0" class="px-3 py-2 text-xs font-medium text-center focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 text-white hover:bg-red-600 rounded-md inline-flex justify-center bg-red-500"
+                :class="{'opacity-50 cursor-not-allowed': selectedId.length === 0}">
+                <i class="bi bi-trash3-fill mr-2"></i>
+                Hapus Permanen
+            </button>
+            <button @click="confirmRestoreMultiple()"
+                :disabled="selectedId.length === 0" class="px-3 py-2 text-xs font-medium text-center focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 text-white hover:bg-gray-600 rounded-md inline-flex justify-center bg-gray-500"
+                :class="{'opacity-50 cursor-not-allowed': selectedId.length === 0}">
+                <i class="bi bi-database-up mr-2"></i>
+                Restore
+            </button>
+        </div>
+    </div>
     <!-- Modal -->
-    <div x-show="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-999" x-transition>
+    <div x-show="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-999" x-transition>
         <div class="bg-white dark:bg-boxdark rounded-lg p-8 w-full md:w-1/2 max-h-screen overflow-y-auto">
 
             <!-- Judul Modal -->
@@ -34,38 +62,38 @@
             <form @submit.prevent="submitForm" class=''>
                 <div class="mb-4">
                     <label for="user_name" class="block text-sm font-medium text-gray-700">Username</label>
-                    <input type="email" id="user_name" name="user_name" x-model="form.user_name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" :disabled="modalType=='edit'">
-                    <span id="error_user_name" class="text-red-600 text-sm" x-text="errors.user_name"></span>
+                    <input type="text" id="user_name" name="user_name" x-model="form.user_name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" :disabled="modalType=='edit'">
+                    <span id="error_user_name" class="text-red-600 text-sm" x-text="errorData.user_name"></span>
                 </div>
 
                 <div class="mb-4">
                     <label for="user_email" class="block text-sm font-medium text-gray-700">Email</label>
                     <input type="email" id="user_email" name="user_email" x-model="form.user_email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    <span id="error_user_email" class="text-red-600 text-sm" x-text="errors.user_email"></span>
+                    <span id="error_user_email" class="text-red-600 text-sm" x-text="errorData.user_email"></span>
                 </div>
 
                 <div class="mb-4">
                     <label for="user_password" class="block text-sm font-medium text-gray-700">Password</label>
                     <input type="password" id="user_password" name="user_password" x-model="form.user_password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    <span id="error_user_password" class="text-red-600 text-sm" x-text="errors.user_password"></span>
+                    <span id="error_user_password" class="text-red-600 text-sm" x-text="errorData.user_password"></span>
                 </div>
 
                 <div class="mb-4">
                     <label for="user_password2" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
-                    <input type="password" id="user_password2" name="user_password2" x-model="form.user_password2" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    <span id="error_user_password2" class="text-red-600 text-sm" x-text="errors.user_password2"></span>
+                    <input type="password" id="user_password2" na
+                        me="user_password2" x-model="form.user_password2" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                    <span id="error_user_password2" class="text-red-600 text-sm" x-text="errorData.user_password2"></span>
                 </div>
 
                 <div class="mb-4">
                     <label for="user_type" class="block text-sm font-medium text-gray-700">Role</label>
                     <select id="user_type" name="user_type" x-model="form.user_type" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                        <option value="super_user">Super Admin</option>
                         <option value="administrator">Administrator</option>
                         <option value="employee">Guru</option>
                         <option value="student">Student</option>
-                        <option value="danton">Ketua Kelas</option>
-                        <option value="batalyon">Staf Batalyon</option>
                     </select>
-                    <span id="error_user_type" class="text-red-600 text-sm" x-text="errors.user_type"></span>
+                    <span id="error_user_type" class="text-red-600 text-sm" x-text="errorData.user_type"></span>
                 </div>
 
 
@@ -81,9 +109,8 @@
 </div>
 <script>
     const config = {
-        controller: 'admin/users',
-        columns: [
-            {
+        controller: 'users/users',
+        columns: [{
                 key: 'user_name',
                 label: 'Username'
             },

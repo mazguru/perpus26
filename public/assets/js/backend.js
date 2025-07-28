@@ -53,7 +53,7 @@ function settingsApp(config) {
             if (response) {
                 this.data = response;
             } else {
-                Swal.fire('Error', 'Gagal memuat data.', 'error');
+                Notifier.show('Error', 'Gagal memuat data.', 'error');
             }
         },
         getFieldType(variable) {
@@ -112,7 +112,7 @@ function settingsApp(config) {
         async saveEdit() {
 
             if (this.isUploadField(this.editItem.setting_variable) && !this.selectedFile) {
-                Swal.fire('Error', 'File harus diunggah untuk pengaturan ini.', 'error');
+                Notifier.show('Error', 'File harus diunggah untuk pengaturan ini.', 'error');
                 return;
             }
             this.updateSettingValue();
@@ -139,7 +139,7 @@ function settingsApp(config) {
                 this.selectedFile = file; // Simpan file jika valid
             } else {
                 this.selectedFile = null; // Reset jika file tidak valid
-                Swal.fire('Error', 'File harus berupa JPG, JPEG, PNG, atau GIF.', 'error');
+                Notifier.show('Error', 'File harus berupa JPG, JPEG, PNG, atau GIF.', 'error');
             }
         },
         async uploadFile() {
@@ -336,7 +336,7 @@ function DM(config) {
                 if (dataModal) {
                     this.form = { ...dataModal };
                 } else {
-                    Swal.fire('Error', `Data dengan ID ${id} tidak ditemukan.`, 'error');
+                    Notifier.show('Error', `Data dengan ID ${id} tidak ditemukan.`, 'error');
                 }
             } else {
                 this.resetForm();
@@ -359,44 +359,44 @@ function DM(config) {
 
             const response = await this.fetchData(url, method, this.form);
             if (response && response.status === 'success') {
-                Swal.fire('Berhasil!', response.message, 'success');
+                Notifier.show('Berhasil!', response.message, 'success');
                 this.loadDataTable();
                 this.closeModal();
             } else {
                 this.errors = response.errors ? response.errors : [];
-                Swal.fire('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
             }
         },
 
         async deleteData(ids) {
             const response = await this.fetchData(`${this.deleteUrl}`, 'DELETE', { id: ids });
             if (response && response.status === 'success') {
-                Swal.fire('Berhasil!', response.message, 'success');
+                Notifier.show('Berhasil!', response.message, 'success');
                 this.loadDataTable();
                 this.selectedId = [];
                 document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                     checkbox.checked = false;
                 });
             } else {
-                Swal.fire('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
             }
         },
         async deletePermanently(ids) {
             const response = await this.fetchData(`${this.deletePermanentlyUrl}`, 'DELETE', { id: ids });
             if (response && response.status === 'success') {
-                Swal.fire('Berhasil!', response.message, 'success');
+                Notifier.show('Berhasil!', response.message, 'success');
                 this.loadDataTable();
                 this.selectedId = [];
                 document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                     checkbox.checked = false;
                 });
             } else {
-                Swal.fire('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
             }
         },
 
         confirmDelete(id) {
-            Swal.fire({
+            Notifier.show({
                 title: 'Yakin ingin menghapus?',
                 text: 'Data yang dihapus tidak dapat dikembalikan!',
                 icon: 'warning',
@@ -408,7 +408,7 @@ function DM(config) {
             });
         },
         confirmDeleteMultiple() {
-            Swal.fire({
+            Notifier.show({
                 title: 'Yakin ingin menghapus?',
                 text: 'Data yang dihapus kemungkinan tidak dapat dikembalikan!',
                 icon: 'warning',
@@ -419,7 +419,7 @@ function DM(config) {
             });
         },
         confirmDeletePermanently() {
-            Swal.fire({
+            Notifier.show({
                 title: 'Yakin ingin menghapus?',
                 text: 'Data yang dihapus kemungkinan tidak dapat dikembalikan!',
                 icon: 'warning',
@@ -432,18 +432,18 @@ function DM(config) {
         async restoreData(ids) {
             const response = await this.fetchData(`${this.restoreUrl}`, 'POST', { id: ids });
             if (response && response.status === 'success') {
-                Swal.fire('Berhasil!', response.message, 'success');
+                Notifier.show('Berhasil!', response.message, 'success');
                 this.loadDataTable();
                 this.selectedId = [];
                 document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                     checkbox.checked = false;
                 });
             } else {
-                Swal.fire('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
             }
         },
         confirmRestore(id) {
-            Swal.fire({
+            Notifier.show({
                 title: 'Yakin ingin mengembalikan?',
                 text: 'Data ini akan didikembalikan.',
                 icon: 'warning',
@@ -456,7 +456,7 @@ function DM(config) {
             });
         },
         confirmRestoreMultiple() {
-            Swal.fire({
+            Notifier.show({
                 title: 'Yakin ingin mengembalikan?',
                 text: 'Data ini akan didikembalikan.',
                 icon: 'warning',
@@ -480,7 +480,7 @@ function DM(config) {
         classes: [],
         openMoveModal() {
             if (!this.selectedId.length) {
-                Swal.fire('Warning', 'Silakan pilih setidaknya satu siswa.', 'warning');
+                Notifier.show('Warning', 'Silakan pilih setidaknya satu siswa.', 'warning');
                 return;
             }
             this.loadOptions();
@@ -509,7 +509,7 @@ function DM(config) {
         },
         async submitMoveStudent() {
             if (!this.academicYearsMove || !this.classId) {
-                Swal.fire('Warning', 'Silakan pilih tahun ajaran dan kelas.', 'warning');
+                Notifier.show('Warning', 'Silakan pilih tahun ajaran dan kelas.', 'warning');
                 return;
             }
 
@@ -541,9 +541,11 @@ function DM(config) {
             );
 
             if (response?.status === 'success') {
-                Swal.fire('Berhasil!', response.message, 'success').then(() => location.reload());
+                Notifier.show('Berhasil!', response.message, 'success');
+                this.closeModal();
+                this.loadDataTable();
             } else {
-                Swal.fire('Gagal!', response?.message || 'Kesalahan tidak diketahui.', 'error');
+                Notifier.show('Gagal!', response?.message || 'Kesalahan tidak diketahui.', 'error');
             }
         },
 
@@ -862,7 +864,7 @@ function postingan(config) {
                 this.tableData = response;
                 this.renderDataTable();
             } else {
-                Swal.fire('Error', 'Gagal memuat data.', 'error');
+                Notifier.show('Error', 'Gagal memuat data.', 'error');
             }
         },
 

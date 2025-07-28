@@ -101,7 +101,7 @@ return [
         'submenu' => [
             [
                 'title' => 'Data User',
-                'route' => 'admin/users',
+                'route' => 'users/users',
                 'roles' => ['super_user']
             ],
             [
