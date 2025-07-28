@@ -45,7 +45,7 @@ class Page extends AdminController
         return view('layouts/master_admin', $data);
     }
 
-    public function getposts()
+    public function getList()
     {
         $posts = $this->m_posts->getAllPosts('page');
         $results = [];
@@ -57,10 +57,15 @@ class Page extends AdminController
                 'author' => $post['post_author'],
                 'status' => $post['post_status'],
                 'created_at' => $post['created_at'],
+                'url'=>'page/'.$post['post_slug'],
             ];
         }
 
-        return $this->response->setJSON($results);
+        $data =[
+            'data' => $results
+        ];
+
+        return $this->response->setJSON($data);
     }
     public function getcategories()
     {

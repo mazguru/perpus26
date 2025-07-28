@@ -48,15 +48,23 @@ class Menu extends BaseController
     {
         $data = $this->request->getJSON(true);
 
-        if (isset($data['menu_id']) || isset($data['parent_id'])) {
+        // Normalisasi nilai menu_id dan parent_id
+        $isSubmenu = !empty($data['menu_id']) || !empty($data['parent_id']);
+        $parentId = $data['menu_id'] ?? $data['parent_id'] ?? null;
+
+        // Siapkan data umum
+        $commonData = [
+            'title'      => $data['title'] ?? '',
+            'url'        => $data['url'] ?? '',
+            'order_num'  => $data['order_num'] ?? 0,
+            'is_active'  => isset($data['is_active']) ? (int) $data['is_active'] : 1,
+        ];
+
+        if ($isSubmenu) {
             // Tangani sebagai submenu
-            $save = [
-                'title' => $data['title'],
-                'url' => $data['url'],
-                'menu_id' => $data['menu_id'] ?? $data['parent_id'],
-                'order_num' => $data['order_num'],
-                'is_active' => $data['is_active']
-            ];
+            $save = array_merge($commonData, [
+                'menu_id' => $parentId,
+            ]);
 
             if (!empty($data['id'])) {
                 $this->submenuModel->update($data['id'], $save);
@@ -65,21 +73,17 @@ class Menu extends BaseController
             }
         } else {
             // Tangani sebagai menu utama
-            $save = [
-                'title' => $data['title'],
-                'url' => $data['url'],
-                'is_active' => $data['is_active'],
-                'order_num' => $data['order_num']
-            ];
-
             if (!empty($data['id'])) {
-                $this->menuModel->update($data['id'], $save);
+                $this->menuModel->update($data['id'], $commonData);
             } else {
-                $this->menuModel->insert($save);
+                $this->menuModel->insert($commonData);
             }
         }
 
-        return $this->response->setJSON(['status' => 'success', 'message' => 'data tersimpan']);
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Data berhasil disimpan'
+        ]);
     }
 
     public function delete($id)

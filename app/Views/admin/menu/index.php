@@ -1,96 +1,195 @@
 <div x-data="menuMg()" x-init="init()">
-    <div class="p-4 bg-white dark:bg-boxdark shadow-md block sm:flex items-center justify-between border-b border-gray-200">
-        <div class="mb-1 w-full">
-
-            <div class="mb-4">
-                <h1 class="text-xl sm:text-2xl font-semibold"><?= $title ?></h1>
+    <!-- Header -->
+    <div class="p-4 bg-white dark:bg-boxdark shadow-md border-b border-gray-200">
+        <div class="mb-4">
+            <h1 class="text-xl sm:text-2xl font-semibold"><?= $title ?></h1>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div class="col-span-5">
+                <p class="text-sm text-gray-600">Menampilkan data menu</p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-6 gap-4 md:justify-between">
-                <div class="sm:flex items-center sm:divide-x sm:divide-gray-100 mb-3 sm:mb-0 col-span-5">
-                    <p>Menampilkan data menu</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:justify-end gap-4">
-                    <button @click="openModal('create-menu')" class="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto">
-                        <i class="bi bi-plus-lg font-bold text-[14pt] mr-2"></i>
-                        Tambah Menu
-                    </button>
-
-
-                </div>
+            <div>
+                <button @click="openModal('create-menu')" class="text-white bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded text-sm w-full sm:w-auto">
+                    <i class="bi bi-plus-lg mr-2"></i> Tambah Menu
+                </button>
             </div>
         </div>
     </div>
-    <!-- Daftar Menu & Submenu -->
-    <template x-for="menu in menuData" :key="menu.id">
-        <div class="border p-4 my-2 bg-white rounded">
-            <div class="font-bold" x-text="menu.order_num + '. ' + menu.title "></div>
-            <div class="flex">
-                <div class="text-sm text-gray-600 mr-2" x-text="'url (' + menu.url + ')'"></div>
-                <a :href="_BASEURL + menu.url" class="text-sm text-primary hover:text-blue-500" target="_blank">Lihat</a>
-            </div>
-            <div class="mt-1">
-                <button @click="openModal('create-submenu', menu.id)" class="text-blue-500 text-sm">+ Tambah Submenu</button>
-                <button @click="editMenu(menu.id)" class="text-yellow-500 text-sm ml-2">Edit</button>
-                <button @click="deleteMenu(menu.id, 'menu')" class="text-red-500 text-sm ml-2">Hapus</button>
-            </div>
 
-            <!-- Submenu -->
-            <template x-for="submenu in submenuData.filter(s => s.menu_id === menu.id)" :key="submenu.id">
-                <div class="ml-4 mt-2 border-l-2 pl-2">
-                    <div class="flex">
-                        <div class="text-sm mr-2" x-text="submenu.title + ' (' + submenu.url + ')' "></div>
-                        <a :href="_BASEURL + submenu.url" class="text-sm text-primary hover:text-blue-500" target="_blank">Lihat</a>
+    <!-- Konten -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <!-- Daftar Halaman -->
+        <div>
+            <div class="bg-white border rounded-md" x-data="{ hover: false }">
+                <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
+                    <button @click="btnLoadprofil = !btnLoadprofil" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
+                        <span class="font-bold">Load Halaman</span>
+                        <!-- Chevron down icon -->
+                        <svg class="w-4 h-4 transition-transform duration-200"
+                            :class="btnLoadprofil ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <div x-show="btnLoadprofil">
+                    <template x-for="profil in profilData" :key="profil.id">
+                        <div class="border-x p-4 bg-white">
+                            <div class="font-bold text-gray-800" x-text="profil.title"></div>
+                            <div class="text-sm text-gray-600" x-text="'URL: ' + profil.url"></div>
+                            <button @click="openModal('from-page'); setFromPage(profil.id)" class="text-blue-600 text-sm mt-2 hover:underline">
+                                + Tambahkan ke Menu
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="bg-white border rounded-md" x-data="{ hover: false }">
+                <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
+                    <button @click="btnLoadlayanan = !btnLoadlayanan" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
+                        <span class="font-bold">Load Halaman</span>
+                        <!-- Chevron down icon -->
+                        <svg class="w-4 h-4 transition-transform duration-200"
+                            :class="btnLoadlayanan ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <div x-show="btnLoadlayanan">
+                    <template x-for="layanan in layananData" :key="layanan.id">
+                        <div class="border-x p-4 bg-white">
+                            <div class="font-bold text-gray-800" x-text="layanan.title"></div>
+                            <div class="text-sm text-gray-600" x-text="'URL: ' + layanan.url"></div>
+                            <button @click="openModal('from-page'); setFromPage(layanan.id)" class="text-blue-600 text-sm mt-2 hover:underline">
+                                + Tambahkan ke Menu
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="bg-white border rounded-md" x-data="{ hover: false }">
+                <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
+                    <button @click="btnLoadPage = !btnLoadPage" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
+                        <span class="font-bold">Load Halaman</span>
+                        <!-- Chevron down icon -->
+                        <svg class="w-4 h-4 transition-transform duration-200"
+                            :class="btnLoadPage ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <div x-show="btnLoadPage">
+                    <template x-for="page in pageData" :key="page.id">
+                        <div class="border-x p-4 bg-white">
+                            <div class="font-bold text-gray-800" x-text="page.title"></div>
+                            <div class="text-sm text-gray-600" x-text="'URL: ' + page.url"></div>
+                            <button @click="openModal('from-page'); setFromPage(page.id)" class="text-blue-600 text-sm mt-2 hover:underline">
+                                + Tambahkan ke Menu
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daftar Menu & Submenu -->
+        <div class="col-span-2">
+            <template x-for="menu in menuData" :key="menu.id">
+                <div class="border p-4 bg-white rounded shadow-sm mb-4">
+                    <div class="font-bold text-gray-800" x-text="menu.order_num + '. ' + menu.title"></div>
+                    <div class="text-sm text-gray-600" x-text="'URL: ' + menu.url"></div>
+                    <div class="mt-2">
+                        <a :href="_BASEURL + menu.url" class="text-blue-600 text-sm hover:underline" target="_blank">Lihat</a>
+                        <button @click="openModal('create-submenu', menu.id)" class="text-blue-500 text-sm ml-2">+ Submenu</button>
+                        <button @click="editMenu(menu.id)" class="text-yellow-500 text-sm ml-2">Edit</button>
+                        <button @click="deleteMenu(menu.id, 'menu')" class="text-red-500 text-sm ml-2">Hapus</button>
                     </div>
-                    <div class="mt-1">
-                        <button @click="editsubMenu(submenu.id)" class="text-yellow-500 text-sm ml-2">Edit</button>
-                        <button @click="deleteMenu(submenu.id, 'submenu')" class="text-red-500 text-sm ml-2">Hapus</button>
-                    </div>
+
+                    <!-- Submenu -->
+                    <template x-for="submenu in submenuData.filter(s => s.menu_id === menu.id)" :key="submenu.id">
+                        <div class="ml-4 mt-2 border-l-2 pl-2">
+                            <div class="text-sm text-gray-700" x-text="submenu.title + ' (' + submenu.url + ')' "></div>
+                            <div>
+                                <a :href="_BASEURL + submenu.url" class="text-blue-600 text-sm hover:underline" target="_blank">Lihat</a>
+                                <button @click="editsubMenu(submenu.id)" class="text-yellow-500 text-sm ml-2">Edit</button>
+                                <button @click="deleteMenu(submenu.id, 'submenu')" class="text-red-500 text-sm ml-2">Hapus</button>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </template>
         </div>
-    </template>
+    </div>
 
-    <!-- Modal Tambah/Edit Menu/Submenu -->
+    <!-- Modal -->
     <template x-if="showModal">
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-                <h2 class="text-lg font-bold mb-4" x-text="modalType === 'create-menu' ? 'Tambah Menu Utama' : (modalType === 'create-submenu' ? 'Tambah Submenu' : 'Edit Menu')"></h2>
+                <h2 class="text-lg font-semibold mb-4"
+                    x-text="modalType === 'create-menu' ? 'Tambah Menu Utama' :
+                             (modalType === 'create-submenu' ? 'Tambah Submenu' :
+                             (modalType === 'from-page' ? 'Tambahkan Halaman ke Menu' : 'Edit Menu'))">
+                </h2>
+
                 <form @submit.prevent="submitMenu">
-                    <!-- Nama Menu -->
+                    <!-- Dropdown Pilih Halaman -->
+                    <div class="mb-4" x-show="modalType === 'from-page'">
+                        <label class="text-sm font-medium text-gray-700">Pilih Halaman</label>
+                        <select class="w-full border p-2 rounded" @change="setFromPage($event.target.value)">
+                            <option value="">-- Pilih Halaman --</option>
+                            <template x-for="page in pageData" :key="page.id">
+                                <option :value="page.id" x-text="page.title"></option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <!-- Input Nama Menu -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">Nama</label>
+                        <label class="block text-sm font-medium text-gray-700">Nama Menu</label>
                         <input type="text" class="w-full border p-2 rounded" x-model="formData.title" required>
                     </div>
 
-                    <!-- URL -->
+                    <!-- Input URL -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">URL</label>
                         <input type="text" class="w-full border p-2 rounded" x-model="formData.url" required>
                     </div>
-                    <!-- URL -->
+
+                    <!-- Pilih Menu Induk -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Menu Induk (jika sebagai submenu)</label>
+                        <select class="w-full border p-2 rounded" x-model="formData.menu_id">
+                            <option value="">-- Sebagai Menu Utama --</option>
+                            <template x-for="menu in menuData" :key="menu.id">
+                                <option :value="menu.id" x-text="menu.title"></option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <!-- Urutan -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Urutan</label>
                         <input type="number" class="w-full border p-2 rounded" x-model="formData.order_num" required>
                     </div>
 
-                    <!-- Tampilkan Parent ID (hidden) -->
-                    <input type="hidden" x-model="formData.id">
-
                     <!-- Aktif -->
                     <div class="mb-4">
                         <label class="inline-flex items-center">
-                            <input type="checkbox" class="form-checkbox" x-model="formData.is_active" :checked="formData.is_active == 1"
-                                @change="formData.is_active = $event.target.checked ? 1 : 0" :true-value="1" :false-value="0">
+                            <input type="checkbox" class="form-checkbox" x-model="formData.is_active"
+                                @change="formData.is_active = $event.target.checked ? 1 : 0">
                             <span class="ml-2 text-sm text-gray-700">Aktif</span>
                         </label>
                     </div>
 
                     <!-- Tombol -->
                     <div class="flex justify-end space-x-2">
-                        <button type="button" @click="closeModal" class="px-4 py-2 text-sm bg-gray-400 text-white rounded">Batal</button>
-                        <button type="submit" class="px-4 py-2 text-sm bg-blue-600 text-white rounded">Simpan</button>
+                        <button type="button" @click="closeModal" class="bg-gray-400 text-white px-4 py-2 rounded">Batal</button>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Simpan</button>
                     </div>
                 </form>
             </div>
@@ -101,17 +200,25 @@
 <script>
     function menuMg() {
         return {
+            _BASEURL: '<?= base_url() ?>',
             showModal: false,
             modalType: '',
             formData: {
                 id: null,
                 title: '',
                 url: '',
-                menu_id: null, // NULL = menu utama, isi = submenu
-                is_active: true
+                order_num: 99,
+                menu_id: null,
+                is_active: 1
             },
             menuData: [],
+            pageData: [],
+            profilData: [],
+            layananData: [],
             submenuData: [],
+            btnLoadPage: false,
+            btnLoadprofil: false,
+            btnLoadlayanan: false,
 
             openModal(type, parentId = null) {
                 this.modalType = type;
@@ -120,29 +227,32 @@
                     id: null,
                     title: '',
                     url: '',
+                    order_num: 99,
                     menu_id: parentId,
-                    is_active: true
+                    is_active: 1
                 };
             },
 
             closeModal() {
                 this.showModal = false;
             },
-            submitSMenu() {
-                alert(JSON.stringify(this.formData))
-            },
-            async submitMenu() {
-                const url = '/admin/menu/save';
-                const method = 'POST';
 
-                const response = await this.fetchData(url, method, this.formData);
+            setFromPage(id) {
+                const page = this.pageData.find(p => p.id == id);
+                if (page) {
+                    this.formData.title = page.title;
+                    this.formData.url = page.url;
+                }
+            },
+
+            async submitMenu() {
+                const response = await this.fetchData('/admin/menu/save', 'POST', this.formData);
                 if (response && response.status === 'success') {
                     Notifier.show('Berhasil!', response.message, 'success');
                     this.loadMenus();
                     this.closeModal();
                 } else {
-                    this.errors = response.errors ? response.errors : [];
-                    Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+                    Notifier.show('Gagal!', response?.message || 'Terjadi kesalahan.', 'error');
                 }
             },
 
@@ -156,6 +266,7 @@
                     };
                 }
             },
+
             editsubMenu(id) {
                 const item = this.submenuData.find(m => m.id === id);
                 if (item) {
@@ -172,24 +283,17 @@
                     fetch(`/admin/menu/delete/${id}?type=${type}`, {
                             method: 'GET',
                             headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-Requested-With': 'XMLHttpRequest'
                             }
                         })
                         .then(res => res.json())
                         .then(data => {
-                            if (data.success) {
-                                this.loadMenus();
-                            } else {
-                                alert('Gagal menghapus ' + type);
-                            }
+                            if (data.success) this.loadMenus();
+                            else alert('Gagal menghapus ' + type);
                         })
-                        .catch(err => {
-                            console.error(err);
-                            alert('Terjadi kesalahan');
-                        });
+                        .catch(() => alert('Terjadi kesalahan'));
                 }
             },
-
 
             async fetchData(url, method = 'GET', body = null) {
                 try {
@@ -197,11 +301,10 @@
                         method,
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-Requested-With': 'XMLHttpRequest'
                         },
-                        body: body ? JSON.stringify(body) : null,
+                        body: body ? JSON.stringify(body) : null
                     });
-
                     if (!response.ok) throw new Error('Network error');
                     return await response.json();
                 } catch (error) {
@@ -211,16 +314,31 @@
             },
 
             async loadMenus() {
-                const response = await this.fetchData('/admin/menu/list');
-                console.log(response);
-                if (response) {
-                    this.menuData = response.menus || [];
-                    this.submenuData = response.submenus || [];
+                const res = await this.fetchData('/admin/menu/list');
+                if (res) {
+                    this.menuData = res.menus || [];
+                    this.submenuData = res.submenus || [];
                 }
+            },
+
+            async loadPages() {
+                const res = await this.fetchData('/blog/page/list');
+                if (res) this.pageData = res.data || [];
+            },
+            async loadLayanan() {
+                const res = await this.fetchData('/blog/layanan/list');
+                if (res) this.layananData = res.data || [];
+            },
+            async loadProfil() {
+                const res = await this.fetchData('/blog/profil/list');
+                if (res) this.profilData = res.data || [];
             },
 
             init() {
                 this.loadMenus();
+                this.loadPages();
+                this.loadLayanan();
+                this.loadProfil();
             }
         }
     }
