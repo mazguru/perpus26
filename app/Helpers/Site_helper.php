@@ -23,6 +23,12 @@ if (!function_exists('get_latest_posts')) {
 		return (new PublikPostsModel())->get_latest_posts($limit); // array
 	}
 }
+if (!function_exists('get_post_categories')) {
+	function get_post_categories($slug, $limit = 0)
+	{
+		return (new PublikPostsModel())->get_post_categories($slug, $limit); // array
+	}
+}
 
 
 if (!function_exists('get_menus')) {
