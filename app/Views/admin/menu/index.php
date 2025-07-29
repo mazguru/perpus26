@@ -288,7 +288,7 @@
 
             deleteMenu(id, type) {
                 if (confirm('Hapus ' + type + ' ini?')) {
-                    fetch(`/admin/menu/delete/${id}?type=${type}`, {
+                    fetch(`/admin/menu/deleted/${id}?type=${type}`, {
                             method: 'GET',
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest'

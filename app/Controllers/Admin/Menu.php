@@ -2,22 +2,31 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
+use App\Controllers\AdminController;
 use App\Models\MenuModel;
 use App\Models\SubmenuModel;
 
-class Menu extends BaseController
+class Menu extends AdminController
 {
     protected $menuModel;
     protected $submenuModel;
+    public function initController(
+        \CodeIgniter\HTTP\RequestInterface $request,
+        \CodeIgniter\HTTP\ResponseInterface $response,
+        \Psr\Log\LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
 
-    public function __construct()
-    {
         $this->menuModel = new MenuModel();
         $this->submenuModel = new SubmenuModel();
+        // 🔑 Inisialisasi Primary Key & Table
+        $this->pk = 'id';            // Ganti dengan nama kolom PK sebenarnya
+        $this->table = 'menu';      // Nama tabel
+        $this->model = new \App\Models\GenericModel($this->table, $this->pk);
+        helper(['form', 'url']);
     }
 
-    public function index()
+    public function getIndex()
     {
         $data = [
             'title' => 'Manajemen Menu',
@@ -28,7 +37,7 @@ class Menu extends BaseController
         return view('layouts/master_admin', $data);
     }
 
-    public function list()
+    public function getList()
     {
         $data = [
             'menus' => $this->menuModel->orderBy('order_num')->findAll(),
@@ -37,14 +46,14 @@ class Menu extends BaseController
         return $this->response->setJSON($data);
     }
 
-    public function submenus($menuId)
+    public function getSubmenus($menuId)
     {
         $menu = $this->menuModel->find($menuId);
         $submenus = $this->submenuModel->where('menu_id', $menuId)->orderBy('order_num')->findAll();
         return view('admin/menu/submenus', ['menu' => $menu, 'submenus' => $submenus]);
     }
 
-    public function save()
+    public function postSave()
     {
         $data = $this->request->getJSON(true);
 
@@ -86,7 +95,7 @@ class Menu extends BaseController
         ]);
     }
 
-    public function delete($id)
+    public function getDeleted($id)
     {
         $type = $this->request->getGet('type');
 

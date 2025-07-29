@@ -36,6 +36,7 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'auth'          => \App\Filters\Auth::class,
         'trigger'       => \App\Filters\Trigger::class,
+        'visitorlogger' => \App\Filters\VisitorLogger::class,
     ];
 
     /**
@@ -75,6 +76,7 @@ class Filters extends BaseFilters
             // 'csrf',
             // 'invalidchars',
             'trigger',
+            'visitorlogger',
         ],
         'after' => [
             // 'honeypot',

@@ -90,7 +90,7 @@ if (! function_exists('menuadmin')) {
                 'submenu' => [
                     [
                         'title' => 'Menu',
-                        'route' => 'administrator/menu',
+                        'route' => 'admin/menu',
                         'roles' => ['super_user']
                     ],
 
@@ -109,12 +109,12 @@ if (! function_exists('menuadmin')) {
                     ],
                     [
                         'title' => 'Grup Pengguna',
-                        'route' => 'administrator/user-groups',
+                        'route' => 'admin/user-groups',
                         'roles' => ['super_user']
                     ],
                     [
                         'title' => 'Hak Akses',
-                        'route' => 'administrator/permissions',
+                        'route' => 'admin/permissions',
                         'roles' => ['super_user']
                     ],
                 ]

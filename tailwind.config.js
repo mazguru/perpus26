@@ -30,6 +30,22 @@ module.exports = {
       '3xl': '2000px',
       ...defaultTheme.screens,
     },
+    container: {
+      center: true, // Opsional: untuk selalu center
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '4rem',
+        xl: '5rem',
+        '2xl': '6rem',
+      },
+      screens: {
+        sm: '600px',
+        md: '728px',
+        lg: '984px',
+        xl: '1280px',
+      },
+    },
     extend: {
       colors: {
         current: 'currentColor',

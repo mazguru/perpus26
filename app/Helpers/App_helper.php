@@ -315,3 +315,153 @@ if (!function_exists('dekripsi')) {
         return openssl_decrypt(base64_decode($string ?? ''), $encrypt_method, $key, 0, $iv);
     }
 }
+
+
+if (!function_exists('date_indo')) {
+    /**
+     * Fungsi untuk mendapatkan nama hari, tanggal, dan bulan dalam bahasa Indonesia
+     *
+     * @param string|null $date Format: Y-m-d. Jika null, maka menggunakan tanggal hari ini.
+     * @return string Format tanggal dalam bahasa Indonesia (e.g., "Rabu, 25 Desember 2024")
+     */
+    function date_indo($date = null) {
+        // Daftar nama hari dalam bahasa Indonesia
+        $hari_indonesia = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+        // Daftar nama bulan dalam bahasa Indonesia
+        $bulan_indonesia = [
+            1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+
+        // Gunakan tanggal hari ini jika parameter tidak diberikan
+        if (!$date) {
+            $date = date('Y-m-d');
+        }
+
+        // Konversi ke timestamp
+        $timestamp = strtotime($date);
+
+        // Mendapatkan nama hari
+        $day_of_week = date('w', $timestamp);
+        $hari = $hari_indonesia[$day_of_week];
+
+        // Mendapatkan tanggal, bulan, dan tahun
+        $tanggal = date('j', $timestamp);
+        $bulan = date('n', $timestamp); // Nomor bulan (1-12)
+        $tahun = date('Y', $timestamp);
+
+        // Mengembalikan format "Hari, Tanggal Bulan Tahun"
+        return $hari . ', ' . $tanggal . ' ' . $bulan_indonesia[$bulan] . ' ' . $tahun;
+    }
+}
+
+if (!function_exists('date_java')) {
+    /**
+     * Fungsi untuk mendapatkan hari dan pasaran Jawa berdasarkan tanggal
+     *
+     * @param string|null $date Format: Y-m-d. Jika null, maka menggunakan tanggal hari ini.
+     * @return array Hari dalam bahasa Masehi, Pasaran Jawa, dan Weton.
+     */
+    function date_java($date = null) {
+        // Daftar nama hari pasaran Jawa
+        $hari_pasaran = ['Legi', 'Pahing', 'Pon', 'Wage', 'Kliwon'];
+        
+        // Daftar nama hari dalam bahasa Indonesia
+        $hari_indonesia = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+        $bulan_indonesia = [
+            1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+
+        // Gunakan tanggal hari ini jika parameter tidak diberikan
+        if (!$date) {
+            $date = date('Y-m-d');
+        }
+
+        // Konversi ke timestamp
+        $timestamp = strtotime($date);
+
+        // Mendapatkan hari dalam bahasa Indonesia
+        $day_of_week = date('w', $timestamp); // 0 untuk Minggu, 6 untuk Sabtu
+        $hari_masehi_result = $hari_indonesia[$day_of_week];
+
+        // Menghitung hari pasaran Jawa
+        $days_since_epoch = floor($timestamp / 86400); // Total hari sejak epoch
+        $hari_pasaran_result = $hari_pasaran[$days_since_epoch % 5];
+
+         // Mendapatkan tanggal, bulan, dan tahun
+         $tanggal = date('j', $timestamp);
+         $bulan = date('n', $timestamp); // Nomor bulan (1-12)
+         $tahun = date('Y', $timestamp);
+ 
+         // Mengembalikan format "Hari, Tanggal Bulan Tahun"
+         return $hari_masehi_result . ' ' . $hari_pasaran_result . ', ' . $tanggal . ' ' . $bulan_indonesia[$bulan] . ' ' . $tahun;
+
+    }
+    
+}
+if (!function_exists('_date')) {
+    /**
+     * Fungsi untuk mendapatkan hari dan pasaran Jawa berdasarkan tanggal
+     *
+     * @param string|null $date Format: Y-m-d. Jika null, maka menggunakan tanggal hari ini.
+     * @return array Hari dalam bahasa Masehi, Pasaran Jawa, dan Weton.
+     */
+    function _date($date = null, $include_day = false) {
+        $days = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+        ];
+
+        $months = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+
+        if (!$date) {
+            $date = date('Y-m-d');
+        }
+
+        $timestamp = strtotime($date);
+        $day_name = date('l', $timestamp); // Nama hari dalam bahasa Inggris
+        $day = date('d', $timestamp); // Hari
+        $month = date('m', $timestamp); // Bulan
+        $year = date('Y', $timestamp); // Tahun
+
+        $formatted_date = $day . ' ' . $months[$month] . ' ' . $year;
+
+        if ($include_day) {
+            $formatted_date = $days[$day_name] . ', ' . $formatted_date;
+        }
+
+        return $formatted_date;
+
+    }
+
+}
+
+if (! function_exists('read_time')) {
+    function read_time(string $content): string
+    {
+        $jumlah_kata = str_word_count(strip_tags($content));
+        $menit = ceil($jumlah_kata / 200);
+        return $menit . ' menit baca';
+    }
+}

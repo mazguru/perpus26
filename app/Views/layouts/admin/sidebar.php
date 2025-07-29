@@ -54,7 +54,6 @@
         </div>
     </template>
 </aside>
-<?=session('user_role')?>
 
 <script>
 function menuManager() {

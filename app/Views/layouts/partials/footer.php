@@ -50,16 +50,38 @@
             </div>
         </div>
 
-        <!-- Latest News -->
-        <div>
+        <!-- Statistik Kunjungan -->
+        <div x-data="visitSummary()" x-init="loadSummary()">
             <h2 class="text-lg font-semibold mb-4 border-b border-blue-500 inline-block pb-1">Statistik Pengunjung</h2>
-            <div class="space-y-2 text-gray-300">
-                <p>Pengunjung Hari Ini : </p>
-                <p>Pengunjung Bulan Ini : </p>
-                <p>Pengunjung Tahun Ini : </p>
-                <p>Total Pengunjung : </p>
+            <div class="space-y-2 text-gray-700 text-sm">
+                <p>Pengunjung Hari Ini : <span class="font-bold" x-text="today"></span></p>
+                <p>Pengunjung Bulan Ini : <span class="font-bold" x-text="month"></span></p>
+                <p>Pengunjung Tahun Ini : <span class="font-bold" x-text="year"></span></p>
+                <p>Total Pengunjung : <span class="font-bold" x-text="total"></span></p>
             </div>
         </div>
+
+        <script>
+            function visitSummary() {
+                return {
+                    today: 0,
+                    month: 0,
+                    year: 0,
+                    total: 0,
+                    loadSummary() {
+                        fetch(_BASEURL + 'visitor/summary')
+                            .then(res => res.json())
+                            .then(data => {
+                                this.today = data.today;
+                                this.month = data.month;
+                                this.year = data.year;
+                                this.total = data.total;
+                            });
+                    }
+                }
+            }
+        </script>
+
     </div>
 
     <!-- Copyright -->
