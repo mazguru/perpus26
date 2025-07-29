@@ -74,7 +74,7 @@ function settingsApp(config) {
             return ['meta_description', 'meta_keywords'].includes(settingVariable);
         },
         isOptions(settingVariable) {
-            return ['site_maintenance', 'cooming_soon', 'timezone', 'recaptcha_status', 'site_cache', 'default_post_status', 'default_post_visibility','default_post_discussion','comment_order','comment_registration','comment_moderation'].includes(settingVariable);
+            return ['site_maintenance', 'cooming_soon', 'timezone', 'recaptcha_status', 'site_cache', 'default_post_status', 'default_post_visibility', 'default_post_discussion', 'comment_order', 'comment_registration', 'comment_moderation'].includes(settingVariable);
         },
         optionSources: {
             default_post_status: { publish: "Diterbitkan", draft: "Konsep" },
@@ -458,6 +458,15 @@ function mgrData(config) {
         dataTableInstance: null,
         errorData: '',
         selectedId: [],
+
+        errors:{},
+
+
+        deleteUrl: _BASEURL + `${config.controller}/delete`,
+        editUrl: _BASEURL + `${config.controller}/edit`,
+        createUrl: _BASEURL + `${config.controller}/create`,
+        restoreUrl: _BASEURL + `${config.controller}/restore`,
+
         async fetchData(url, method = 'GET', body = null) {
             try {
                 const headers = {
@@ -508,6 +517,14 @@ function mgrData(config) {
                         title: 'No',
                         data: 'id',
                         render: (_, __, row, meta) => meta.row + 1
+                    },
+                    {
+                        data: 'id',
+                        orderable: false,
+                        title: `<input type="checkbox" @click="selectAll($event)" />`,
+                        responsivePriority: 1,
+                        render: (data, type, row) =>
+                            `<input :value="${row.id}" x-model="selectedId" type="checkbox" />`,
                     },
                     ...config.columns.map(col => ({
                         data: col.key,
@@ -610,16 +627,16 @@ function mgrData(config) {
             }
         },
 
-        confirmDeletepermanent(id) {
+        confirmDeletepermanent() {
             const confirmDelete = confirm('Apakah Anda yakin ingin menghapus data ini?');
             if (!confirmDelete) return;
-            this.deleteDataPermanent([id]);
+            this.deleteDataPermanent(this.selectedId);
         },
         async deleteDataPermanent(ids) {
             const response = await this.fetchData(_BASEURL + `${config.controller}/deletepermanent`, 'POST', {
                 id: ids
             });
-
+            console.log(response);
             if (response && response.status === 'success') {
                 Notifier.show('Berhasil!', response.message, 'success');
                 this.loadData();
@@ -692,7 +709,13 @@ function mgrData(config) {
         },
 
         goLink(url) {
-            window.location.href = url
+            window.location.href = url;
+        },
+        addContent() {
+            window.location.href = this.createUrl;
+        },
+        editContent(id) {
+            window.location.href = this.editUrl + '/'+ id;
         }
 
     };
@@ -779,7 +802,7 @@ function postingan(config) {
                     responsive: true,
                     dom: '<"md:flex justify-between mb-2"<"search-box mb-2"f><"info-box"l>>t<"md:flex justify-between mt-2"<"info-box mb-2"i><"pagination"p>>',
                     rowCallback: function (row, data) {
-                        if (data.is_deleted == 1) {
+                        if (data.is_deleted == 'true') {
                             row.classList.add("text-red-700"); // Warna merah untuk baris
                             row.style.textDecoration = "line-through";
                         }
@@ -788,7 +811,10 @@ function postingan(config) {
             }
         },
         editPost(id) {
-            window.location.href = _BASEURL + config.controller + '/edit/' + id
+            window.location.href = _BASEURL + config.controller + '/create/' + id
+        },
+        addPost() {
+            window.location.href = _BASEURL + config.controller + '/create'
         }
 
     };

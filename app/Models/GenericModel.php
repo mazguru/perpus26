@@ -26,7 +26,10 @@ class GenericModel extends Model
     {
         $builder = $this->db->table($table ?? $this->table);
         return $builder->whereIn($this->primaryKey, $ids)
-            ->update(['deleted_at' => date('Y-m-d H:i:s'), 'is_deleted' => 'true']);
+            ->update([
+                'deleted_at' => date('Y-m-d H:i:s'),
+                'is_deleted' => 'true'
+            ]);
     }
 
     public function deletePermanently($table, $pk, $ids)
@@ -40,8 +43,12 @@ class GenericModel extends Model
     {
         return $this->db->table($table ?? $this->table)
             ->whereIn($this->primaryKey, $ids)
-            ->update(['deleted_at' => null]);
+            ->update([
+                'deleted_at' => null,
+                'is_deleted' => 'false'
+            ]);
     }
+
 
     public function findRowObject($pk, $id, $table = null)
     {

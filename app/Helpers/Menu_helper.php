@@ -30,11 +30,6 @@ if (! function_exists('menuadmin')) {
                         'route' => 'blog/page',
                         'roles' => ['administrator', 'super_user']
                     ],
-                    [
-                        'title' => 'Komentar',
-                        'route' => 'blog/comment',
-                        'roles' => ['administrator', 'super_user']
-                    ],
                 ]
             ],
             [
@@ -50,6 +45,23 @@ if (! function_exists('menuadmin')) {
                     [
                         'title' => 'Tambah Halaman',
                         'route' => 'blog/page/create',
+                        'roles' => ['administrator', 'super_user']
+                    ],
+                ]
+            ],
+            [
+                'title' => 'Komentar Pesan',
+                'icon'  => 'bi bi-newspaper',
+                'roles' => ['administrator', 'super_user'],
+                'submenu' => [
+                    [
+                        'title' => 'Komentar',
+                        'route' => 'blog/comment',
+                        'roles' => ['administrator', 'super_user']
+                    ],
+                    [
+                        'title' => 'Pesan Masuk',
+                        'route' => 'blog/message',
                         'roles' => ['administrator', 'super_user']
                     ],
                 ]

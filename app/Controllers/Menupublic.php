@@ -10,6 +10,9 @@ class Menupublic extends PublicController
 {
    public function getIndex()
     {
+        if (! $this->request->isAJAX()) {
+            return $this->response->setStatusCode(403)->setJSON(['status' => 'error', 'message' => 'Akses tidak diizinkan']);
+        }
         $menuModel = new MenuModel();
         $rawMenus = $menuModel->getMenusWithSubmenus();
 

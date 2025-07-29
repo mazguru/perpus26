@@ -1,4 +1,4 @@
-<div x-data="DM(config)" x-init="loadData">
+<div x-data="mgrData(config)" x-init="loadData">
     <div class="p-4 bg-white dark:bg-boxdark shadow-md block sm:flex items-center justify-between border-b border-gray-200">
         <div class="mb-1 w-full">
 

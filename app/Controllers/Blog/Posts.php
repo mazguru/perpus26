@@ -12,42 +12,71 @@ class Posts extends AdminController
 {
     protected $m_posts;
     protected $m_categories;
+    public function initController(
+        \CodeIgniter\HTTP\RequestInterface $request,
+        \CodeIgniter\HTTP\ResponseInterface $response,
+        \Psr\Log\LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
 
-    public function __construct()
-    {
         $this->m_posts = new PostsModel();
         $this->m_categories = new PostCategoriesModel();
+        // 🔑 Inisialisasi Primary Key & Table
+        $this->pk = 'id';            // Ganti dengan nama kolom PK sebenarnya
+        $this->table = 'posts';      // Nama tabel
+        $this->model = new \App\Models\GenericModel($this->table, $this->pk);
+        helper(['form', 'url']);
     }
 
     public function getIndex(): string
     {
+        $breadcrumbs = [
+            ['title' => 'Beranda', 'url' => base_url()],
+            ['title' => 'Kelola Postingan']
+        ];
         $data = [
-            'title' => 'Tulisan',
+            'title' => 'Kelola Postingan',
             'content' => 'admin/posts/index',
+            'breadcrumbs' => $breadcrumbs
+
         ];
         return view('layouts/master_admin', $data);
     }
-    public function create($id = null): string
+
+    public function getCreate($id = null): string
     {
+        $breadcrumbs = [
+            ['title' => 'Beranda', 'url' => base_url()],
+            ['title' => 'Kelola Postingan', 'url' => base_url('blog/posts')],
+            ['title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan']
+        ];
         $data = [
             'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
-            'content' => 'admin/posts/create'
+            'type' => 'create',
+            'content' => 'admin/posts/create',
+            'breadcrumbs' => $breadcrumbs
         ];
         return view('layouts/master_admin', $data);
     }
     public function getEdit($id = null): string
     {
+        $breadcrumbs = [
+            ['title' => 'Beranda', 'url' => base_url()],
+            ['title' => 'Kelola Postingan', 'url' => base_url('blog/posts')],
+            ['title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan']
+        ];
         $data = [
             'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
             'post_id' => $id,
-            'content' => 'admin/posts/create'
+            'content' => 'admin/posts/create',
+            'breadcrumbs' => $breadcrumbs
         ];
         return view('layouts/master_admin', $data);
     }
 
     public function getList()
     {
-        $posts = $this->m_posts->getAllPosts();
+        $posts = $this->m_posts->withDeleted()->getAllPosts();
         $results = [];
 
         foreach ($posts as $post) {
@@ -61,7 +90,11 @@ class Posts extends AdminController
             ];
         }
 
-        return $this->response->setJSON($results);
+        $data = [
+            'alldata' => $results
+        ];
+
+        return $this->response->setJSON($data);
     }
     public function getCategories()
     {
@@ -73,8 +106,11 @@ class Posts extends AdminController
     }
 
 
-    public function getPostid($id){
-        $posts = $this->m_posts->getPostsId($id);
+    public function getPostid($id)
+    {
+        $posts =  $this->m_posts
+            ->where('id', $id)
+            ->first();
 
         return $this->response->setJSON($posts);
     }
@@ -87,27 +123,30 @@ class Posts extends AdminController
             ]);
         }
 
-        // Validasi input wajib
+        $postId = $this->request->getPost('id');
+        $isEdit = $postId ? true : false;
+
+        // Ambil slug dari input dan buat versi URL-friendly
+        $slugInput = $this->request->getPost('post_slug');
+        $slug = url_title($slugInput, '-', true);
+
+        $postImage = $this->request->getFile('post_image');
+
+        // Validasi input
         $validationRules = [
-            'post_title' => 'required',
+            'post_title' => 'required|max_length[120]',
             'post_slug' => 'required|alpha_dash',
             'post_content' => 'required',
             'post_status' => 'required|in_list[draft,publish]',
             'post_categories' => 'required',
         ];
 
-        $postId = $this->request->getPost('id'); // Jika ada berarti update
-        $postImage = $this->request->getFile('post_image');
-        $slug = url_title($this->request->getPost('post_slug'), '-', true);
-        $isEdit = $postId ? true : false;
-
-        // Tambah aturan validasi file jika ada yang diunggah
         if ($postImage && $postImage->isValid() && !$postImage->hasMoved()) {
             $validationRules['post_image'] = [
                 'uploaded[post_image]',
                 'is_image[post_image]',
                 'max_size[post_image,2048]',
-                'mime_in[post_image,image/jpg,image/jpeg,image/png]',
+                'mime_in[post_image,image/jpg,image/jpeg,image/png]'
             ];
         }
 
@@ -119,44 +158,35 @@ class Posts extends AdminController
             ]);
         }
 
-        // Data dari input
+        // Ambil data
         $data = [
             'post_title' => $this->request->getPost('post_title'),
-            'post_slug' => $this->request->getPost('post_slug'),
+            'post_slug' => $slug,
             'post_content' => $this->request->getPost('post_content'),
             'post_categories' => $this->request->getPost('post_categories'),
             'post_status' => $this->request->getPost('post_status'),
+            'post_visibility' => $this->request->getPost('post_visibility'),
+            'post_comment_status' => $this->request->getPost('post_comment_status'),
             'post_type' => 'post',
             'post_author' => session('user_id'),
-            'created_at' => date('Y-m-d H:i:s'),
         ];
 
-
-        // Proses upload gambar jika ada
+        // Upload dan resize image
         if ($postImage && $postImage->isValid() && !$postImage->hasMoved()) {
-            $slug = url_title($this->request->getPost('post_slug'), '-', true);
-            $extension = $postImage->getExtension(); // jpg, png, etc
-            $newName = $slug . '.' . $extension;
+            $newName = $slug . '.' . $postImage->getExtension();
             $data['post_image'] = $newName;
 
-            // Folder
             $originalPath = FCPATH . 'media_library/posts/original/';
-            $thumbPath    = FCPATH . 'media_library/posts/thumbs/';
-            $headerPath   = FCPATH . 'media_library/posts/headers/';
+            $thumbPath = FCPATH . 'media_library/posts/thumbs/';
+            $headerPath = FCPATH . 'media_library/posts/headers/';
 
             helper('filesystem');
             foreach ([$originalPath, $thumbPath, $headerPath] as $dir) {
                 if (!is_dir($dir)) {
-                    if (!mkdir($dir, 0755, true)) {
-                        return $this->response->setJSON([
-                            'status' => 'error',
-                            'message' => "Gagal membuat folder: $dir"
-                        ]);
-                    }
+                    mkdir($dir, 0755, true);
                 }
             }
 
-            // Simpan original
             $postImage->move($originalPath, $newName, true);
 
             // Resize thumbnail
@@ -170,40 +200,42 @@ class Posts extends AdminController
                 ->withFile($originalPath . $newName)
                 ->resize(1200, 400, true)
                 ->save($headerPath . $newName);
-
-            $data['post_image'] = $newName;
         }
-        // Cek apakah slug sudah ada dan bukan milik post yang sedang diedit
-        $post = $this->m_posts->getIdBySlug($slug);
 
-        if ($post) {
-            // UPDATE
-            $postId = $post['id'];
+        // Cek slug jika duplikat (kecuali sedang edit dirinya sendiri)
+
+        if (!$isEdit) {
+            $cekin = $this->m_posts->getIdBySlug($slug);
+            if ($cekin) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Slug sudah digunakan oleh post lain.'
+                ]);
+            }
+        }
+
+        if ($isEdit) {
             $data['updated_at'] = date('Y-m-d H:i:s');
-            $post_create = $this->m_posts->update($postId, $data);
+            $data['updated_by'] = session('user_id');
+            $success = $this->m_posts->update($postId, $data);
             $action = 'diperbarui';
         } else {
-            // INSERT
             $data['created_at'] = date('Y-m-d H:i:s');
-            $post_create = $this->m_posts->insert($data);
+            $data['created_by'] = session('user_id');
+            $success = $this->m_posts->insert($data);
             $action = 'ditambahkan';
         }
-
-        if ($post_create) {
-            return $this->response->setJSON([
-                'status' => 'success',
-                'message' => 'Post berhasil ' . $action,
-                'image' => $data['post_image'] ?? null
-            ]);
-        } else {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Post gagal ' . $action
-            ]);
-        }
+        $cekin = $this->m_posts->getIdBySlug($slug);
+        return $this->response->setJSON([
+            'status' => $success ? 'success' : 'error',
+            'message' => $success ? "Post berhasil $action." : "Post gagal $action.",
+            'id' => $cekin['id'],
+            'image' => $data['post_image'] ?? null
+        ]);
     }
 
-    public function imagesUploadHandler()
+
+    public function postUploadimageeditor()
     {
         helper(['filesystem', 'url']);
 

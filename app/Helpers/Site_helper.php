@@ -15,11 +15,12 @@ use App\Models\AlbumsModel;
 use App\Models\MenuModel;
 use App\Models\CategoriesModel;
 use App\Models\PostsModel;
+use App\Models\publik\PostsModel as PublikPostsModel;
 
 if (!function_exists('get_latest_posts')) {
 	function get_latest_posts($limit = 0)
 	{
-		return model(PostsModel::class)->get_latest_posts($limit);
+		return (new PublikPostsModel())->get_latest_posts($limit); // array
 	}
 }
 

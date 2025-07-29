@@ -6,24 +6,39 @@ use CodeIgniter\Model;
 
 class PostsModel extends Model
 {
-    protected $table      = 'posts';
-    protected $primaryKey = 'id';
+    protected $table            = 'posts';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
 
-    protected $allowedFields = [
+    protected $returnType       = 'array';
+
+    protected $allowedFields    = [
         'post_title',
         'post_content',
+        'post_image',
         'post_author',
         'post_categories',
-        'post_image',
-        'post_slug',
-        'post_status',
         'post_type',
-        'created_at',
-        'is_deleted'
+        'post_status',
+        'post_visibility',
+        'post_comment_status',
+        'post_slug',
+        'post_tags',
+        'post_counter',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'restored_by',
+        'restored_at',
+        'is_deleted',
     ];
 
+
     protected $useTimestamps = true;
+    protected $useSoftDeletes   = true;
     protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
     public function getAllPosts($type = 'post')
     {
@@ -45,7 +60,28 @@ class PostsModel extends Model
         $builder->join('users x2', 'x1.post_author = x2.id', 'left');
         $builder->join('categories x3', 'x1.post_categories = x3.id', 'left');
         $builder->where('x1.post_type', $type);
-        $builder->where('x1.is_deleted', 'false');
+
+        $builder->orderBy('x1.created_at', 'DESC');
+
+        return $builder->get()->getResultArray();
+    }
+    public function getAllPostsPublic($type = 'post')
+    {
+        $builder = $this->db->table($this->table . ' x1');
+        $builder->select('
+        x1.id,
+        x1.post_title,
+        x1.post_slug,
+        x1.post_content,
+        x1.post_image,
+        x2.user_full_name AS post_author,
+        x3.category_name
+    ');
+        $builder->join('users x2', 'x1.post_author = x2.id', 'left');
+        $builder->join('categories x3', 'x1.post_categories = x3.id', 'left');
+        $builder->where('x1.post_type', $type);
+        $builder->where('x1.post_status', 'publish');
+        $builder->where('x1.post_visibility', 'public');
 
         $builder->orderBy('x1.created_at', 'DESC');
 

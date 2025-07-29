@@ -87,6 +87,7 @@
                     <div class="h-5 w-5 bg-blue-500 rounded-full animate-bounce"></div>
                 </div>
                 <div class="mx-auto max-w-(--breakpoint-2xl) p-4 md:p-6">
+                    <?= $this->include('layouts/admin/breadcrumb') ?>
                     <?= $this->renderSection('content') ?>
                     <?php if (isset($content)) { ?>
                         <?= $this->include($content) ?>

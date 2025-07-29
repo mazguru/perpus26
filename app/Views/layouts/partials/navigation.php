@@ -99,7 +99,12 @@
             base_url: _BASEURL,
             async fetchMenu() {
                 try {
-                    const res = await fetch(this.base_url + 'menupublic');
+                    const res = await fetch(this.base_url + 'menupublic', {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                    });
                     const data = await res.json();
                     console.log(data);
 

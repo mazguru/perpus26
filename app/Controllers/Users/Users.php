@@ -31,7 +31,7 @@ class Users extends AdminController
             'title' => 'Daftar Pengguna',
             'halaman' => 'users',
             'breadcrumb' => 'Daftar Pengguna',
-            'content' => 'users/list'
+            'content' => 'admin/users/list'
         ];
         return view('layouts/master_admin', $data);
     }
