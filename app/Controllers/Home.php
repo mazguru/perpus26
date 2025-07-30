@@ -23,6 +23,7 @@ class Home extends PublicController
         $data = [
             'title' => 'Daftar Artikel',
             'albums' => $albums,
+            'postquery' => get_latest_posts(6),
             'content' => 'frontend/home/index'
         ];
 

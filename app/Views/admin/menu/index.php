@@ -333,6 +333,7 @@
             async loadPages() {
                 const res = await this.fetchData('/blog/page/list');
                 if (res) this.pageData = res.data || [];
+                console.log(res);
             },
             async loadLayanan() {
                 const res = await this.fetchData('/blog/layanan/list');

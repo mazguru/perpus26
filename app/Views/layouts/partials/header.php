@@ -2,7 +2,7 @@
     <!-- Logo dan Search -->
     <div class="max-w-screen-xl mx-auto flex flex-wrap justify-between items-center px-4 pt-2">
         <div class="hidden md:flex items-center space-x-3">
-            <img src="/assets/images/logo/logo.svg" alt="Logo" class="w-10 h-10" />
+            <img src="/upload/images/<?= session('logo')?>" alt="Logo" class="w-10 h-10" />
             <div>
                 <h1 class="text-base md:text-lg font-bold text-gray-800 my-0 py-0">PERPUSTAKAAN ADYATAMA</h1>
                 <p class="text-xs text-gray-600 my-0 py-0">SMP Islam Al Azhar 26 Yogyakarta<br>NPP. 3404061D0100001</p>

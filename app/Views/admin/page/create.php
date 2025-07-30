@@ -1,5 +1,3 @@
-<h2 class="text-2xl font-bold mb-4"><?= $title ?></h2>
-
 <form
     method="post"
     x-data="postForm(config)"
@@ -14,12 +12,18 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Kolom Kiri -->
         <div class="md:col-span-2 space-y-4">
-            <input type="text" x-model="form.post_title" @input="!isEdit && generateSlug()" placeholder="Add Title"
-                class="w-full border border-gray-300 p-3 text-xl font-bold rounded" />
-
-            <textarea x-model="form.post_content" rows="20" id='post_content' x-model="form.post_content"
-                class="w-full border border-gray-300 p-3 rounded resize-y"
-                placeholder="Tulis isi artikel di sini..."></textarea>
+            <div class="border rounded bg-gray-50 p-2">
+                <label class="block font-semibold">Judul</label>
+                <input type="text" x-model="form.post_title" @input="type === 'create' && generateSlug()" placeholder="Add Title"
+                    class="w-full border border-gray-300 p-3 text-xl font-bold rounded" />
+                <span class="text-xs italic text-red-600" x-text='errors.post_title'></span>
+            </div>
+            <div class="border rounded bg-gray-50 p-2">
+                <label class="block font-semibold">Isi Konten</label>
+                <textarea x-model="form.post_content" rows="20" id='post_content' x-model="form.post_content"
+                    class="w-full border border-gray-300 p-3 rounded resize-y"
+                    placeholder="Tulis isi artikel di sini..."></textarea>
+            </div>
         </div>
 
         <!-- Kolom Kanan -->
@@ -28,7 +32,7 @@
             <div class="border rounded bg-gray-50 p-2">
                 <label class="block font-semibold">Slug</label>
                 <input type="text" x-model="form.post_slug"
-                    class="w-full text-sm p-2 border border-gray-300 rounded" :disabled="isEdit">
+                    class="w-full text-sm p-2 border border-gray-300 rounded" :readonly="type === 'edit'">
             </div>
             <!-- Kategori -->
             <div class="border rounded bg-gray-50 p-4">
@@ -43,7 +47,7 @@
                         <span x-text="cat.category_name"></span>
                     </label>
                 </template>
-                <button class="mt-2 text-sm text-blue-500 hover:underline">+ Tambah Kategori</button>
+                <span class="text-xs italic text-red-600" x-text='errors.post_categories'></span>
             </div>
 
             <!-- Publikasi -->
@@ -61,7 +65,7 @@
                     <label class="block text-sm font-medium">Akses</label>
                     <select x-model="form.post_visibility" class="w-full p-2 border rounded">
                         <option value="public">Publik</option>
-                        <option value="privat">Privat</option>
+                        <option value="private">Privat</option>
                     </select>
                 </div>
                 <div>
@@ -75,13 +79,18 @@
                     <label class="block text-sm font-medium">Gambar</label>
                     <input type="file" @change="handleFile($event)" name='post_image' x-ref="post_image" class="w-full text-sm border rounded">
                     <!-- Dengan x-if -->
-                    <template x-if="form.post_image && form.post_image !== 'null'">
+                    <template x-if="typeof form.post_image === 'string' && form.post_image !== '' && form.post_image !== 'null'">
                         <div class="mb-2">
                             <label class="block text-sm font-medium text-gray-600">Gambar Aktif:</label>
                             <img :src="_BASEURL + 'media_library/posts/thumbs/' + form.post_image" alt="Current Image" class="h-20 object-cover rounded border">
                         </div>
                     </template>
-
+                    <template x-if="previewFile">
+                        <div class="mb-2">
+                            <label class="block text-sm font-medium text-gray-600">Gambar Baru:</label>
+                            <img :src="previewFile" class="h-20 object-cover rounded border">
+                        </div>
+                    </template>
                 </div>
             </div>
 
@@ -103,6 +112,8 @@
 <script>
     const config = {
         controller: 'blog/page',
+        post_id: '<?= $post_id ?? null ?>',
+        type_crud: '<?= $type ?? 'edit' ?>',
     }
 
     function postForm(config) {
@@ -118,14 +129,14 @@
                 post_comment_status: 'open',
             },
 
-            isEdit: false,
-
+            previewFile: null,
             curent_tumb: '',
 
-            postId: '<?= $post_id ?? null ?>',
-            type: '<?= $type ?? 'edit' ?>',
+            postId: config.post_id,
+            type: config.type_crud,
 
             categories: '',
+            errors: [],
 
             errorMessage: '',
             generateSlug() {
@@ -170,6 +181,7 @@
 
                 if (response && response.status === 'success') {
                     Notifier.show('Berhasil!', response.message, 'success');
+                    this.form.id = response.id;
                 } else {
                     this.errors = response.errors ? response.errors : [];
                     Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
@@ -177,12 +189,9 @@
             },
             init() {
                 this.loadCategories();
-                
                 this.initTinymce()
                 if (this.type === 'edit' && this.postId) {
                     this.loadPostById(this.postId);
-                    this.isEdit = true;
-                    
                 }
             },
 
@@ -215,7 +224,7 @@
                 }
             },
             async loadCategories() {
-                const response = await this.fetchData(_BASEURL + `${config.controller}/getcategories`);
+                const response = await this.fetchData(_BASEURL + `${config.controller}/categories`);
                 console.log(response);
                 if (response) {
                     this.categories = response.categories;
@@ -225,7 +234,7 @@
             },
 
             async loadPostById(id) {
-                const response = await this.fetchData(_BASEURL + `${config.controller}/getpostid/${this.postId}`);
+                const response = await this.fetchData(_BASEURL + `${config.controller}/postid/${this.postId}`);
                 console.log(response);
                 if (response) {
                     this.form = response;
@@ -256,6 +265,7 @@
                     if (imageFile) {
                         this.form.post_image = imageFile;
                     }
+                    this.previewFile = URL.createObjectURL(file);
                 } else {
                     this.form.post_image = null; // Reset jika file tidak valid
                     Notifier.show('Error', 'File harus berupa JPG, JPEG, PNG, atau GIF.', 'error');
@@ -304,7 +314,7 @@
                         var xhr, formData;
                         xhr = new XMLHttpRequest();
                         xhr.withCredentials = false;
-                        xhr.open('POST', _BASEURL + 'blog/page/upload_image');
+                        xhr.open('POST', _BASEURL + 'blog/posts/uploadimageeditor');
                         xhr.onload = function() {
                             if (xhr.status != 200) {
                                 failure('HTTP Error: ' + xhr.status);

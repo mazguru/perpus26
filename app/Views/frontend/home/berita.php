@@ -8,7 +8,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Berita 1 -->
-            <?php $postquery = get_latest_posts(6);
+            <?php
             if (! empty($postquery)) {
                 foreach ($postquery as $berita) {
             ?>
