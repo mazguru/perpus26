@@ -16,7 +16,12 @@
                         <div class="relative overflow-hidden">
                             <a href="/post/<?= $berita['post_slug'] ?>">
                                 <?php if ($berita['post_image']): ?>
-                                    <img src="<?= base_url() ?>/media_library/posts/thumbs/<?= $berita['post_image'] ?>" class="w-full transition delay-150 duration-300 ease-in-out aspect-[16/9] object-cover mb-2 hover:scale-110">
+                                    <img
+                                        src="<?= base_url() ?>/media_library/posts/thumbs/<?= $berita['post_image'] ?>"
+                                        class="w-full transition delay-150 duration-300 ease-in-out aspect-[16/9] object-cover mb-2 hover:scale-110"
+                                        alt="<?= $berita['post_title'] ?>"
+                                        loading="lazy"
+                                        onerror="this.onerror=null; this.src='<?= base_url('assets/images/noimage.svg') ?>'">
                                 <?php else : ?>
                                     <div class="aspect-[16/9] object-cover">
                                         <svg class="w-full h-full bg-gray dark:bg-boxdark text-gray-300 p-2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">

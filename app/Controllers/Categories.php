@@ -4,30 +4,57 @@ namespace App\Controllers;
 
 use App\Models\PostCategoriesModel;
 use App\Models\publik\PostsModel as PublikPostsModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Categories extends PublicController
 {
 
     public function getIndex($slug = null)
     {
-        $model = new PostCategoriesModel();
-        $categories = $model->where('category_slug', $slug)
-                ->where('is_deleted', 'false') // atau whereNull('deleted_at')
-                ->first();;
-
-        if (!$categories) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException("Artikel tidak ditemukan");
+        if (!$slug) {
+            throw PageNotFoundException::forPageNotFound('Kategori tidak ditemukan.');
         }
 
-        $data = [
-            'title' => $categories['category_name'],
-            'categorySlug' => $slug,
-            'content' => 'frontend/categories/index'
-        ];
+        // Ambil kategori
+        $catModel = new PostCategoriesModel();
+        $category = $catModel->where('category_slug', $slug)
+                             ->where('deleted_at', null) // atau ->where('is_deleted', 0)
+                             ->first();
 
-        return view('layouts/master', $data);
+        if (!$category) {
+            throw PageNotFoundException::forPageNotFound('Kategori tidak ditemukan.');
+        }
+
+        $perPage = (int) (session('post_per_page') ?? 6);
+        $page    = max(1, (int) ($this->request->getGet('page') ?? 1));
+
+        // Ambil daftar post untuk kategori tsb
+        $postModel = new PublikPostsModel();
+
+        $postModel->select('posts.id, posts.post_title, posts.post_slug, posts.post_image, posts.post_content, posts.post_counter, posts.created_at, u.user_full_name AS post_author')
+                  ->join('users u', 'u.id = posts.post_author', 'left')
+                  ->forCategorySlug($slug)
+                  ->where('posts.post_type', 'post')
+                  ->where('posts.post_status', 'publish')
+                  ->where('posts.post_visibility', 'public')
+                  ->where('posts.deleted_at', null) // atau ->where('posts.is_deleted', 0)
+                  ->orderBy('posts.created_at', 'DESC');
+
+        $results = $postModel->paginate($perPage, 'default', $page);
+        $pager   = $postModel->pager;
+
+        // (Opsional) pastikan path pager tetap /kategori/{slug}
+        $pager->setPath($this->request->getUri()->getPath());
+
+        return view('layouts/master', [
+            'title'    => $category['category_name'],
+            'category' => $category,
+            'results'  => $results,
+            'pager'    => $pager,
+            'content'  => 'frontend/categories/index',
+        ]);
     }
-    public function postList()
+    public function getList()
     {
         if (! $this->request->isAJAX()) {
             return $this->response->setStatusCode(400)->setJSON([
@@ -40,8 +67,8 @@ class Categories extends PublicController
         $pageNumber   = (int) ($this->request->getPost('page_number') ?? 1);
         $pageNumber   = max(1, $pageNumber);
 
-        $perPage = (int) (session('post_per_page') ?? 6);
-        $perPage = $perPage > 0 ? $perPage : 6;
+        $perPage = (int) (session('post_per_page') ?? 10);
+        $perPage = $perPage > 0 ? $perPage : 10;
 
         $offset = ($pageNumber - 1) * $perPage;
 
@@ -49,15 +76,14 @@ class Categories extends PublicController
         $isValidSlug = (bool) preg_match('/^[a-z0-9-]+$/i', $categorySlug);
 
         $rows = [];
-        
-            $model = new PublikPostsModel();
+        if ($isValidSlug) {
+            $model = new PostsModel();
             // get_post_categories() sudah kita konversi untuk mengembalikan array
             $rows = $model->get_post_categories($categorySlug, $perPage, $offset);
-        
+        }
 
         return $this->response->setJSON([
-            'rows' => $rows,
-            'slug' => $categorySlug
+            'rows' => $rows
         ]);
     }
 }

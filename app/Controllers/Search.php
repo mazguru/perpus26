@@ -11,19 +11,20 @@ class Search extends BaseController
     {
         $q       = trim((string) $this->request->getGet('q'));
         $perPage = (int) ($this->request->getGet('per_page') ?? 6);
-        $page    = (int) ($this->request->getGet('page') ?? 1);
+        $page    = (int) ($this->request->getGet('page') ?? 1); // pakai nama param sesuai group
 
         $model = new PostsModel();
-        $model->search_index($q); // siapkan query di model
+        $model->applySearch($q);
 
-        $results = $model->paginate($perPage, 'default', $page); // tetap pakai paginate() dari Model
+        // gunakan group 'search' agar param halaman jadi ?page_search=2
+        $results = $model->paginate($perPage, 'default', $page);
 
         $data = [
-            'title' => 'Pencarian',
+            'title'   => 'Pencarian',
             'q'       => $q,
             'results' => $results,
             'pager'   => $model->pager,
-            'content' => 'frontend/search'
+            'content' => 'frontend/search',
         ];
 
         return view('layouts/master', $data);

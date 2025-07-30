@@ -2,6 +2,7 @@
 
 namespace App\Models\publik;
 
+use CodeIgniter\Database\BaseBuilder;
 use CodeIgniter\Model;
 
 class PostsModel extends Model
@@ -200,33 +201,33 @@ class PostsModel extends Model
             ->update();
     }
 
-    // di Model kamu (extends \CodeIgniter\Model)
-    public function search_index(string $keyword): array
+    public function applySearch(string $keyword): self
     {
         $keyword = trim($keyword);
-        if ($keyword === '') {
-            return [];
+
+        // pakai alias seperti di query kamu: x1 untuk posts, x2 untuk users
+        $this->from($this->table . ' x1')
+             ->select("
+                x1.id, x1.post_title, x1.created_at, x1.post_image, x1.post_content,
+                x1.post_slug, x1.post_counter, x2.user_full_name AS post_author
+             ", false)
+             ->join('users x2', 'x1.post_author = x2.id', 'left')
+             ->where('x1.post_status', 'publish')
+             ->where('x1.is_deleted', 'false')               // sesuaikan tipe kolom (0/1 atau boolean)
+             ->whereIn('x1.post_type', ['post', 'page'])
+             ->groupBy('x1.id');;
+
+        if ($keyword !== '') {
+            // MySQL/MariaDB: collation *_ci sudah case-insensitive → hindari LOWER()
+            $this->groupStart()
+                 ->like('x1.post_title', $keyword, 'both')
+                 ->groupEnd();
+        } else {
+            // Jika q kosong, jangan tampilkan semua data (opsional)
+            $this->where('1 = 0', null, false);
         }
 
-        $b = $this->db->table($this->table . ' x1')
-            ->select("
-            x1.id, x1.post_title, x1.created_at, x1.post_image,
-            x1.post_slug, x1.post_counter, x2.user_full_name AS post_author
-        ", false)
-            ->join('users x2', 'x1.post_author = x2.id', 'left')
-            ->where('x1.post_status', 'publish')
-            ->where('x1.is_deleted', 'false') // sesuaikan tipe kolommu: 0/1 (bool)
-            ->whereIn('x1.post_type', ['post', 'page'])
-            ->groupStart()
-            ->like('x1.post_title', $keyword, 'both') // case-insensitive by collation *_ci
-            ->groupEnd()
-            ->orderBy('x1.created_at', 'DESC')
-            ->limit(10);
-
-        // tetap panggil helper milikmu
-        $this->applyPublicOnlyIfGuest($b, 'x1');
-
-        return $b->get()->getResultArray();
+        return $this->orderBy('x1.created_at', 'DESC');
     }
 
 
@@ -349,6 +350,30 @@ class PostsModel extends Model
 
         if ($limit > 0) $b->limit($limit, $offset);
         return $b->get()->getResultArray();
+    }
+
+    public function forCategorySlug(string $slug): self
+    {
+        // Ambil ID kategori (tabel kategorimu bernama 'categories', type='post')
+        $cat = $this->db->table('categories')
+            ->select('id')
+            ->where('category_slug', $slug)
+            ->where('category_type', 'post')
+            ->where('deleted_at', null)    // jika pakai soft delete
+            // ->where('is_deleted', 0)    // jika pakai flag boolean
+            ->limit(1)
+            ->get()->getRowArray();
+
+        if (!$cat) {
+            // Pastikan tidak ada hasil jika kategori tidak ditemukan
+            return $this->where('1 =', 0);
+        }
+
+        $catId = (int) $cat['id'];
+
+        // Gunakan FIND_IN_SET untuk CSV id kategori
+        // Catatan: ini akan menambah WHERE ke builder internal model.
+        return $this->where("FIND_IN_SET({$catId}, {$this->table}.post_categories)");
     }
 
     public function get_another_pages(int $id = 0, int $limit = 0): array

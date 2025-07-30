@@ -3,8 +3,8 @@
     <div class="container mx-auto px-4 py-16">
         <div class="flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-10 md:mb-0">
-                <h1 class="text-4xl md:text-5xl font-bold text-indigo-900 mb-4">Selamat Datang di Perpustakaan Kita</h1>
-                <p class="text-lg text-gray-700 mb-8">Temukan ribuan koleksi buku, jurnal, dan sumber pengetahuan lainnya untuk menginspirasi dan memperluas wawasan Anda.</p>
+                <h1 class="text-4xl md:text-5xl font-bold text-indigo-900 mb-4">Selamat Datang di <?=session('nama_perpus')?></h1>
+                <p class="text-lg text-gray-700 mb-8"><?= session('meta_description')?></p>
                 <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                     <a href="#layanan" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 text-center">Jelajahi Layanan</a>
                     <a href="#katalog" class="bg-white hover:bg-gray-100 text-indigo-600 font-medium py-3 px-6 rounded-lg border border-indigo-600 transition duration-300 text-center">Katalog Buku</a>
