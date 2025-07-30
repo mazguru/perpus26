@@ -24,6 +24,10 @@ class Pager extends BaseConfig
         'default_full'   => 'CodeIgniter\Pager\Views\default_full',
         'default_simple' => 'CodeIgniter\Pager\Views\default_simple',
         'default_head'   => 'CodeIgniter\Pager\Views\default_head',
+
+        // Tailwind templates
+        'tw_full'        => 'pager/tw_full',
+        'tw_simple'      => 'pager/tw_simple', // opsional
     ];
 
     /**
@@ -33,5 +37,5 @@ class Pager extends BaseConfig
      *
      * The default number of results shown in a single page.
      */
-    public int $perPage = 20;
+    public int $perPage = 10;
 }

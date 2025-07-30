@@ -200,26 +200,35 @@ class PostsModel extends Model
             ->update();
     }
 
-    public function search(string $keyword): array
+    // di Model kamu (extends \CodeIgniter\Model)
+    public function search_index(string $keyword): array
     {
+        $keyword = trim($keyword);
+        if ($keyword === '') {
+            return [];
+        }
+
         $b = $this->db->table($this->table . ' x1')
             ->select("
-                x1.id, x1.post_title, x1.created_at, x1.post_content, x1.post_image,
-                x1.post_slug, x1.post_counter, x2.user_full_name AS post_author
-            ", false)
+            x1.id, x1.post_title, x1.created_at, x1.post_image,
+            x1.post_slug, x1.post_counter, x2.user_full_name AS post_author
+        ", false)
             ->join('users x2', 'x1.post_author = x2.id', 'left')
             ->where('x1.post_status', 'publish')
-            ->where('x1.is_deleted', 'false')
+            ->where('x1.is_deleted', 'false') // sesuaikan tipe kolommu: 0/1 (bool)
             ->whereIn('x1.post_type', ['post', 'page'])
             ->groupStart()
-            ->like('LOWER(x1.post_title)', strtolower($keyword), 'both', null, true) // escape false utk LOWER()
+            ->like('x1.post_title', $keyword, 'both') // case-insensitive by collation *_ci
             ->groupEnd()
-            ->limit(20);
+            ->orderBy('x1.created_at', 'DESC')
+            ->limit(10);
 
+        // tetap panggil helper milikmu
         $this->applyPublicOnlyIfGuest($b, 'x1');
 
         return $b->get()->getResultArray();
     }
+
 
     public function get_years(): array
     {
@@ -319,10 +328,7 @@ class PostsModel extends Model
             ->limit(1)
             ->get()->getRowArray();
 
-        $idLike = '+0+';
-        if ($catRow) {
-            $idLike = '+' . $catRow['id'] . '+';
-        }
+        $idLike = $catRow['id'];
 
         $b = $this->db->table($this->table . ' x1')
             ->select("
