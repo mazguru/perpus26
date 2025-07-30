@@ -416,16 +416,16 @@ class PostsModel extends Model
 
         return $b->get()->getResultArray();
     }
-
-    public function get_opening_speech(): string
+    
+    public function getCategoryPost(): array
     {
-        $row = $this->db->table($this->table)
-            ->select('post_content')
-            ->where('post_type', 'opening_speech')
-            ->limit(1)
-            ->get()->getRowArray();
 
-        return $row['post_content'] ?? '';
+        $b = $this->db->table('categories')
+            ->select('id, category_name, category_slug')
+            ->where('category_type', 'post')
+            ->where('is_deleted', 'false');
+
+        return $b->get()->getResultArray();
     }
 
     public function count_post_categories(string $category_slug = ''): int

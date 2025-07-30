@@ -18,7 +18,7 @@ class Menu extends AdminController
         parent::initController($request, $response, $logger);
 
         
-        helper(['form', 'url', 'menu']);
+        helper(['form', 'url', 'Menu']);
     }
     public function getMenuadmin()
     {

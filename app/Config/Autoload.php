@@ -88,5 +88,5 @@ class Autoload extends AutoloadConfig
      *
      * @var list<string>
      */
-    public $helpers = ['form', 'url', 'site', 'app', 'setting'];
+    public $helpers = ['form', 'url', 'Site', 'App', 'Setting'];
 }
