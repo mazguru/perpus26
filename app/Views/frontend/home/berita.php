@@ -48,29 +48,143 @@
             } ?>
 
 
-            <div class="relative bg-primarylight rounded-lg mb-7.5">
-                <div class="relative overflow-hidden">
-                    <a href="blog-details-1.html"><img src="assets/images/blog/blog-grid/pic7.png" alt=""></a>
-                    <div class="bg-primary text-white py-1.5 px-3 rounded absolute top-2.5 left-2.5 text-sm">14 jan 2024</div>
-                </div>
-                <div class="py-[25px] px-7.5 max-xl:py-5 max-xl:px-4">
-                    <div class="mb-[5px]">
-                        <ul class="flex flex-wrap">
-                            <li class="uppercase text-sm ltr:mr-5 rtl:ml-5 text-black flex items-center gap-x-[0.3rem]"><i class="las la-user-circle text-primary"></i> By <a class="text-primary ltr:ml-[3px] rtl:mr-[3px]" href="javascript:void(0);">Johne Doe</a></li>
-                            <li class="uppercase text-sm ltr:mr-5 rtl:ml-5 text-black flex items-center gap-x-[0.3rem]"><i class="las la-comment text-primary"></i> <a class="text-primary ltr:ml-[3px] rtl:mr-[3px]" href="javascript:void(0);">15 Comments</a></li>
-                        </ul>
-                    </div>
-                    <h4 class="mb-[5px] leading-[1.3]"><a href="blog-details-1.html">Fusce mollis felis quis tristique.</a></h4>
-                    <p class="mb-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                    <a href="javascript:void(0);" class="py-5 px-[35px] max-xl:py-3 max-xl:px-[25px] text-[15px] max-xl:text-sm inline-block font-medium leading-[1.2] uppercase bg-primary hover:bg-primaryhover text-white rounded duration-700">VIEW POST
-                    </a>
-                </div>
-            </div>
         </div>
 
 
         <div class="text-center mt-10">
-            <a href="#" class="inline-block bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-medium py-3 px-6 rounded-lg transition duration-300">Lihat Semua Berita</a>
+            <a href="<?= base_url('categories/berita')?>" class="inline-block bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-medium py-3 px-6 rounded-lg transition duration-300">Lihat Semua Berita</a>
         </div>
     </div>
+</section>
+
+<section class="bg-gray-50 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-12">
+      
+      <!-- Info Sekolah -->
+      <div>
+        <h2 class="text-2xl font-semibold text-slate-800">Info Sekolah</h2>
+        <h3 class="text-lg font-bold text-sky-600 mt-1 border-l-4 border-sky-600 pl-4">
+          Agenda & Pengumuman
+        </h3>
+
+        <div class="mt-6 space-y-6">
+          <!-- Card 1 -->
+          <div class="bg-white p-6 rounded-2xl shadow-md">
+            <div class="text-sm text-sky-600 font-semibold flex items-center gap-2 mb-2">
+              <!-- Icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3M16 7V3M4 11h16M4 19h16M4 15h16" />
+              </svg>
+              Pengumuman
+            </div>
+            <h4 class="text-base font-bold leading-snug mb-1">
+              PENGUMUMAN KELULUSAN SMKN 1 TEMON TAHUN PELAJARAN 2024/2025
+            </h4>
+            <p class="text-sm text-gray-700 line-clamp-2 mb-3">
+              Berdasarkan Hasil Rapat Pleno Dewan Guru SMK……
+            </p>
+            <a href="#" class="text-sm font-medium text-sky-600 inline-flex items-center">
+              READ MORE
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-white p-6 rounded-2xl shadow-md">
+            <div class="text-sm text-sky-600 font-semibold flex items-center gap-2 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3M16 7V3M4 11h16M4 19h16M4 15h16" />
+              </svg>
+              Pengumuman
+            </div>
+            <h4 class="text-base font-bold leading-snug mb-1">
+              Edaran Pelaksanaan Pembelajaran Selama Ramadan
+            </h4>
+            <p class="text-sm text-gray-700 line-clamp-2 mb-3">
+              Berdasarkan surat edaran Kepala Dinas Pemuda dan……
+            </p>
+            <a href="#" class="text-sm font-medium text-sky-600 inline-flex items-center">
+              READ MORE
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-white p-6 rounded-2xl shadow-md">
+            <div class="text-sm text-sky-600 font-semibold flex items-center gap-2 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3M16 7V3M4 11h16M4 19h16M4 15h16" />
+              </svg>
+              Agenda
+            </div>
+            <h4 class="text-base font-bold leading-snug mb-1">
+              Ujian Sekolah SMKN 1 Temon TA 2023/2024
+            </h4>
+            <p class="text-sm text-gray-700 line-clamp-2 mb-3">
+              Tdk terasa sudah hampir 3...
+            </p>
+            <a href="#" class="text-sm font-medium text-sky-600 inline-flex items-center">
+              READ MORE
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Konten Edukasi -->
+      <div>
+        <h2 class="text-2xl font-semibold text-slate-800">Konten Edukasi</h2>
+        <h3 class="text-lg font-bold text-sky-600 mt-1 border-l-4 border-sky-600 pl-4">
+          Artikel & Jurnal Pendidikan
+        </h3>
+
+        <div class="mt-6 space-y-6">
+          <!-- Artikel 1 -->
+          <div class="flex items-start gap-4">
+            <img src="https://via.placeholder.com/100x100.png?text=IMG1" alt="thumb" class="w-24 h-24 object-cover rounded-lg shrink-0" />
+            <div>
+              <h4 class="text-base font-semibold leading-tight">
+                Apel Pagi Taruna Taruni SMK Negeri 1 Temon, Persiapan Menjelang Ujian Kenaikan Tingkat
+              </h4>
+              <p class="text-sm text-gray-700 mt-1 line-clamp-2">
+                Temon, 19 Juni 2025 – Pada hari Kamis sekitar pukul 07.00 WIB...
+              </p>
+              <a href="#" class="mt-2 inline-flex items-center text-sm font-semibold text-sky-600">
+                selengkapnya
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Artikel 2 -->
+          <div class="flex items-start gap-4">
+            <img src="https://via.placeholder.com/100x100.png?text=IMG2" alt="thumb" class="w-24 h-24 object-cover rounded-lg shrink-0" />
+            <div>
+              <h4 class="text-base font-semibold leading-tight">
+                Bangkit Bersama, Wujudkan Indonesia Kuat: Peran Kritis Generasi Muda SMKN 1 Temon
+              </h4>
+              <p class="text-sm text-gray-700 mt-1 line-clamp-2">
+                Hari Kebangkitan Nasional, yang kita peringati setiap tanggal 20 Mei...
+              </p>
+              <a href="#" class="mt-2 inline-flex items-center text-sm font-semibold text-sky-600">
+                selengkapnya
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

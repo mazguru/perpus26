@@ -58,7 +58,6 @@ class Feed extends BaseController
         // (Anda masih bisa menambah ETag/Cache-Control bila perlu)
         $xmlResponse = $this->response->setXML($payload);
 
-        // Opsi caching ringan (ETag)
         $etag = '"' . sha1($xmlResponse->getBody()) . '"';
         $xmlResponse
             ->setHeader('ETag', $etag)
