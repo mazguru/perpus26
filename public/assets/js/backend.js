@@ -9,7 +9,6 @@ function hideLoading() {
 }
 function settingsApp(config) {
     return {
-        baseUrl: _BASEURL + config.dirUpload,
         data: '',
         isModalOpen: false,
         editIndex: null,

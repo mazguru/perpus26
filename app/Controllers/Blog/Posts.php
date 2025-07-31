@@ -77,21 +77,8 @@ class Posts extends AdminController
     public function getList()
     {
         $posts = $this->m_posts->withDeleted()->getAllPosts();
-        $results = [];
-
-        foreach ($posts as $post) {
-            $results[] = [
-                'id' => $post['id'],
-                'title' => $post['post_title'],
-                'author' => $post['post_author'],
-                'status' => $post['post_status'],
-                'created_at' => $post['created_at'],
-                'is_deleted' => $post['is_deleted'],
-            ];
-        }
-
         $data = [
-            'alldata' => $results
+            'alldata' => $posts
         ];
 
         return $this->response->setJSON($data);

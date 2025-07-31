@@ -4,15 +4,40 @@
             <h1 class="text-2xl font-semibold"><?= $title ?></h1>
         </div>
         <div class="flex justify-between items-center mb-4">
-            <p class="text-xs">Menampilkan daftar album foto dan video</p>
-            <button @click="openModal('create')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-2 rounded text-xs">
-                <i class="bi bi-plus-lg mr-2"></i> Tambah Album
+            <p class="text-sm">Menampilkan daftar kategori</p>
+            <button @click="openModal('create')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-2 rounded text-sm">
+                <i class="bi bi-plus-lg mr-2"></i> Tambah Kategori
             </button>
         </div>
     </div>
     <div class="bg-white dark:bg-boxdark shadow-md rounded-b border-b p-4 table-striped table-hover">
         <table id="table-data" class="table-auto w-full border-collapse border">
         </table>
+        <div class="mb-4">
+            <p class="text-gray-600">
+                <strong x-text="selectedId.length"></strong> data dipilih
+            </p>
+        </div>
+        <div class="md:flex space-x-1 space-y-1 pl-0 sm:pl-2 mt-3 sm:mt-0 gap-4">
+            <button @click="confirmDeleteMultiple()"
+                :disabled="selectedId.length === 0" class="px-3 py-2 text-xs font-medium text-center focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 text-white hover:bg-red-600 rounded-md inline-flex justify-center bg-red-500"
+                :class="{'opacity-50 cursor-not-allowed': selectedId.length === 0}">
+                <i class="bi bi-trash3-fill mr-2"></i>
+                Hapus
+            </button>
+            <button @click="confirmDeletepermanent()"
+                :disabled="selectedId.length === 0" class="px-3 py-2 text-xs font-medium text-center focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 text-white hover:bg-red-600 rounded-md inline-flex justify-center bg-red-500"
+                :class="{'opacity-50 cursor-not-allowed': selectedId.length === 0}">
+                <i class="bi bi-trash3-fill mr-2"></i>
+                Hapus Permanen
+            </button>
+            <button @click="confirmRestoreMultiple()"
+                :disabled="selectedId.length === 0" class="px-3 py-2 text-xs font-medium text-center focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 text-white hover:bg-gray-600 rounded-md inline-flex justify-center bg-gray-500"
+                :class="{'opacity-50 cursor-not-allowed': selectedId.length === 0}">
+                <i class="bi bi-database-up mr-2"></i>
+                Restore
+            </button>
+        </div>
     </div>
     <!-- Modal -->
     <template x-if="showModal">
@@ -40,8 +65,6 @@
                         <select id="role" name="role" x-model="form.category_type" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
                             <option value="post">Post</option>
                             <option value="page">Page</option>
-                            <option value="profil">Profil</option>
-                            <option value="layanan">Layanan</option>
                             <option value="file">File</option>
                         </select>
                     </div>
@@ -95,15 +118,9 @@
                             <i class="bi bi-database-up mr-2"></i>
                             <span>Restore</span>
                         </button>
-                        <button
-                            class="text-xs bg-red-400 px-2 py-1 rounded mr-2 text-white dark:text-white hover:bg-red-300 flex items-center"
-                            @click="confirmDeletepermanent(${row.id})">
-                            <i class="bi bi-trash mr-2"></i>
-                            <span>Hapus</span>
-                        </button>
                         </div>`
                     : `<div class="flex"><button class="text-xs bg-yellow-400 px-2 py-1 rounded mr-2 text-white" @click="editData(${row.id})">Edit</button>
-                        <button class="text-xs bg-red-400 px-2 py-1 rounded mr-2 text-white" @click="deleteData(${row.id})">Hapus</button></div>`
+                        <button class="text-xs bg-red-400 px-2 py-1 rounded mr-2 text-white" @click="confirmDelete(${row.id})">Hapus</button></div>`
                                     }
                 `;
                 }

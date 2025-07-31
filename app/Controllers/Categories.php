@@ -18,12 +18,13 @@ class Categories extends PublicController
         // Ambil kategori
         $catModel = new PostCategoriesModel();
         $category = $catModel->where('category_slug', $slug)
-                             ->where('deleted_at', null) // atau ->where('is_deleted', 0)
-                             ->first();
+            ->where('deleted_at', null) // atau ->where('is_deleted', 0)
+            ->first();
 
         if (!$category) {
             throw PageNotFoundException::forPageNotFound('Kategori tidak ditemukan.');
         }
+        $uri = current_url();
 
         $perPage = (int) (session('post_per_page') ?? 6);
         $page    = max(1, (int) ($this->request->getGet('page') ?? 1));
@@ -32,13 +33,13 @@ class Categories extends PublicController
         $postModel = new PublikPostsModel();
 
         $postModel->select('posts.id, posts.post_title, posts.post_slug, posts.post_image, posts.post_content, posts.post_counter, posts.created_at, u.user_full_name AS post_author')
-                  ->join('users u', 'u.id = posts.post_author', 'left')
-                  ->forCategorySlug($slug)
-                  ->where('posts.post_type', 'post')
-                  ->where('posts.post_status', 'publish')
-                  ->where('posts.post_visibility', 'public')
-                  ->where('posts.deleted_at', null) // atau ->where('posts.is_deleted', 0)
-                  ->orderBy('posts.created_at', 'DESC');
+            ->join('users u', 'u.id = posts.post_author', 'left')
+            ->forCategorySlug($slug)
+            ->where('posts.post_type', 'post')
+            ->where('posts.post_status', 'publish')
+            ->where('posts.post_visibility', 'public')
+            ->where('posts.deleted_at', null) // atau ->where('posts.is_deleted', 0)
+            ->orderBy('posts.created_at', 'DESC');
 
         $results = $postModel->paginate($perPage, 'default', $page);
         $pager   = $postModel->pager;

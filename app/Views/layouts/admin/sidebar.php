@@ -5,14 +5,13 @@
 
     <!-- Logo -->
     <div :class="sidebarToggle ? 'justify-center' : 'justify-between'" class="sidebar-header flex items-center gap-2 pt-8 pb-7">
-        <a href="/">
+        <a href="<?=base_url('dashboard')?>">
             <template x-if="!sidebarToggle">
                 <div class="flex items-center gap-2">
-                    <img class="h-8 dark:hidden" src="/assets/images/logo/logo.svg" alt="Logo">
-                    <img class="h-8 hidden dark:block" src="/assets/images/logo/logo-dark.svg" alt="Logo Dark">
+                    <img class="h-10 dark:hidden" src="<?=base_url('/assets/images/'.session('logo'))?>" alt="Logo">
                     <div>
                         <h1 class="text-base md:text-lg font-bold text-gray-800 uppercase"><?= session('nama_perpus') ?? ''?></h1>
-                        <p class="text-xs text-gray-600">SMP Islam Al Azhar 26 Yogyakarta<br>NPP. 3404061D0100001</p>
+                        <p class="text-xs text-gray-600"><?=session('school_name')?><br>NPP. <?=session('npp')?></p>
                     </div>
                 </div>
             </template>

@@ -8,16 +8,20 @@
         controller: 'blog/posts',
         dirUpload: 'upload/image/',
         columns: [{
-                key: 'title',
+                key: 'post_title',
                 label: 'Judul'
             },
             {
-                key: 'author',
+                key: 'post_author',
                 label: 'Author'
             },
             {
-                key: 'status',
+                key: 'post_status',
                 label: 'Status'
+            },
+            {
+                key: 'category_name',
+                label: 'Kategori'
             },
             {
                 key: 'created_at',

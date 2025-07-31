@@ -9,19 +9,28 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Category extends AdminController
 {
     protected $m_category;
+    public function initController(
+        \CodeIgniter\HTTP\RequestInterface $request,
+        \CodeIgniter\HTTP\ResponseInterface $response,
+        \Psr\Log\LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
 
-    public function __construct()
-    {
         $this->m_category = new PostCategoriesModel();
+        // 🔑 Inisialisasi Primary Key & Table
+        $this->pk = 'id';            // Ganti dengan nama kolom PK sebenarnya
+        $this->table = 'categories';      // Nama tabel
+        $this->model = new \App\Models\GenericModel($this->table, $this->pk);
+        helper(['form', 'url']);
     }
 
     public function getIndex(): string
     {
         $data = [
-            'title' => 'category Media',
+            'title' => 'Kategori',
             'media' => true,
             'categorys' => true,
-            'content' => 'admin/posts/category',
+            'content' => 'admin/categories/index',
         ];
         return view('layouts/master_admin', $data);
     }
@@ -33,7 +42,8 @@ class Category extends AdminController
                 ->where('is_deleted', 'false')
                 ->findAll(),
             'alldata' => $this->m_category
-            ->orderBy('category_type','ASC')
+                ->withDeleted()
+                ->orderBy('category_type', 'ASC')
                 ->findAll()
         ];
 
@@ -77,16 +87,6 @@ class Category extends AdminController
         ]);
     }
 
-    public function edit($id)
-    {
-        $category = $this->m_category->find($id);
-        if (!$category) {
-            return $this->failNotFound('category tidak ditemukan');
-        }
-
-        return $this->response->setJSON($category);
-    }
-
     public function postUpdate($id)
     {
         helper(['form', 'text']);
@@ -104,18 +104,6 @@ class Category extends AdminController
             'updated_by'        => session('user_id'),
         ];
 
-        $cover = $this->request->getFile('image_cover');
-        if ($cover && $cover->isValid() && !$cover->hasMoved()) {
-            $newName = $cover->getRandomName();
-            $cover->move(FCPATH . 'upload/image', $newName);
-            $data['image_cover'] = $newName;
-
-            // Hapus cover lama jika ada
-            if ($category['image_cover'] && file_exists(FCPATH . 'upload/image/' . $category['image_cover'])) {
-                unlink(FCPATH . 'upload/image/' . $category['image_cover']);
-            }
-        }
-
         $this->m_category->update($id, $data);
 
         return $this->response->setJSON([
@@ -124,166 +112,6 @@ class Category extends AdminController
         ]);
     }
 
-    public function postDelete()
-    {
-
-        if (!$this->request->isAJAX()) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Permintaan bukan AJAX.'
-            ]);
-        }
-        $json = $this->request->getJSON();
-        $id = $json->id ?? null;
-
-
-
-        if (!$id) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => 'error',
-                'message' => 'ID tidak ditemukan dalam permintaan.'
-            ]);
-        }
-
-        $this->m_category->update($id, [
-            'is_deleted' => 'true',
-            'deleted_at' => date('Y-m-d H:i:s'),
-            'deleted_by' => session('user_id')
-        ]);
-
-        return $this->response->setJSON([
-            'status'  => 'success',
-            'message' => 'category berhasil dihapus.'
-        ]);
-    }
-    public function postDeletepermanent()
-    {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Permintaan bukan AJAX.'
-            ]);
-        }
-
-        $json = $this->request->getJSON();
-        $ids = $json->id ?? [];
-
-        if (!is_array($ids) || empty($ids)) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => 'error',
-                'message' => 'Data ID tidak valid.'
-            ]);
-        }
-
-        foreach ($ids as $id) {
-            $category = $this->m_category->find($id);
-            if (!$category) continue;
-
-            // Hapus file cover category
-            if (!empty($category['image_cover'])) {
-                $coverPath = FCPATH . 'upload/image/' . $category['image_cover'];
-                if (file_exists($coverPath)) {
-                    unlink($coverPath);
-                }
-            }
-
-            // Ambil dan hapus semua foto dari category
-            $photos = $this->photoModel->where('photo_category_id', $id)->findAll();
-            foreach ($photos as $photo) {
-                if (!empty($photo['photo_name'])) {
-                    $photoPath = FCPATH . 'uploads/photos/' . $photo['photo_name'];
-                    if (file_exists($photoPath)) {
-                        unlink($photoPath);
-                    }
-                }
-
-                $this->photoModel->delete($photo['id']);
-            }
-
-            // Hapus category
-            $this->m_category->delete($id);
-        }
-
-        return $this->response->setJSON([
-            'status' => 'success',
-            'message' => 'Semua category dan foto berhasil dihapus.'
-        ]);
-    }
-
-
-    public function postRestore()
-    {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Permintaan bukan AJAX.'
-            ]);
-        }
-        $json = $this->request->getJSON();
-        $id = $json->id ?? null;
-
-
-        if (!$id) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => 'error',
-                'message' => 'ID tidak ditemukan dalam permintaan.'
-            ]);
-        }
-        $this->m_category->update($id, [
-            'is_deleted' => 'false',
-            'restored_at' => date('Y-m-d H:i:s'),
-            'restored_by' => session('user_id')
-        ]);
-
-        return $this->response->setJSON([
-            'status'  => 'success',
-            'message' => 'category berhasil dipulihkan.'
-        ]);
-    }
-
-    public function postUploadImage($id)
-    {
-        $category = $this->m_category->find($id);
-        if (!$category) {
-            return $this->failNotFound('category tidak ditemukan');
-        }
-
-        $files = $this->request->getFiles();
-        if (!$files || !isset($files['photos'])) {
-            return $this->failValidationErrors(['photos' => 'Foto tidak ditemukan']);
-        }
-
-        $photos = $files['photos'];
-        foreach ($photos as $photo) {
-            if ($photo->isValid() && !$photo->hasMoved()) {
-                $filename = $photo->getRandomName();
-                $photo->move('upload/image/', $filename);
-
-                $this->photoModel->insert([
-                    'photo_category_id' => $id,
-                    'photo_name'     => $filename,
-                    'created_at'     => date('Y-m-d H:i:s'),
-                    'created_by'     => session('user_id'),
-                    'is_deleted'     => 'false'
-                ]);
-            }
-        }
-
-        return $this->response->setJSON([
-            'status'  => 'success',
-            'message' => 'Foto berhasil diunggah.'
-        ]);
-    }
-
-    // Helper
-    private function failValidationErrors($errors)
-    {
-        return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
-            ->setJSON([
-                'status' => 'error',
-                'message' => $errors
-            ]);
-    }
     private function failNotFound()
     {
         return $this->response->setStatusCode(ResponseInterface::HTTP_NOT_FOUND)->setJSON([

@@ -2,34 +2,59 @@
 <html>
 
 <head>
-  <meta charset="UTF-8" />
+  <title><?= isset($page_title) ? $page_title . ' | ' : '' ?><?= __session('school_name') ?></title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="keywords" content="<?= __session('meta_keywords'); ?>" />
+  <meta name="description" content="<?= __session('meta_description'); ?>" />
+  <meta name="subject" content="Situs Pendidikan">
+  <meta name="copyright" content="<?= __session('school_name') ?>">
+  <meta name="language" content="Indonesia">
+  <meta name="robots" content="index,follow" />
+  <meta name="revised" content="Friday, August 1th, 2025, 5:15 pm" />
+  <meta name="Classification" content="Education">
+  <meta name="author" content="Bakhtiar Rifai, bakhtiarsma@gmail.com">
+  <meta name="designer" content="Bakhtiar Rifai, bakhtiarsma@gmail.com">
+  <meta name="reply-to" content="bakhtiarsma@gmail.com">
+  <meta name="owner" content="Bakhtiar Rifai">
+  <meta name="url" content="https://sinmat.my.id">
+  <meta name="identifier-URL" content="https://sinmat.my.id">
+  <meta name="category" content="Admission, Education">
+  <meta name="coverage" content="Worldwide">
+  <meta name="distribution" content="Global">
+  <meta name="rating" content="General">
+  <meta name="revisit-after" content="7 days">
+  <meta http-equiv="Expires" content="0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Copyright" content="<?= __session('school_name'); ?>" />
+  <meta http-equiv="imagetoolbar" content="no" />
+  <meta name="revisit-after" content="7" />
+  <meta name="webcrawlers" content="all" />
+  <meta name="rating" content="general" />
+  <meta name="spiders" content="all" />
+  <meta itemprop="name" content="<?= __session('school_name'); ?>" />
+  <meta itemprop="description" content="<?= __session('meta_description'); ?>" />
+  <meta itemprop="image" content="<?= base_url('assets/images/' . __session('logo')); ?>" />
+  <meta name="csrf-token" content="<?= __session('csrf_token') ?>">
+  <?php if (isset($post_type) && $post_type == 'post') { ?>
+    <meta property="og:url" content="<?= current_url() ?>" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="<?= $query->post_title ?>" />
+    <meta property="og:description" content="<?= word_limiter(strip_tags($query->post_content), 30) ?>" />
+    <meta property="og:image" content="<?= base_url('media_library/posts/large/' . $query->post_image) ?>" />
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?= $query->post_title ?>" />
+    <meta name="twitter:description" content="<?= word_limiter(strip_tags($query->post_content), 30) ?>" />
+    <meta name="twitter:image" content="<?= base_url('media_library/posts/large/' . $query->post_image) ?>" />
 
-  <!-- SEO Meta Tags -->
-  <meta name="title" content="<?= isset($title) ? $title : 'Publik' ?> | SIAPNDAN SMKN 1 Temon" />
-  <meta name="description" content="SMKN 1 Temon adalah sekolah berbasis ketarunaan yang menyediakan informasi absensi, pelaporan pelanggaran taruna, dan layanan lainnya melalui aplikasi SIAPNDAN." />
-  <meta name="keywords" content="SMKN 1 Temon, ketarunaan, SIAPNDAN, absensi taruna, pelaporan pelanggaran, sekolah terbaik Temon" />
-  <meta name="author" content="SMKN 1 Temon" />
-  <meta name="robots" content="index, follow" />
-  <meta name="language" content="id" />
+  <?php } ?>
+  <link rel="icon" href="<?= base_url('assets/images/' . __session('favicon')); ?>">
+  <link rel="alternate" type="application/rss+xml" title="<?= __session('school_name'); ?> Feed" href="<?= base_url('feed') ?>" />
 
-  <!-- Open Graph / Facebook Meta Tags -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="<?= $title ?> | SIAPNDAN SMKN 1 Temon" />
-  <meta property="og:description" content="SMKN 1 Temon adalah sekolah berbasis ketarunaan yang menyediakan informasi absensi, pelaporan pelanggaran taruna, dan layanan lainnya melalui aplikasi SIAPNDAN." />
-  <meta property="og:image" content="<?= base_url('assets/images/logo.png') ?>" />
-  <meta property="og:url" content="<?= current_url() ?>" />
-  <meta property="og:site_name" content="SMKN 1 Temon" />
-
-  <!-- Twitter Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="<?= $title ?> | SIAPNDAN SMKN 1 Temon" />
-  <meta name="twitter:description" content="SMKN 1 Temon adalah sekolah berbasis ketarunaan yang menyediakan informasi absensi, pelaporan pelanggaran taruna, dan layanan lainnya melalui aplikasi SIAPNDAN." />
-  <meta name="twitter:image" content="<?= base_url('assets/images/logo.png') ?>" />
-
-
-  <title><?= esc($title ?? 'Blog Perpustakaan') ?></title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,9 +63,7 @@
 
   <!-- STYLESHEETS -->
   <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/swiper/swiper-bundle.min.css') ?>">
-  <link href="<?= base_url('assets/plugins/owl-carousel/owl.carousel.css') ?>" rel="stylesheet">
-  <link href="<?= base_url('assets/plugins/lightgallery/css/lightgallery.css') ?>" rel="stylesheet">
-  
+
   <link href="<?= base_url('assets/plugins/animate/animate.css') ?>" rel="stylesheet">
   <link href="<?= base_url('assets/plugins/swiper/swiper-bundle.min.css') ?>" rel="stylesheet">
 
@@ -73,6 +96,9 @@
 </head>
 
 <body class="bg-gray-100 text-gray-800" x-data="{ mobileMenuOpen: false, openDropdown: null }">
+  <noscript>
+      You need to enable javaScript to run this app.
+   </noscript>
   <?= $this->include('layouts/partials/header') ?>
   <?= $this->include('layouts/partials/navigation') ?>
 

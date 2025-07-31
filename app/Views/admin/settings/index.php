@@ -24,7 +24,7 @@
                                     </td>
                                     <td class="px-4 py-2 ">
                                         <template x-if="item.setting_value && item.setting_value.match(/\.(jpeg|jpg|gif|png)$/)">
-                                            <img :src="baseUrl + item.setting_value" alt="Image" class="h-20 object-cover rounded">
+                                            <img :src="_BASEURL + 'assets/images/' + item.setting_value" alt="Image" class="h-20 object-cover rounded">
                                         </template>
                                         <template x-if="item.setting_value && !item.setting_value.match(/\.(jpeg|jpg|gif|png)$/)">
                                             <span x-text="item.setting_value"></span>

@@ -7,41 +7,62 @@ use CodeIgniter\Model;
 
 class PostsModel extends Model
 {
-    protected $table            = 'posts';
-    protected $primaryKey       = 'id';
-    protected $returnType       = 'array';
-    protected $useAutoIncrement = true;
+    protected $table          = 'posts';
+    protected $primaryKey     = 'id';
+    protected $returnType     = 'array';
+    protected $useSoftDeletes = true;
 
-    // Soft delete (opsional, sesuaikan dengan struktur DB kamu)
-    protected $useSoftDeletes   = true;
-    protected $deletedField     = 'deleted_at';
-
-    protected $allowedFields    = [
+    protected $allowedFields  = [
         'post_title',
         'post_content',
         'post_image',
-        'post_slug',
-        'post_counter',
         'post_author',
+        'post_categories',
         'post_type',
         'post_status',
         'post_visibility',
-        'post_categories',
+        'post_comment_status',
+        'post_slug',
         'post_tags',
+        'post_counter',
         'created_by',
         'updated_by',
         'deleted_by',
         'restored_by',
         'restored_at',
-        'is_deleted', // kamu pakai string 'false' / 'true' di CI3
-        'created_at',
-        'updated_at',
-        'deleted_at',
+        'is_deleted'
     ];
+    protected $createdField   = 'created_at';
+    protected $updatedField   = 'updated_at';
+    protected $deletedField   = 'deleted_at';
 
-    protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    /**
+     * Filter posts berdasarkan slug kategori.
+     * Asumsi: kolom posts.post_categories berisi CSV ID kategori.
+     */
+    public function forCategorySlug(string $slug): self
+    {
+        // Ambil ID kategori (tabel kategorimu bernama 'categories', type='post')
+        $cat = $this->db->table('categories')
+            ->select('id')
+            ->where('category_slug', $slug)
+            ->where('category_type', 'post')
+            ->where('deleted_at', null)    // jika pakai soft delete
+            // ->where('is_deleted', 0)    // jika pakai flag boolean
+            ->limit(1)
+            ->get()->getRowArray();
+
+        if (!$cat) {
+            // Pastikan tidak ada hasil jika kategori tidak ditemukan
+            return $this->where('1 =', 0);
+        }
+
+        $catId = (int) $cat['id'];
+
+        // Gunakan FIND_IN_SET untuk CSV id kategori
+        // Catatan: ini akan menambah WHERE ke builder internal model.
+        return $this->where("FIND_IN_SET({$catId}, {$this->table}.post_categories)");
+    }
 
     /** Cek login (mengacu ke session/Library Auth jika ada) */
     protected function isLoggedIn(): bool
@@ -207,21 +228,21 @@ class PostsModel extends Model
 
         // pakai alias seperti di query kamu: x1 untuk posts, x2 untuk users
         $this->from($this->table . ' x1')
-             ->select("
+            ->select("
                 x1.id, x1.post_title, x1.created_at, x1.post_image, x1.post_content,
                 x1.post_slug, x1.post_counter, x2.user_full_name AS post_author
              ", false)
-             ->join('users x2', 'x1.post_author = x2.id', 'left')
-             ->where('x1.post_status', 'publish')
-             ->where('x1.is_deleted', 'false')               // sesuaikan tipe kolom (0/1 atau boolean)
-             ->whereIn('x1.post_type', ['post', 'page'])
-             ->groupBy('x1.id');;
+            ->join('users x2', 'x1.post_author = x2.id', 'left')
+            ->where('x1.post_status', 'publish')
+            ->where('x1.is_deleted', 'false')               // sesuaikan tipe kolom (0/1 atau boolean)
+            ->whereIn('x1.post_type', ['post', 'page'])
+            ->groupBy('x1.id');;
 
         if ($keyword !== '') {
             // MySQL/MariaDB: collation *_ci sudah case-insensitive → hindari LOWER()
             $this->groupStart()
-                 ->like('x1.post_title', $keyword, 'both')
-                 ->groupEnd();
+                ->like('x1.post_title', $keyword, 'both')
+                ->groupEnd();
         } else {
             // Jika q kosong, jangan tampilkan semua data (opsional)
             $this->where('1 = 0', null, false);
@@ -352,29 +373,6 @@ class PostsModel extends Model
         return $b->get()->getResultArray();
     }
 
-    public function forCategorySlug(string $slug): self
-    {
-        // Ambil ID kategori (tabel kategorimu bernama 'categories', type='post')
-        $cat = $this->db->table('categories')
-            ->select('id')
-            ->where('category_slug', $slug)
-            ->where('category_type', 'post')
-            ->where('deleted_at', null)    // jika pakai soft delete
-            // ->where('is_deleted', 0)    // jika pakai flag boolean
-            ->limit(1)
-            ->get()->getRowArray();
-
-        if (!$cat) {
-            // Pastikan tidak ada hasil jika kategori tidak ditemukan
-            return $this->where('1 =', 0);
-        }
-
-        $catId = (int) $cat['id'];
-
-        // Gunakan FIND_IN_SET untuk CSV id kategori
-        // Catatan: ini akan menambah WHERE ke builder internal model.
-        return $this->where("FIND_IN_SET({$catId}, {$this->table}.post_categories)");
-    }
 
     public function get_another_pages(int $id = 0, int $limit = 0): array
     {
@@ -416,7 +414,7 @@ class PostsModel extends Model
 
         return $b->get()->getResultArray();
     }
-    
+
     public function getCategoryPost(): array
     {
 
@@ -439,11 +437,7 @@ class PostsModel extends Model
             ->limit(1)
             ->get()->getRowArray();
 
-        $idLike = '+0+';
-        if ($catRow) {
-            $idLike = '+' . $catRow['id'] . '+';
-        }
-
+        $idLike = $catRow['id'];
         // Hitung
         $b = $this->db->table($this->table . ' x1')
             ->join('users x2', 'x1.post_author = x2.id', 'left')
@@ -457,5 +451,21 @@ class PostsModel extends Model
         $this->applyPublicOnlyIfGuest($b, 'x1');
 
         return (int) $b->countAllResults(); // CI4 countAllResults menjalankan query
+    }
+
+    public function countPostsPerCategory(): array
+    {
+        return $this->db->table($this->table . ' x1')
+            ->select('x2.id, x2.category_name, x2.category_slug, COUNT(x1.id) as post_count')
+            ->join('categories x2', 'x2.id = x1.post_categories')
+            ->where('x1.post_type', 'post') // jika ada soft delete
+            ->where('x1.post_status', 'publish') // jika ada soft delete
+            ->where('x1.post_visibility', 'public') // jika ada soft delete
+            ->where('x1.is_deleted', 'false') // jika ada soft delete
+            ->where('x2.category_type', 'post') // jika ada soft delete
+            ->where('x2.is_deleted', 'false')
+            ->groupBy('x2.id')
+            ->get()
+            ->getResultArray();
     }
 }

@@ -32,7 +32,7 @@ class PublicController extends BaseController
         parent::initController($request, $response, $logger);
 
         // Load helper
-        helper(['text', 'blog']);
+        helper(['text', 'blog', 'url']);
 
         // Inisialisasi Token
         $this->token = new Token();

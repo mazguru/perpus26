@@ -171,14 +171,6 @@ if (! function_exists('get_post_categories')) {
     }
 }
 
-if (! function_exists('count_post_categories')) {
-    function count_post_categories(string $category_slug)
-    {
-        $m = new PublikPostModel ();
-        return $m->count_post_categories($category_slug);
-    }
-}
-
 // =========================
 // Categories
 // =========================
@@ -187,6 +179,13 @@ if (! function_exists('get_categories')) {
     {
         $m = model('M_categories');
         return $m->get_categories($category_type, $limit);
+    }
+}
+if (! function_exists('count_post_categories')) {
+    function count_post_categories()
+    {
+        $m = new PublikPostModel();
+        return $m->countPostsPerCategory();
     }
 }
 

@@ -3,11 +3,11 @@
     <div class="container mx-auto px-4 py-16">
         <div class="flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-10 md:mb-0">
-                <h1 class="text-4xl md:text-5xl font-bold text-indigo-900 mb-4">Selamat Datang di <?=session('nama_perpus')?></h1>
-                <p class="text-lg text-gray-700 mb-8"><?= session('meta_description')?></p>
+                <h1 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">Selamat Datang di <?= session('nama_perpus') ?></h1>
+                <p class="text-lg text-gray-700 mb-8"><?= session('meta_description') ?></p>
                 <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="#layanan" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 text-center">Jelajahi Layanan</a>
-                    <a href="#katalog" class="bg-white hover:bg-gray-100 text-indigo-600 font-medium py-3 px-6 rounded-lg border border-indigo-600 transition duration-300 text-center">Katalog Buku</a>
+                    <a href="#layanan" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 text-center">Jelajahi Layanan</a>
+                    <a href="#katalog" class="bg-white hover:bg-gray-100 text-blue-600 font-medium py-3 px-6 rounded-lg border border-blue-600 transition duration-300 text-center">Katalog Buku</a>
                 </div>
             </div>
             <div class="md:w-1/2 flex justify-center">
@@ -24,6 +24,36 @@
                     <circle cx="50" cy="200" r="20" fill="#4f46e5" />
                     <circle cx="450" cy="200" r="20" fill="#4f46e5" />
                 </svg>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .book-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-pattern2 {
+        background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
+        background-image: radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.2) 2%, transparent 0%),
+            radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.2) 2%, transparent 0%);
+        background-size: 100px 100px;
+    }
+</style>
+<!-- Hero Section -->
+<section class="hero-pattern2 text-white py-16">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-4">Jelajahi Dunia Pengetahuan</h2>
+            <p class="text-lg mb-8">Temukan berbagai artikel, berita, jurnal, dan sumber belajar digital untuk menambah wawasan Anda</p>
+            <div class="bg-white rounded-lg p-2 flex items-center shadow-lg">
+                <input type="text" placeholder="Cari artikel berita atau informasi..." class="w-full px-4 py-2 outline-none text-gray-700">
+                <button class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">Cari</button>
             </div>
         </div>
     </div>

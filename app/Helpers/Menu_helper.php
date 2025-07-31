@@ -25,11 +25,6 @@ if (! function_exists('menuadmin')) {
                         'route' => 'blog/posts/create',
                         'roles' => ['administrator', 'super_user']
                     ],
-                    [
-                        'title' => 'Halaman',
-                        'route' => 'blog/page',
-                        'roles' => ['administrator', 'super_user']
-                    ],
                 ]
             ],
             [
@@ -51,7 +46,7 @@ if (! function_exists('menuadmin')) {
             ],
             [
                 'title' => 'Komentar Pesan',
-                'icon'  => 'bi bi-newspaper',
+                'icon'  => 'bi bi-wechat',
                 'roles' => ['administrator', 'super_user'],
                 'submenu' => [
                     [
@@ -68,7 +63,7 @@ if (! function_exists('menuadmin')) {
             ],
             [
                 'title' => 'Kategori',
-                'icon'  => 'bi bi-house',
+                'icon'  => 'bi bi-tags',
                 'route' => 'blog/category',
                 'roles' => ['administrator', 'super_user']
             ],
@@ -84,7 +79,7 @@ if (! function_exists('menuadmin')) {
                     ],
                     [
                         'title' => 'Video',
-                        'route' => 'media/galeri-video',
+                        'route' => 'media/video',
                         'roles' => ['super_user']
                     ],
                     [
@@ -137,7 +132,7 @@ if (! function_exists('menuadmin')) {
                 'roles' => ['super_user'],
                 'submenu' => [
                     [
-                        'title' => 'Umum',
+                        'title' => 'Aplikasi',
                         'route' => 'settings/general',
                         'roles' => ['super_user']
                     ],

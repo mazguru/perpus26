@@ -8,16 +8,24 @@ class PostCategoriesModel extends Model
 {
     protected $table      = 'categories';
     protected $primaryKey = 'id';
+    protected $useTimestamps = true;
+    protected $useSoftDeletes   = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
     protected $allowedFields = [
         'category_name',
         'category_description',
         'category_slug',
         'category_type',
-        'is_deleted'
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'restored_by',
+        'restored_at',
+        'is_deleted',
     ];
-
-    protected $useTimestamps = false;
 
     /**
      * Get filtered data for posts
