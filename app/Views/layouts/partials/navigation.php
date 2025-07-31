@@ -22,6 +22,12 @@
 
         <!-- Menu utama (desktop) -->
         <div class="hidden md:flex space-x-6 items-center text-sm font-medium">
+            <div class="relative group">
+                <!-- Menu tanpa submenu -->
+                    <a :href="_BASEURL" class="hover:text-green-600 text-md">Beranda</a>
+
+
+            </div>
             <template x-for="menu in menus" :key="menu.id">
                 <div class="relative group" x-data="{ hover: false }">
                     <!-- Menu tanpa submenu -->

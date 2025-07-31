@@ -1,4 +1,4 @@
-<aside x-data="menuManager()" x-init="fetchMenu()" 
+<aside x-data="menuManager()" x-init="fetchMenu()"
     :class="sidebarToggle ? 'translate-x-0 lg:w-[90px]' : '-translate-x-full'"
     class="sidebar fixed left-0 top-0 z-99 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 duration-300 ease-linear dark:border-gray-800 dark:bg-black lg:static lg:translate-x-0"
     @click.outside="sidebarToggle = false">
@@ -10,8 +10,10 @@
                 <div class="flex items-center gap-2">
                     <img class="h-8 dark:hidden" src="/assets/images/logo/logo.svg" alt="Logo">
                     <img class="h-8 hidden dark:block" src="/assets/images/logo/logo-dark.svg" alt="Logo Dark">
-                    <img class="h-8 dark:hidden" src="/assets/images/logo/logo-text.png" alt="Logo Text">
-                    <img class="h-8 hidden dark:block" src="/assets/images/logo/logo-text-dark.png" alt="Logo Text Dark">
+                    <div>
+                        <h1 class="text-base md:text-lg font-bold text-gray-800 uppercase"><?= session('nama_perpus') ?? ''?></h1>
+                        <p class="text-xs text-gray-600">SMP Islam Al Azhar 26 Yogyakarta<br>NPP. 3404061D0100001</p>
+                    </div>
                 </div>
             </template>
             <template x-if="sidebarToggle">
@@ -56,50 +58,50 @@
 </aside>
 
 <script>
-function menuManager() {
-    return {
-        menus: [],
-        base_url: '<?= base_url() ?>',
-        currentPath: window.location.pathname,
+    function menuManager() {
+        return {
+            menus: [],
+            base_url: '<?= base_url() ?>',
+            currentPath: window.location.pathname,
 
-        async fetchMenu() {
-            try {
-                const res = await fetch(this.base_url + 'menu/menuadmin');
-                const data = await res.json();
-                console.log(data);
+            async fetchMenu() {
+                try {
+                    const res = await fetch(this.base_url + 'menu/menuadmin');
+                    const data = await res.json();
+                    console.log(data);
 
-                this.menus = data.map(menu => {
-                    const fullMenuPath = this.base_url.replace(location.origin, '') + menu.route;
-                    let menuActive = this.currentPath === fullMenuPath;
+                    this.menus = data.map(menu => {
+                        const fullMenuPath = this.base_url.replace(location.origin, '') + menu.route;
+                        let menuActive = this.currentPath === fullMenuPath;
 
-                    if (!menu.submenu) {
+                        if (!menu.submenu) {
+                            return {
+                                ...menu,
+                                active: menuActive
+                            };
+                        }
+
+                        const submenu = menu.submenu.map(sub => {
+                            const fullSubPath = this.base_url.replace(location.origin, '') + sub.route;
+                            const isActive = this.currentPath === fullSubPath;
+                            if (isActive) menuActive = true;
+                            return {
+                                ...sub,
+                                active: isActive
+                            };
+                        });
+
                         return {
                             ...menu,
-                            active: menuActive
-                        };
-                    }
-
-                    const submenu = menu.submenu.map(sub => {
-                        const fullSubPath = this.base_url.replace(location.origin, '') + sub.route;
-                        const isActive = this.currentPath === fullSubPath;
-                        if (isActive) menuActive = true;
-                        return {
-                            ...sub,
-                            active: isActive
+                            active: menuActive,
+                            submenu
                         };
                     });
 
-                    return {
-                        ...menu,
-                        active: menuActive,
-                        submenu
-                    };
-                });
-
-            } catch (error) {
-                console.error('Gagal memuat menu:', error);
+                } catch (error) {
+                    console.error('Gagal memuat menu:', error);
+                }
             }
         }
     }
-}
 </script>

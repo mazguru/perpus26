@@ -98,6 +98,7 @@ class Category extends AdminController
         $data = [
             'category_name'       => $this->request->getPost('category_name'),
             'category_description' => $this->request->getPost('category_description'),
+            'category_type' => $this->request->getPost('category_type'),
             'category_slug'        => url_title($this->request->getPost('category_name'), '-', true),
             'updated_at'        => date('Y-m-d H:i:s'),
             'updated_by'        => session('user_id'),

@@ -20,60 +20,11 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         <!-- Daftar Halaman -->
         <div class="space-y-2">
-            <div class="bg-white border  rounded-md" x-data="{ hover: false }">
-                <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
-                    <button @click="btnLoadprofil = !btnLoadprofil" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
-                        <span class="font-bold">Load Halaman Profil</span>
-                        <!-- Chevron down icon -->
-                        <svg class="w-4 h-4 transition-transform duration-200"
-                            :class="btnLoadprofil ? 'rotate-180' : ''"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                </div>
-                <div x-show="btnLoadprofil">
-                    <template x-for="profil in profilData" :key="profil.id">
-                        <div class="border-x p-4 bg-white">
-                            <div class="font-bold text-gray-800" x-text="profil.title"></div>
-                            <div class="text-sm text-gray-600" x-text="'URL: ' + profil.url"></div>
-                            <button @click="openModal('from-page'); setFromProfil(profil.id)" class="text-blue-600 text-sm mt-2 hover:underline">
-                                + Tambahkan ke Menu
-                            </button>
-                        </div>
-                    </template>
-                </div>
-            </div>
-            <div class="bg-white border rounded-md" x-data="{ hover: false }">
-                <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
-                    <button @click="btnLoadlayanan = !btnLoadlayanan" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
-                        <span class="font-bold">Load Halaman Layanan</span>
-                        <!-- Chevron down icon -->
-                        <svg class="w-4 h-4 transition-transform duration-200"
-                            :class="btnLoadlayanan ? 'rotate-180' : ''"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                </div>
-                <div x-show="btnLoadlayanan">
-                    <template x-for="layanan in layananData" :key="layanan.id">
-                        <div class="border-x p-4 bg-white">
-                            <div class="font-bold text-gray-800" x-text="layanan.title"></div>
-                            <div class="text-sm text-gray-600" x-text="'URL: ' + layanan.url"></div>
-                            <button @click="openModal('from-page'); setFromLayanan(layanan.id)" class="text-blue-600 text-sm mt-2 hover:underline">
-                                + Tambahkan ke Menu
-                            </button>
-                        </div>
-                    </template>
-                </div>
-            </div>
+            
             <div class="bg-white border rounded-md" x-data="{ hover: false }">
                 <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
                     <button @click="btnLoadPage = !btnLoadPage" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
-                        <span class="font-bold">Load Halaman Lainnya</span>
+                        <span class="font-bold">Load Halaman Page</span>
                         <!-- Chevron down icon -->
                         <svg class="w-4 h-4 transition-transform duration-200"
                             :class="btnLoadPage ? 'rotate-180' : ''"
@@ -233,21 +184,7 @@
                 const page = this.pageData.find(p => p.id == id);
                 if (page) {
                     this.formData.title = page.title;
-                    this.formData.url = page.url;
-                }
-            },
-            setFromProfil(id) {
-                const page = this.profilData.find(p => p.id == id);
-                if (page) {
-                    this.formData.title = page.title;
-                    this.formData.url = page.url;
-                }
-            },
-            setFromLayanan(id) {
-                const page = this.layananData.find(p => p.id == id);
-                if (page) {
-                    this.formData.title = page.title;
-                    this.formData.url = page.url;
+                    this.formData.url = 'page/' + page.url;
                 }
             },
 
@@ -335,20 +272,10 @@
                 if (res) this.pageData = res.data || [];
                 console.log(res);
             },
-            async loadLayanan() {
-                const res = await this.fetchData('/blog/layanan/list');
-                if (res) this.layananData = res.data || [];
-            },
-            async loadProfil() {
-                const res = await this.fetchData('/blog/profil/list');
-                if (res) this.profilData = res.data || [];
-            },
 
             init() {
                 this.loadMenus();
                 this.loadPages();
-                this.loadLayanan();
-                this.loadProfil();
             }
         }
     }
