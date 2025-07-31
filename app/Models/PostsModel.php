@@ -112,6 +112,9 @@ class PostsModel extends Model
         x1.is_deleted,
         x1.post_type,
         x2.user_full_name AS post_author,
+        x2.user_jabatan AS author_jabatan,
+        x2.user_bio AS author_bio,
+        x2.user_contact AS post_contact,
         x3.category_name
     ');
         $builder->join('users x2', 'x1.post_author = x2.id', 'left');

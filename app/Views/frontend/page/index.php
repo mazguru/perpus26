@@ -2,7 +2,7 @@
     <header class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-16">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div class="mb-4 flex justify-center">
-                <span class="inline-block bg-white bg-opacity-20 rounded-full px-4 py-1 text-sm font-semibold">Technology</span>
+                <span class="inline-block bg-white bg-opacity-20 rounded-full px-4 py-1 text-sm font-semibold"><?=$artikel['category_name']?></span>
             </div>
             <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"><?= $artikel['post_title'] ?></h1>
             <div class="flex items-center justify-center space-x-4">
@@ -39,8 +39,8 @@
                 </div>
                 <div class="ml-4">
                     <h3 class="text-xl font-bold"><?= $artikel['post_author'] ?></h3>
-                    <p class="text-gray-600">Senior Web Developer & Tech Enthusiast</p>
-                    <p class="mt-2">John has been developing web applications for over a decade and loves sharing insights about emerging technologies.</p>
+                    <p class="text-gray-600"><?= $artikel['author_jabatan'] ?></p>
+                    <p class="mt-2"><?= $artikel['author_bio'] ?></p>
                 </div>
             </div>
         </div>
@@ -68,10 +68,12 @@
         </div>
 
         <!-- Related Posts -->
+         <?php $otherpage = get_another_pages($artikel['id'], 3)?>
         <div class="mt-12 pt-8 border-t border-gray-200">
             <h3 class="text-2xl font-bold mb-6">Related Articles</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <a href="#" class="block group">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <?php foreach ($otherpage as $page) : ?>
+                <a href="<?= base_url('page/'.$artikel['post_slug'])?>" class="block group">
                     <div class="bg-gray-100 rounded-lg overflow-hidden">
                         <div class="h-48 bg-gray-200 group-hover:opacity-90 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -79,26 +81,13 @@
                             </svg>
                         </div>
                         <div class="p-4">
-                            <span class="text-sm text-indigo-600 font-semibold">Development</span>
-                            <h4 class="text-lg font-bold mt-1 group-hover:text-indigo-600 transition">Modern CSS Techniques Every Developer Should Know</h4>
-                            <p class="text-gray-600 mt-2">Explore the latest CSS features that are changing how we style web applications.</p>
+                            <h4 class="text-lg font-bold mt-1 group-hover:text-indigo-600 transition"><?= $page['post_title'] ?></h4>
+                            <p class="text-gray-600 mt-2 text-sm"><?= strip_tags_truncate($page['post_content'])?></p>
                         </div>
                     </div>
                 </a>
-                <a href="#" class="block group">
-                    <div class="bg-gray-100 rounded-lg overflow-hidden">
-                        <div class="h-48 bg-gray-200 group-hover:opacity-90 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="p-4">
-                            <span class="text-sm text-indigo-600 font-semibold">Performance</span>
-                            <h4 class="text-lg font-bold mt-1 group-hover:text-indigo-600 transition">Optimizing Web Performance: A Practical Guide</h4>
-                            <p class="text-gray-600 mt-2">Learn how to measure and improve your website's performance for better user experience.</p>
-                        </div>
-                    </div>
-                </a>
+                <?php endforeach ?>
+                
             </div>
         </div>
 
