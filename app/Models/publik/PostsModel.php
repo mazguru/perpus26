@@ -250,6 +250,33 @@ class PostsModel extends Model
 
         return $this->orderBy('x1.created_at', 'DESC');
     }
+    public function applyPostsCategoriesId($id): self
+    {
+
+        // pakai alias seperti di query kamu: x1 untuk posts, x2 untuk users
+        $this->from($this->table . ' x1')
+            ->select("
+                x1.id, x1.post_title, x1.created_at, x1.post_image, x1.post_content,
+                x1.post_slug, x1.post_counter, x2.user_full_name AS post_author
+             ", false)
+            ->join('users x2', 'x1.post_author = x2.id', 'left')
+            ->where('x1.post_status', 'publish')
+            ->where('x1.is_deleted', 'false')               // sesuaikan tipe kolom (0/1 atau boolean)
+            ->whereIn('x1.post_type', ['post'])
+            ->groupBy('x1.id');;
+
+        if ($id!== '') {
+            // MySQL/MariaDB: collation *_ci sudah case-insensitive → hindari LOWER()
+            $this->groupStart()
+                ->like('x1.post_categories', $id, 'both')
+                ->groupEnd();
+        } else {
+            // Jika q kosong, jangan tampilkan semua data (opsional)
+            $this->where('1 = 0', null, false);
+        }
+
+        return $this->orderBy('x1.created_at', 'DESC');
+    }
 
 
     public function get_years(): array
@@ -363,7 +390,7 @@ class PostsModel extends Model
             ->where('x1.is_deleted', 'false')
             ->where('x1.post_status', 'publish')
             ->groupStart()
-            ->like('x1.post_categories', $idLike)
+            ->like('x1.post_categories', '1')
             ->groupEnd()
             ->orderBy('x1.created_at', 'DESC');
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\Categories;
 use CodeIgniter\Router\RouteCollection;
 
 $routes->set404Override(static function () {
@@ -8,3 +9,5 @@ $routes->set404Override(static function () {
 
     return view('404');
 });
+
+$routes->get('kategori/(:segment)', 'Categories::index/$1');

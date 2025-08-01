@@ -13,10 +13,13 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="h-[340px] sm:h-[380px] flex flex-col items-center justify-center text-center text-white">
           <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-wide drop-shadow">
-            ARTIKEL
+            <?= esc($title) ?>
           </h1>
-          <p class="mt-4 text-sm sm:text-base text-slate-200">
-            Menampilkan <span class="font-semibold">13</span> tulisan dari <span class="font-semibold">2</span> Halaman artikel
+          <p class="mt-4 text-base md:text-2xl text-slate-200">
+            <?= esc($title) ?> apa yang akan kamu baca hari ini?
+          </p>
+          <p class="m-0 p-0 text-sm md:text-base text-slate-200">
+            Yuk, baca artikelnya agar tambah pengetahuan.
           </p>
 
           <!-- Breadcrumb / Button group -->
