@@ -9,7 +9,7 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 class Categories extends PublicController
 {
 
-    public function index($slug = null)
+    public function getIndex($slug = null)
     {
     
         $page = $this->request->getGet('page') ?? 1;

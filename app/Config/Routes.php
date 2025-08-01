@@ -10,4 +10,3 @@ $routes->set404Override(static function () {
     return view('404');
 });
 
-$routes->get('kategori/(:segment)', 'Categories::index/$1');

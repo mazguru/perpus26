@@ -24,7 +24,7 @@
         <div class="hidden md:flex space-x-6 items-center text-sm font-medium">
             <div class="relative group">
                 <!-- Menu tanpa submenu -->
-                    <a :href="_BASEURL" class="hover:text-green-600 text-md">Beranda</a>
+                    <a :href="_BASEURL" class="hover:text-blue-600 text-md">Beranda</a>
 
 
             </div>
@@ -32,13 +32,13 @@
                 <div class="relative group" x-data="{ hover: false }">
                     <!-- Menu tanpa submenu -->
                     <template x-if="menu.submenus.length === 0">
-                        <a :href="_BASEURL + menu.url" class="hover:text-green-600 text-md" x-text="menu.title"></a>
+                        <a :href="_BASEURL + menu.url" class="hover:text-blue-600 text-md" x-text="menu.title"></a>
                     </template>
 
                     <!-- Menu dengan submenu -->
                     <template x-if="menu.submenus.length > 0">
                         <div @mouseenter="hover = true" @mouseleave="hover = false">
-                            <button class="hover:text-green-600 flex items-center space-x-1">
+                            <button class="hover:text-blue-600 flex items-center space-x-1">
                                 <span x-text="menu.title"></span>
                                 <!-- Chevron down icon -->
                                 <svg class="w-4 h-4 transition-transform duration-200"
@@ -70,13 +70,13 @@
                 <div x-data="{ subOpen: false }">
                     <!-- Menu tanpa submenu -->
                     <template x-if="menu.submenus.length === 0">
-                        <a :href="menu.url" class="block py-2 text-gray-700 hover:text-green-600 font-medium" x-text="menu.title"></a>
+                        <a :href="menu.url" class="block py-2 text-gray-700 hover:text-blue-600 font-medium" x-text="menu.title"></a>
                     </template>
 
                     <!-- Menu dengan submenu -->
                     <template x-if="menu.submenus.length > 0">
                         <div>
-                            <button @click="subOpen = !subOpen" class="w-full flex justify-between py-2 text-gray-700 hover:text-green-600 font-medium">
+                            <button @click="subOpen = !subOpen" class="w-full flex justify-between py-2 text-gray-700 hover:text-blue-600 font-medium">
                                 <span x-text="menu.title"></span>
                                 <svg class="w-4 h-4 transform" :class="subOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -85,7 +85,7 @@
                             </button>
                             <div x-show="subOpen" x-transition class="pl-4">
                                 <template x-for="sub in menu.submenus" :key="sub.id">
-                                    <a :href="sub.url" class="block py-1 text-gray-600 hover:text-green-600" x-text="sub.title"></a>
+                                    <a :href="sub.url" class="block py-1 text-gray-600 hover:text-blue-600" x-text="sub.title"></a>
                                 </template>
                             </div>
                         </div>

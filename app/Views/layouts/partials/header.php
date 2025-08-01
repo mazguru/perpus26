@@ -23,10 +23,10 @@
                 type="text"
                 name="q"
                 placeholder="Cari sesuatu..."
-                class="mr-2 border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+                class="mr-2 border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             <button
                 type="submit"
-                class="bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700 transition duration-200">
+                class="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition duration-200">
                 🔍 Cari
             </button>
         </form>
@@ -41,10 +41,10 @@
                         type="text"
                         name="q"
                         placeholder="Cari..."
-                        class="w-full border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+                        class="w-full border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                     <button
                         type="submit"
-                        class="bg-green-600 text-white text-sm px-3 py-2 rounded hover:bg-green-700 transition duration-200">
+                        class="bg-blue-600 text-white text-sm px-3 py-2 rounded hover:bg-blue-700 transition duration-200">
                         🔍
                     </button>
                 </div>

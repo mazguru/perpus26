@@ -37,7 +37,7 @@
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-800 mb-1">Alamat</h4>
-                                <p class="text-gray-600">Jl. Perpustakaan No. 123, Jakarta Pusat, 10110</p>
+                                <p class="text-gray-600"><?= session('street_address') ?>, <?= session('village') ?>, <?= session('sub_district') ?>, Kab. <?= session('district') ?> <?= session('postal_code') ?></p>
                             </div>
                         </div>
                         <div class="flex items-start">
@@ -48,7 +48,7 @@
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-800 mb-1">Telepon</h4>
-                                <p class="text-gray-600">(021) 1234-5678</p>
+                                <p class="text-gray-600"><?= session('phone') ?></p>
                             </div>
                         </div>
                         <div class="flex items-start">
@@ -59,7 +59,7 @@
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-800 mb-1">Email</h4>
-                                <p class="text-gray-600">info@perpustakaandigital.com</p>
+                                <p class="text-gray-600"><?= session('email') ?></p>
                             </div>
                         </div>
                         <div class="flex items-start">
@@ -70,7 +70,8 @@
                             </div>
                             <div>
                                 <h4 class="font-medium text-gray-800 mb-1">Jam Operasional</h4>
-                                <p class="text-gray-600">Senin - Minggu: 08.00 - 20.00 WIB</p>
+                                <p class="text-gray-600">Senin - Jumat: 07.00 - 16.00 WIB</p>
+                                <p class="text-gray-600">Sabtu: 08.00 - 13.00 WIB</p>
                             </div>
                         </div>
                     </div>

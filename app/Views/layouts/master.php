@@ -112,9 +112,6 @@
   <script src="<?= base_url('assets/js/datatables.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/app.min.js') ?>"></script>
 
-  <!-- LIGHTGALLERY -->
-  <script src="<?= base_url('assets/plugins/jquery/jquery.min.js') ?>"></script>
-  <script src="<?= base_url('assets/plugins/lightgallery/js/lightgallery-all.min.js') ?>"></script>
   <script src="<?= base_url('assets/plugins/swiper/swiper-bundle.min.js') ?>"></script><!-- swiper -->
 
 </body>
