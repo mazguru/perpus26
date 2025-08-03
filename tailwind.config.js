@@ -5,6 +5,7 @@ module.exports = {
       './app/Views/*.php', // Sesuaikan dengan path file PHP Anda
       './app/Views/**/*.php', // Sesuaikan dengan path file PHP Anda
       './app/Views/**/**/*.php', // Sesuaikan dengan path file PHP Anda
+      './app/Views/**/**/**/*.php', // Sesuaikan dengan path file PHP Anda
       './Views/*.php', // Sesuaikan dengan path file PHP Anda
       './application/libraries/*.php', // Sesuaikan dengan path file PHP Anda
       './views/**/**/*.php', // Sesuaikan dengan path file PHP Anda
@@ -339,5 +340,6 @@ module.exports = {
   plugins: [
     require('@tailwindcss/typography'),
     require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/line-clamp'),
   ],
 };

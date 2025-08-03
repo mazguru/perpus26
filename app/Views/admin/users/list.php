@@ -1,4 +1,4 @@
-<div x-data="mgrData(config)" x-init="loadData">
+<div x-data="DM(config)" x-init="loadData">
     <div class="p-4 bg-white dark:bg-boxdark shadow-md block sm:flex items-center justify-between border-b border-gray-200">
         <div class="mb-1 w-full">
 
@@ -8,13 +8,13 @@
 
             <div class="grid grid-cols-1 md:grid-cols-6 gap-4 md:justify-between">
                 <div class="sm:flex items-center sm:divide-x sm:divide-gray-100 mb-3 sm:mb-0 col-span-5">
-                    <p>Menampilkan data siswa Tahun Pelajaran</p>
+                    <p>Menampilkan data semua Users</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:justify-end gap-4">
                     <button @click="openModal('create')" class="w-1/2 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center sm:w-auto">
                         <i class="bi bi-plus-lg font-bold text-[14pt] mr-2"></i>
-                        Tambah Siswa
+                        Tambah User
                     </button>
 
 
@@ -65,11 +65,33 @@
                     <input type="text" id="user_name" name="user_name" x-model="form.user_name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" :disabled="modalType=='edit'">
                     <span id="error_user_name" class="text-red-600 text-sm" x-text="errors.user_name"></span>
                 </div>
+                <!-- Full Name -->
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Nama Lengkap</label>
+                    <input type="text" x-model="form.user_full_name" class="w-full border rounded px-3 py-2" required>
+                </div>
 
                 <div class="mb-4">
                     <label for="user_email" class="block text-sm font-medium text-gray-700">Email</label>
                     <input type="email" id="user_email" name="user_email" x-model="form.user_email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
                     <span id="error_user_email" class="text-red-600 text-sm" x-text="errors.user_email"></span>
+                </div>
+                   <!-- Jabatan -->
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Jabatan</label>
+                    <input type="text" x-model="form.user_jabatan" class="w-full border rounded px-3 py-2">
+                </div>
+
+                <!-- Kontak -->
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Kontak</label>
+                    <input type="text" x-model="form.user_contact" class="w-full border rounded px-3 py-2">
+                </div>
+
+                <!-- Bio -->
+                <div class="md:col-span-2">
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Bio</label>
+                    <textarea x-model="form.user_bio" class="w-full border rounded px-3 py-2" rows="3"></textarea>
                 </div>
 
                 <div class="mb-4">
@@ -129,7 +151,7 @@
             {
                 key: 'last_logged_in',
                 label: 'Login terakhir'
-            }
+            },
         ],
     }
 </script>

@@ -29,7 +29,7 @@ class AdminController extends BaseController
 
         // Proteksi halaman admin: harus login
         $this->auth->restrict();
-        
+        date_default_timezone_set(session('timezone') ? session('timezone') : 'Asia/Jakarta');
 
         // Cek login
         if (!$this->session->has('user_name')) {

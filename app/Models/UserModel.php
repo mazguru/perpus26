@@ -21,7 +21,9 @@ class UserModel extends Model
         'user_group_id',
         'user_type',
         'user_profile_id',
-        'user_biography',
+        'user_bio',
+        'user_contact',
+        'user_jabatan',
         'user_forgot_password_key',
         'user_forgot_password_request_date',
         'has_login',
@@ -54,6 +56,6 @@ class UserModel extends Model
 
     public function getAllUsers()
     {
-        return $this->findAll();
+        return $this->select('id, user_name, user_full_name, user_type, user_email, user_bio, user_jabatan, user_contact, last_logged_in, is_deleted')->findAll();
     }
 }

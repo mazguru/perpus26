@@ -1,34 +1,49 @@
 <article class="bg-white rounded-lg shadow-md p-6 mb-8">
-  <h1 class="text-3xl font-bold text-gray-800 mb-4">The Art of Creative Writing</h1>
-  <div class="flex items-center text-gray-500 text-sm mb-6">
+  <h1 class="text-3xl font-bold text-gray-800 mb-4"><?= $artikel['post_title'] ?></h1>
+  <div class="flex items-center text-gray-500 text-sm mb-6 pb-4 border-b">
     <span class="mr-4">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
-      June 15, 2023
+      <?= _date($artikel['created_at']) ?>
     </span>
     <span class="mr-4">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
       </svg>
-      By Sarah Johnson
+      By <?= $artikel['post_author'] ?>
     </span>
+    <?php if (!empty($artikel['post_tags'])) { ?>
+      <span class="mr-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+        <?= generate_tags_links($artikel['post_tags']) ?>
+      </span>
+    <?php } ?>
     <span>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-      </svg>
-      Writing, Creativity
+      <i class="bi bi-eye h-4 w-4 mr-1"></i>
+      Dibaca <?= number_format($artikel['post_counter']) ?> kali
     </span>
   </div>
 
-  <div class="mb-6 rounded-lg overflow-hidden h-64 bg-gray-100">
-    <svg class="w-full h-full text-gray-300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
-      <path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z" />
-    </svg>
+  <div class="mb-6 rounded-lg overflow-hidden bg-gray-100">
+    <?php
+    $imagePath = FCPATH . 'media_library/posts/headers/' . $artikel['post_image']; // Absolute path
+    if (is_file($imagePath)) { ?>
+      <img src="<?= base_url('media_library/posts/headers/' . $artikel['post_image']) ?>" alt="<?= $artikel['post_title'] ?>" class="w-full">
+    <?php } ?>
+
   </div>
 
   <div class="prose max-w-none text-gray-700">
-    <?= $artikel['post_content'] ?>
+    <?php if ($artikel['post_type'] == 'video'): ?>
+      <div class="overflow-hidden relative rounded-md shadow-[0_0.5rem_1rem_rgba(0,0,0,0.15)]">
+        <iframe class="h-[450px] max-md:h-[300px] max-sm:h-[200px]" src="https://www.youtube.com/embed/<?= $artikel['post_content'] ?>" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; vertical-align: middle;"></iframe>
+      </div>
+    <?php else : ?>
+      <?= $artikel['post_content'] ?>
+    <?php endif ?>
   </div>
 
   <!-- Share Buttons - Bottom -->
@@ -77,8 +92,8 @@
         </svg>
       </div>
       <div class="ml-4">
-        <h3 class="text-lg font-medium text-gray-800">Sarah Johnson</h3>
-        <p class="text-gray-600">Sarah is a professional writer with over 10 years of experience in creative writing and journalism. She loves sharing her knowledge with aspiring writers.</p>
+        <h3 class="text-lg font-medium text-gray-800"><?= $artikel['post_author'] ?></h3>
+        <p class="text-gray-600"><?= $artikel['author_bio'] ?></p>
       </div>
     </div>
   </div>

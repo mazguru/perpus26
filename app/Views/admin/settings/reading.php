@@ -5,7 +5,7 @@
 <script>
     const config = {
         controller: 'settings/reading',
-        dirUpload: 'upload/image/'
+        dirUpload: 'upload/images/'
     }
 
     

@@ -19,31 +19,39 @@ class VisitorModel extends Model
     public function getDailyStats($limit = 30)
     {
         return $this->select("DATE(visited_at) as visit_date, COUNT(*) as total")
-                    ->groupBy("visit_date")
-                    ->orderBy("visit_date", 'DESC')
-                    ->limit($limit)
-                    ->findAll();
+            ->groupBy("visit_date")
+            ->orderBy("visit_date", 'DESC')
+            ->limit($limit)
+            ->findAll();
     }
+    public function getWeeklyVisitors()
+    {
+        $builder = $this->select("DATE(visited_at) as day, COUNT(*) as total")
+            ->where('visited_at >=', date('Y-m-d 00:00:00', strtotime('-6 days')))
+            ->groupBy('day')
+            ->orderBy('day', 'asc');
 
+        return $builder->get()->getResultArray();
+    }
     // Statistik bulanan: kunjungan per bulan
     public function getMonthlyVisitStats($year = null)
     {
         $year = $year ?? date('Y');
 
         return $this->select("DATE_FORMAT(visited_at, '%Y-%m') as month, COUNT(*) as total")
-                    ->where("YEAR(visited_at)", $year)
-                    ->groupBy("month")
-                    ->orderBy("month", 'ASC')
-                    ->findAll();
+            ->where("YEAR(visited_at)", $year)
+            ->groupBy("month")
+            ->orderBy("month", 'ASC')
+            ->findAll();
     }
 
     // Statistik tahunan
     public function getYearlyVisitStats()
     {
         return $this->select("YEAR(visited_at) as year, COUNT(*) as total")
-                    ->groupBy("year")
-                    ->orderBy("year", 'ASC')
-                    ->findAll();
+            ->groupBy("year")
+            ->orderBy("year", 'ASC')
+            ->findAll();
     }
 
     // Mencatat kunjungan
@@ -61,8 +69,8 @@ class VisitorModel extends Model
         $today = date('Y-m-d');
 
         $existing = $this->where('ip_address', $ip)
-                         ->where('DATE(visited_at)', $today)
-                         ->first();
+            ->where('DATE(visited_at)', $today)
+            ->first();
 
         if (! $existing) {
             $this->insert([
@@ -81,8 +89,8 @@ class VisitorModel extends Model
     public function countThisMonth()
     {
         return $this->where('visited_at >=', date('Y-m-01'))
-                    ->where('visited_at <=', date('Y-m-t 23:59:59'))
-                    ->countAllResults();
+            ->where('visited_at <=', date('Y-m-t 23:59:59'))
+            ->countAllResults();
     }
 
     public function countThisYear()

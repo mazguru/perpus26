@@ -61,7 +61,7 @@
                 label: 'Status'
             },
             {
-                key: 'comment_post_id',
+                key: 'post_title',
                 label: 'Komentar Untuk'
             },
             {

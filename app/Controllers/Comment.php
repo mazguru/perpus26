@@ -21,40 +21,151 @@ class Comment extends BaseController
         $offset = ($page - 1) * $limit;
 
         $comments = $this->commentModel->getTopLevelComments($postId, $limit, $offset);
-        $replies  = $this->commentModel->getReplies($postId);
 
         $totalTopLevel = $this->commentModel
             ->where('comment_post_id', $postId)
             ->where('comment_parent_id', null)
-            ->where('is_deleted', 0)
-            ->where('comment_status', 1)
+            ->where('is_deleted', 'false')
+            ->whereIn('comment_status', ['approved', 'unapproved'])
             ->countAllResults();
 
         return $this->response->setJSON([
             'comments' => $comments,
-            'replies'  => $replies,
             'more'     => ($offset + $limit) < $totalTopLevel
+        ]);
+    }
+    public function getReplies($postId)
+    {
+        $replies  = $this->commentModel->getReplies($postId);
+
+        return $this->response->setJSON([
+            'replies'  => $replies,
         ]);
     }
 
     public function postSave()
     {
-        if (! $this->request->isAJAX()) {
-            return $this->response->setStatusCode(403)->setJSON(['status' => 'error', 'message' => 'Akses tidak diizinkan']);
+        helper(['form', 'text']);
+
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Request bukan AJAX.']);
         }
 
-        $data = $this->request->getJSON(true);
-        $data['comment_status'] = 'unapproved';
-        $data['comment_agent'] = $this->request->getUserAgent();
-        $data['comment_ip_address'] = $this->request->getIPAddress();
-        $data['is_deleted'] = 'false';
+        // Ambil data (mendukung JSON dan form)
+        $payload = $this->request->getJSON(true);
 
-        if (! isset($data['comment_author'], $data['comment_content'], $data['comment_email'])) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Data tidak lengkap']);
+        // Validasi
+        $rules = [
+            'comment_id'      => 'permit_empty|is_natural_no_zero', // dipakai untuk update comment_reply
+            'comment_author'  => 'permit_empty|string|max_length[100]',
+            'comment_email'   => 'permit_empty|valid_email|max_length[150]',
+            'comment_url'     => 'permit_empty|valid_url_strict|max_length[255]',
+            'comment_content' => 'permit_empty|string',
+            'comment_reply'   => 'permit_empty|string',
+            'comment_status'  => 'permit_empty|in_list[approved,unapproved,spam,rejected]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setStatusCode(422)->setJSON([
+                'status'  => 'error',
+                'message' => 'Validasi gagal.',
+                'errors'  => $this->validator->getErrors(),
+            ]);
         }
 
-        $this->commentModel->insert($data);
+        $commentId = (int) ($payload['comment_id'] ?? 0);
 
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Komentar berhasil dikirim']);
+        if ($commentId > 0 && isset($payload['comment_reply'])) {
+            // ❗ Update comment_reply admin
+            $ok = $this->commentModel->update($commentId, [
+                'comment_reply' => esc($payload['comment_reply']),
+                'updated_at'    => date('Y-m-d H:i:s'),
+            ]);
+
+            if (! $ok) {
+                return $this->response->setStatusCode(500)->setJSON([
+                    'status'  => 'error',
+                    'message' => 'Gagal menyimpan balasan admin.',
+                    'errors'  => $this->commentModel->errors() ?? null,
+                ]);
+            }
+
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => 'Balasan admin berhasil disimpan.',
+            ]);
+        } else {
+            // 🔁 Komentar biasa
+            unset($payload['comment_id']); // Pastikan tidak dikira update
+
+            $payload['comment_status']     = 'unapproved';
+            $payload['comment_agent']     = $this->request->getUserAgent()->getAgentString();
+            $payload['comment_ip_address'] = $this->request->getIPAddress();
+            $payload['created_at']         = date('Y-m-d H:i:s');
+
+            $ok = $this->commentModel->insert($payload);
+
+            if (! $ok) {
+                return $this->response->setStatusCode(500)->setJSON([
+                    'status'  => 'error',
+                    'message' => 'Gagal menyimpan komentar.',
+                    'errors'  => $this->commentModel->errors() ?? null,
+                ]);
+            }
+
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => 'Komentar berhasil disimpan.',
+            ]);
+        }
+    }
+    public function postSendmessage()
+    {
+        helper(['form', 'text']);
+
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Request bukan AJAX.']);
+        }
+
+        // Ambil data (mendukung JSON dan form)
+        $payload = $this->request->getJSON(true);
+
+        // Validasi
+        $rules = [
+            'comment_author'  => 'required|string|max_length[100]',
+            'comment_email'   => 'required|valid_email|max_length[150]',
+            'comment_url'     => 'permit_empty|valid_url_strict|max_length[255]',
+            'comment_subject' => 'permit_empty|string|max_length[255]',
+            'comment_content' => 'required|string|min_length[50]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setStatusCode(422)->setJSON([
+                'status'  => 'error',
+                'message' => 'Validasi gagal.',
+                'errors'  => $this->validator->getErrors(),
+            ]);
+        }
+
+        $payload['comment_status']     = 'unapproved';
+        $payload['comment_type']     = 'message';
+        $payload['comment_agent']     = $this->request->getUserAgent()->getAgentString();
+        $payload['comment_ip_address'] = $this->request->getIPAddress();
+        $payload['created_at']         = date('Y-m-d H:i:s');
+
+        $ok = $this->commentModel->insert($payload);
+
+        if (! $ok) {
+            return $this->response->setStatusCode(500)->setJSON([
+                'status'  => 'error',
+                'message' => 'Gagal menyimpan komentar.',
+                'errors'  => $this->commentModel->errors() ?? null,
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => 'Komentar berhasil disimpan.',
+        ]);
     }
 }

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title><?= isset($page_title) ? $page_title . ' | ' : '' ?><?= __session('school_name') ?></title>
+  <title><?= isset($title) ? $title . ' | ' : '' ?><?= __session('nama_perpus') ?></title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -10,7 +10,7 @@
   <meta name="keywords" content="<?= __session('meta_keywords'); ?>" />
   <meta name="description" content="<?= __session('meta_description'); ?>" />
   <meta name="subject" content="Situs Pendidikan">
-  <meta name="copyright" content="<?= __session('school_name') ?>">
+  <meta name="copyright" content="<?= __session('nama_perpus') ?>">
   <meta name="language" content="Indonesia">
   <meta name="robots" content="index,follow" />
   <meta name="revised" content="Friday, August 1th, 2025, 5:15 pm" />
@@ -29,13 +29,13 @@
   <meta http-equiv="Expires" content="0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Cache-Control" content="no-cache">
-  <meta http-equiv="Copyright" content="<?= __session('school_name'); ?>" />
+  <meta http-equiv="Copyright" content="<?= __session('nama_perpus'); ?>" />
   <meta http-equiv="imagetoolbar" content="no" />
   <meta name="revisit-after" content="7" />
   <meta name="webcrawlers" content="all" />
   <meta name="rating" content="general" />
   <meta name="spiders" content="all" />
-  <meta itemprop="name" content="<?= __session('school_name'); ?>" />
+  <meta itemprop="name" content="<?= __session('nama_perpus'); ?>" />
   <meta itemprop="description" content="<?= __session('meta_description'); ?>" />
   <meta itemprop="image" content="<?= base_url('assets/images/' . __session('logo')); ?>" />
   <meta name="csrf-token" content="<?= __session('csrf_token') ?>">
@@ -53,7 +53,7 @@
 
   <?php } ?>
   <link rel="icon" href="<?= base_url('assets/images/' . __session('favicon')); ?>">
-  <link rel="alternate" type="application/rss+xml" title="<?= __session('school_name'); ?> Feed" href="<?= base_url('feed') ?>" />
+  <link rel="alternate" type="application/rss+xml" title="<?= __session('nama_perpus'); ?> Feed" href="<?= base_url('feed') ?>" />
 
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,16 +89,35 @@
       transform: translateY(-5px);
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
+
+    .book-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .book-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-pattern2 {
+      background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
+      background-image: radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.2) 2%, transparent 0%),
+        radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.2) 2%, transparent 0%);
+      background-size: 100px 100px;
+    }
   </style>
   <script>
     const _BASEURL = '<?= base_url() ?>';
   </script>
 </head>
 
-<body class="bg-gray-100 text-gray-800" x-data="{ mobileMenuOpen: false, openDropdown: null }">
+<body class="bg-gray-100 text-gray-800" x-data="{ loaded: true, mobileMenuOpen: false, openDropdown: null,  }">
+  <!-- Loader Section -->
   <noscript>
-      You need to enable javaScript to run this app.
-   </noscript>
+    You need to enable javaScript to run this app.
+  </noscript>
+
+
   <?= $this->include('layouts/partials/header') ?>
   <?= $this->include('layouts/partials/navigation') ?>
 
@@ -107,12 +126,12 @@
 
   <?= $this->include('layouts/partials/footer') ?>
   <script src="<?= base_url('assets/js/frontend.js') ?>"></script>
-
+  <script src="<?= base_url('assets/plugins/swiper/swiper-bundle.min.js') ?>"></script><!-- swiper -->
   <script src="<?= base_url('assets/js/notif.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/datatables.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/app.min.js') ?>"></script>
 
-  <script src="<?= base_url('assets/plugins/swiper/swiper-bundle.min.js') ?>"></script><!-- swiper -->
+
 
 </body>
 

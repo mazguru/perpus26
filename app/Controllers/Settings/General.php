@@ -90,16 +90,16 @@ class General extends AdminController
         }
 
         $newName = $file->getRandomName();
-        $file->move('assets/image/', $newName);
+        $file->move('assets/images/', $newName);
 
-        if ($oldFile && is_file(FCPATH . 'assets/image/' . $oldFile)) {
-            @unlink(FCPATH . 'assets/image/' . $oldFile);
+        if ($oldFile && is_file(FCPATH . 'assets/images/' . $oldFile)) {
+            @unlink(FCPATH . 'assets/images/' . $oldFile);
         }
 
         $this->settingsModel->update($id, ['setting_value' => $newName]);
 
         if ($setting['setting_variable'] != 'headmaster_photo') {
-            $this->imageResize(FCPATH . 'assets/image/', $newName, $setting['setting_variable']);
+            $this->imageResize(FCPATH . 'assets/images/', $newName, $setting['setting_variable']);
         }
 
         return $this->response->setJSON(['status' => 'success', 'message' => 'uploaded']);

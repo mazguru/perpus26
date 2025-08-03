@@ -20,7 +20,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         <!-- Daftar Halaman -->
         <div class="space-y-2">
-            
+
             <div class="bg-white border rounded-md" x-data="{ hover: false }">
                 <div @mouseenter="hover = true" @mouseleave="hover = false" class="border-b">
                     <button @click="btnLoadPage = !btnLoadPage" class="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-white">
@@ -52,8 +52,8 @@
         <div class="col-span-2">
             <template x-for="menu in menuData" :key="menu.id">
                 <div class="border p-4 bg-white rounded shadow-sm mb-4">
-                    <div class="font-bold text-gray-800" x-text="menu.order_num + '. ' + menu.title"></div>
-                    <div class="text-sm text-gray-600" x-text="'URL: ' + menu.url"></div>
+                    <div class="font-bold text-gray-800" x-text="menu.menu_position + '. ' + menu.menu_title"></div>
+                    <div class="text-sm text-gray-600" x-text="'URL: ' + menu.menu_url"></div>
                     <div class="mt-2">
                         <a :href="_BASEURL + menu.url" class="text-blue-600 text-sm hover:underline" target="_blank">Lihat</a>
                         <button @click="openModal('create-submenu', menu.id)" class="text-blue-500 text-sm ml-2">+ Submenu</button>
@@ -62,11 +62,11 @@
                     </div>
 
                     <!-- Submenu -->
-                    <template x-for="submenu in submenuData.filter(s => s.menu_id === menu.id)" :key="submenu.id">
+                    <template x-for="submenu in submenuData.filter(s => s.menu_parent_id === menu.id)" :key="submenu.id">
                         <div class="ml-4 mt-2 border-l-2 pl-2">
-                            <div class="text-sm text-gray-700" x-text="submenu.title + ' (' + submenu.url + ')' "></div>
+                            <div class="text-sm text-gray-700" x-text="submenu.menu_title + ' (' + submenu.menu_url + ')' "></div>
                             <div>
-                                <a :href="_BASEURL + submenu.url" class="text-blue-600 text-sm hover:underline" target="_blank">Lihat</a>
+                                <a :href="_BASEURL + submenu.menu_url" class="text-blue-600 text-sm hover:underline" target="_blank">Lihat</a>
                                 <button @click="editsubMenu(submenu.id)" class="text-yellow-500 text-sm ml-2">Edit</button>
                                 <button @click="deleteMenu(submenu.id, 'submenu')" class="text-red-500 text-sm ml-2">Hapus</button>
                             </div>
@@ -93,22 +93,22 @@
                     <!-- Input Nama Menu -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Nama Menu</label>
-                        <input type="text" class="w-full border p-2 rounded" x-model="formData.title" required>
+                        <input type="text" class="w-full border p-2 rounded" x-model="formData.menu_title" required>
                     </div>
 
                     <!-- Input URL -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">URL</label>
-                        <input type="text" class="w-full border p-2 rounded" x-model="formData.url" required>
+                        <input type="text" class="w-full border p-2 rounded" x-model="formData.menu_url" required>
                     </div>
 
                     <!-- Pilih Menu Induk -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Menu Induk (jika sebagai submenu)</label>
-                        <select class="w-full border p-2 rounded" x-model="formData.menu_id">
+                        <select class="w-full border p-2 rounded" x-model="formData.menu_parent_id">
                             <option value="">-- Sebagai Menu Utama --</option>
                             <template x-for="menu in menuData" :key="menu.id">
-                                <option :value="menu.id" x-text="menu.title"></option>
+                                <option :value="menu.id" x-text="menu.menu_title"></option>
                             </template>
                         </select>
                     </div>
@@ -116,16 +116,32 @@
                     <!-- Urutan -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Urutan</label>
-                        <input type="number" class="w-full border p-2 rounded" x-model="formData.order_num" required>
+                        <input type="number" class="w-full border p-2 rounded" x-model="formData.menu_position" required>
                     </div>
 
                     <!-- Aktif -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Aktif</label>
-                        <select class="w-full border p-2 rounded" x-model="formData.is_active">
+                        <select class="w-full border p-2 rounded" x-model="formData.is_actived">
                             <option value="">--Pilih--</option>
                             <option value="1">Ya</option>
                             <option value="0">Tidak</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Tipe Menu</label>
+                        <select class="w-full border p-2 rounded" x-model="formData.menu_type">
+                            <option value="">--Pilih--</option>
+                            <option value="pages">Pada App ini</option>
+                            <option value="link">Link Eksternal</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-sm mb-1">Target</label>
+                        <select x-model="formData.menu_target" class="w-full border px-3 py-2 rounded">
+                            <option value="">--Pilih--</option>
+                            <option value="_self">_self</option>
+                            <option value="_blank">_blank</option>
                         </select>
                     </div>
 
@@ -143,15 +159,17 @@
 <script>
     function menuMg() {
         return {
-            _BASEURL: '<?= base_url() ?>',
             showModal: false,
             modalType: '',
             formData: {
+                menu_title: '',
+                menu_url: '',
+                menu_target: '_self',
+                menu_type: 'pages',
+                menu_parent_id: '',
+                menu_position: 0,
+                is_actived: 1,
                 id: null,
-                title: '',
-                url: '',
-                order_num: 99,
-                menu_id: '',
             },
             menuData: [],
             pageData: [],
@@ -165,26 +183,30 @@
             openModal(type, parentId = null) {
                 this.modalType = type;
                 this.showModal = true;
-                this.formData = {
-                    id: null,
-                    title: '',
-                    url: '',
-                    order_num: 99,
-                    menu_id: parentId,
-                    is_active: 1
-                };
             },
 
             closeModal() {
                 this.showModal = false;
-                this.form={};
+                this.resetForm();
+            },
+            resetForm() {
+                this.formData = {
+                    menu_title: '',
+                    menu_url: '',
+                    menu_target: '_self',
+                    menu_type: 'pages',
+                    menu_parent_id: '',
+                    menu_position: 0,
+                    is_actived: 1,
+                    id: null,
+                };
             },
 
             setFromPage(id) {
                 const page = this.pageData.find(p => p.id == id);
                 if (page) {
-                    this.formData.title = page.title;
-                    this.formData.url = 'page/' + page.url;
+                    this.formData.menu_title = page.title;
+                    this.formData.menu_url = 'page/' + page.url;
                 }
             },
 
@@ -194,6 +216,7 @@
                     Notifier.show('Berhasil!', response.message, 'success');
                     this.loadMenus();
                     this.closeModal();
+                    this.resetForm();
                 } else {
                     Notifier.show('Gagal!', response?.message || 'Terjadi kesalahan.', 'error');
                 }
@@ -206,7 +229,7 @@
                     this.showModal = true;
                     this.formData = {
                         ...item,
-                        
+
                     };
                 }
             },
@@ -214,7 +237,7 @@
             editsubMenu(id) {
                 const item = this.submenuData.find(m => m.id === id);
                 if (item) {
-                    
+
                     this.formData = {
                         ...item
                     };

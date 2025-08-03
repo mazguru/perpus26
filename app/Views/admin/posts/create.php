@@ -20,7 +20,7 @@
             </div>
             <div class="border rounded bg-gray-50 p-2">
                 <label class="block font-semibold">Isi Konten</label>
-                <textarea x-model="form.post_content" rows="20" id='post_content' x-model="form.post_content"
+                <textarea x-model="form.post_content" rows="25" id='post_content' x-model="form.post_content"
                     class="w-full border border-gray-300 p-3 rounded resize-y"
                     placeholder="Tulis isi artikel di sini..."></textarea>
             </div>
@@ -33,6 +33,14 @@
                 <label class="block font-semibold">Slug</label>
                 <input type="text" x-model="form.post_slug"
                     class="w-full text-sm p-2 border border-gray-300 rounded" :readonly="type === 'edit'">
+            </div>
+            <!-- Kategori -->
+            <div class="border rounded bg-gray-50 p-2">
+                <label class="block font-semibold">Publish Date</label>
+                <input
+                    type="datetime-local"
+                    x-model="form.created_at"
+                    class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 px-3 py-2 text-gray-700" />
             </div>
             <!-- Kategori -->
             <div class="border rounded bg-gray-50 p-4">
@@ -49,7 +57,25 @@
                 </template>
                 <span class="text-xs italic text-red-600" x-text='errors.post_categories'></span>
             </div>
+            <div class="border rounded bg-gray-50 p-4 space-y-3">
+                <h3 class="font-semibold mb-2">🏷️ TAGS</h3>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tags (pisahkan dengan koma)</label>
+                    <input
+                        type="text"
+                        x-model="form.post_tags"
+                        name="tags"
+                        class="border rounded w-full p-2 focus:ring focus:ring-blue-200"
+                        placeholder="contoh: teknologi, literasi, coding">
 
+                    <!-- Optional: Tampilkan preview tag -->
+                    <div class="mt-2">
+                        <template x-for="tag in form.post_tags.split(',')" :key="tag.trim()">
+                            <span class="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded mr-1 mb-1" x-text="tag.trim()"></span>
+                        </template>
+                    </div>
+                </div>
+            </div>
             <!-- Publikasi -->
             <div class="border rounded bg-gray-50 p-4 space-y-3">
                 <h3 class="font-semibold mb-2">📤 PUBLIKASI</h3>
@@ -92,6 +118,7 @@
                         </div>
                     </template>
                 </div>
+
             </div>
 
 
@@ -114,240 +141,6 @@
         controller: 'blog/posts',
         post_id: '<?= $post_id ?? null ?>',
         type_crud: '<?= $type ?? 'edit' ?>',
-    }
-
-    function postForm(config) {
-        return {
-            form: {
-                post_title: '',
-                post_slug: '',
-                post_content: '',
-                post_categories: [],
-                post_status: 'publish',
-                post_type: 'post',
-                post_visibility: 'public',
-                post_comment_status: 'open',
-            },
-
-            previewFile: null,
-            curent_tumb: '',
-
-            postId: config.post_id,
-            type: config.type_crud,
-
-            categories: '',
-            errors: [],
-
-            errorMessage: '',
-            generateSlug() {
-                this.form.post_slug = this.form.post_title
-                    .toLowerCase()
-                    .replace(/[^\w\s-]/g, '')
-                    .replace(/\s+/g, '-')
-                    .replace(/--+/g, '-');
-            },
-            validateForm() {
-                if (!this.form.post_title.trim()) {
-                    this.errorMessage = 'Judul tidak boleh kosong.';
-                    return;
-                }
-                if (!this.form.post_content.trim()) {
-                    this.errorMessage = 'Isi post tidak boleh kosong.';
-                    return;
-                }
-                if (!this.form.post_categories) {
-                    this.errorMessage = 'Kategori harus dipilih.';
-                    return;
-                }
-                this.errorMessage = '';
-                this.submitForm();
-                console.log(this.form)
-            },
-
-            async submitForm() {
-                const url = _BASEURL + config.controller + '/store';
-                const method = 'POST';
-
-                const formData = new FormData();
-                for (const key in this.form) {
-                    formData.append(key, this.form[key]);
-                }
-
-                // Pastikan elemen file dimasukkan (gunakan ref atau cara lain)
-                const imageInput = document.querySelector('input[name="post_image"]');
-                if (imageInput && imageInput.files.length > 0) {
-                    formData.append('post_image', imageInput.files[0]);
-                }
-
-                const response = await this.fetchData(url, method, formData);
-
-                console.log(response);
-
-                if (response && response.status === 'success') {
-                    Notifier.show('Berhasil!', response.message, 'success');
-                    this.form.id = response.id;
-                } else {
-                    this.errors = response.errors ? response.errors : [];
-                    Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
-                }
-            },
-            init() {
-                this.loadCategories();
-                this.initTinymce()
-                if (this.type === 'edit' && this.postId) {
-                    this.loadPostById(this.postId);
-                }
-            },
-
-            async fetchData(url, method = 'GET', body = null) {
-                try {
-                    const headers = {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    };
-
-                    // Jangan set Content-Type jika pakai FormData, browser akan otomatis menambahkan boundary
-                    const isFormData = body instanceof FormData;
-                    if (!isFormData) headers['Content-Type'] = 'application/json';
-
-                    const response = await fetch(url, {
-                        method,
-                        headers,
-                        body: body ? (isFormData ? body : JSON.stringify(body)) : null
-                    });
-
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error('HTTP Error', response.status, errorText);
-                        return null;
-                    }
-
-                    return await response.json();
-                } catch (error) {
-                    console.error('Fetch error:', error);
-                    return null;
-                }
-            },
-            async loadCategories() {
-                const response = await this.fetchData(_BASEURL + `${config.controller}/categories`);
-                console.log(response);
-                if (response) {
-                    this.categories = response.categories;
-                } else {
-                    Notifier.show('Error', 'Gagal memuat data.', 'error');
-                }
-            },
-
-            async loadPostById(id) {
-                const response = await this.fetchData(_BASEURL + `${config.controller}/postid/${this.postId}`);
-                console.log(response);
-                if (response) {
-                    this.form = response;
-                } else {
-                    Notifier.show('Error', 'Gagal memuat data.', 'error');
-                }
-            },
-
-            resetForm() {
-                this.form = {
-                    post_title: '',
-                    post_content: '',
-                    category_id: '',
-                    post_status: 'publish',
-                    post_image: '',
-                    post_type: 'post',
-                };
-            },
-            selectCategory(id) {
-                this.form.post_categories = this.form.post_categories === id ? null : id;
-            },
-            handleFile(event) {
-                const file = event.target.files[0];
-                const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-                const imageFile = this.$refs.post_image?.files[0];
-
-                if (file && allowedExtensions.includes(file.name.split('.').pop().toLowerCase())) {
-                    if (imageFile) {
-                        this.form.post_image = imageFile;
-                    }
-                    this.previewFile = URL.createObjectURL(file);
-                } else {
-                    this.form.post_image = null; // Reset jika file tidak valid
-                    Notifier.show('Error', 'File harus berupa JPG, JPEG, PNG, atau GIF.', 'error');
-                }
-            },
-
-            initTinymce() {
-                tinymce.init({
-                    selector: "#post_content",
-                    theme: 'modern',
-                    paste_data_images: true,
-                    relative_urls: false,
-                    remove_script_host: false,
-                    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-                    toolbar2: "print preview forecolor backcolor emoticons",
-                    image_advtab: true,
-                    plugins: [
-                        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-                        "searchreplace wordcount visualblocks visualchars code fullscreen",
-                        "insertdatetime nonbreaking save table contextmenu directionality",
-                        "emoticons template paste textcolor colorpicker textpattern"
-                    ],
-                    automatic_uploads: true,
-                    file_picker_types: 'image',
-                    file_picker_callback: function(cb, value, meta) {
-                        var input = document.createElement('input');
-                        input.setAttribute('type', 'file');
-                        input.setAttribute('accept', 'image/*');
-                        input.onchange = function() {
-                            var file = this.files[0];
-                            var reader = new FileReader();
-                            reader.readAsDataURL(file);
-                            reader.onload = function() {
-                                var id = 'post-image-' + (new Date()).getTime();
-                                var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                                var blobInfo = blobCache.create(id, file, reader.result);
-                                blobCache.add(blobInfo);
-                                cb(blobInfo.blobUri(), {
-                                    title: file.name
-                                });
-                            };
-                        };
-                        input.click();
-                    },
-                    images_upload_handler: function(blobInfo, success, failure) {
-                        var xhr, formData;
-                        xhr = new XMLHttpRequest();
-                        xhr.withCredentials = false;
-                        xhr.open('POST', _BASEURL + 'blog/posts/uploadimageeditor');
-                        xhr.onload = function() {
-                            if (xhr.status != 200) {
-                                failure('HTTP Error: ' + xhr.status);
-                                return;
-                            }
-                            var res = JSON.parse(xhr.responseText);
-                            console.log(res.location);
-                            if (res.status == 'error') {
-                                failure(res.message);
-                                return;
-                            }
-                            success(res.location);
-                        };
-                        formData = new FormData();
-                        formData.append('file', blobInfo.blob(), blobInfo.filename());
-                        xhr.send(formData);
-                    },
-
-                    setup: (editor) => {
-                        editor.on('init', () => {
-                            editor.setContent(this.form.post_content); // Set initial content
-                        });
-                        editor.on('change input', () => {
-                            this.form.post_content = editor.getContent(); // Sync with Alpine.js state
-                        });
-                    }
-                });
-            }
-        }
     }
 </script>
 

@@ -81,10 +81,6 @@ class Comment extends AdminController
 
         // 4) Validasi (partial update tetap aman)
         $rules = [
-            'comment_author'  => 'permit_empty|string|max_length[100]',
-            'comment_email'   => 'permit_empty|valid_email|max_length[150]',
-            'comment_url'     => 'permit_empty|valid_url_strict|max_length[255]',
-            'comment_content' => 'permit_empty|string',
             'comment_reply'   => 'permit_empty|string',
             'comment_status'  => 'permit_empty|in_list[approved,pending,spam,rejected]',
         ];
@@ -101,7 +97,6 @@ class Comment extends AdminController
         $allowed = $this->m_comment->allowedFields ?? [
             'comment_author',
             'comment_email',
-            'comment_url',
             'comment_content',
             'comment_reply',
             'comment_status',

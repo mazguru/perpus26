@@ -11,6 +11,13 @@ if (! function_exists('menuadmin')) {
                 'roles' => ['administrator', 'super_user']
             ],
             [
+                'title' => 'Lihat Blog',
+                'icon'  => 'bi bi-browser-chrome',
+                'route' => '',
+                'blank'=> true,
+                'roles' => ['administrator', 'super_user']
+            ],
+            [
                 'title' => 'Manajemen Tulisan',
                 'icon'  => 'bi bi-newspaper',
                 'roles' => ['administrator', 'super_user'],
@@ -108,23 +115,7 @@ if (! function_exists('menuadmin')) {
                 'title' => 'Manajemen User',
                 'icon'  => 'bi bi-person-gear',
                 'roles' => ['super_user'],
-                'submenu' => [
-                    [
-                        'title' => 'Data User',
-                        'route' => 'users/users',
-                        'roles' => ['super_user']
-                    ],
-                    [
-                        'title' => 'Grup Pengguna',
-                        'route' => 'admin/user-groups',
-                        'roles' => ['super_user']
-                    ],
-                    [
-                        'title' => 'Hak Akses',
-                        'route' => 'admin/permissions',
-                        'roles' => ['super_user']
-                    ],
-                ]
+                'route' => 'users/users',
             ],
             [
                 'title' => 'Pengaturan',

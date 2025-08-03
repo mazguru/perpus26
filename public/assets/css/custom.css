@@ -4,17 +4,17 @@
 }
 
 
-table.dataTable thead > tr > th.dt-orderable-asc,
-table.dataTable thead > tr > th.dt-orderable-desc,
-table.dataTable thead > tr > th.dt-orderable,
-table.dataTable thead > tr > td.dt-orderable-asc,
-table.dataTable thead > tr > td.dt-orderable-desc,
-table.dataTable thead > tr > td.dt-orderable {
+table.dataTable thead>tr>th.dt-orderable-asc,
+table.dataTable thead>tr>th.dt-orderable-desc,
+table.dataTable thead>tr>th.dt-orderable,
+table.dataTable thead>tr>td.dt-orderable-asc,
+table.dataTable thead>tr>td.dt-orderable-desc,
+table.dataTable thead>tr>td.dt-orderable {
 	padding-right: 30px;
 }
 
-table.dataTable thead > tr > th:active,
-table.dataTable thead > tr > td:active {
+table.dataTable thead>tr>th:active,
+table.dataTable thead>tr>td:active {
 	outline: none;
 }
 
@@ -44,7 +44,7 @@ table.dataTable thead .dt-orderable-asc:after {
 }
 
 table.dataTable thead .dt-orderable-none:after {
-	content: ""!important;
+	content: "" !important;
 }
 
 table.dataTable thead .dt-ordering-asc:after {
@@ -57,4 +57,83 @@ table.dataTable thead .dt-ordering-desc:after {
 
 table.dataTable thead .disabled:after {
 	color: #eee;
+}
+
+.sidebar {
+	transition: all 0.3s ease;
+}
+
+.card-stats {
+	transition: all 0.3s ease;
+}
+
+.card-stats:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.table-container {
+	overflow-x: auto;
+}
+
+.chart-container {
+	height: 250px;
+	position: relative;
+}
+
+@media (max-width: 768px) {
+	.sidebar {
+		transform: translateX(-100%);
+		position: fixed;
+		z-index: 50;
+		height: 100vh;
+	}
+
+	.sidebar.active {
+		transform: translateX(0);
+	}
+}
+
+.sidebar:hover {
+  width: 290px;
+}
+.sidebar:hover .logo {
+  display: block;
+}
+.sidebar:hover .logo-icon {
+  display: none;
+}
+.sidebar:hover .sidebar-header {
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.sidebar:hover .menu-group-title {
+  display: block;
+}
+.sidebar:hover .menu-group-icon {
+  display: none;
+}
+.sidebar:hover .menu-item-text {
+  display: inline;
+}
+.sidebar:hover .menu-item-arrow {
+  display: block;
+}
+.sidebar:hover .menu-dropdown {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.banner-one {
+    min-height: 650px;
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
 }

@@ -7,22 +7,50 @@
         </div>
 
         <div class="flex flex-col md:flex-row gap-12">
-            <div class="md:w-1/2">
-                <form class="space-y-6">
-                    <div>
-                        <label for="name" class="block text-gray-700 font-medium mb-2">Nama</label>
-                        <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div class="md:w-1/2 " x-data="formMessage">
+                <div class="bg-white p-8 rounded-lg shadow-md h-full">
+                    <form x-show="formVisible" x-transition @submit.prevent="submitComment" class="space-y-6">
+                        <div>
+                            <label for="comment_author" class="block text-gray-700 font-medium mb-2">Nama</label>
+                            <input type="text" id="comment_author" x-model="form.comment_author" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p x-text="formErrors.comment_author" class="text-red-500 text-sm mt-1">Nama wajib diisi</p>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+                            <input type="email" id="email" x-model="form.comment_email" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p x-text="formErrors.comment_email" class="text-red-500 text-sm mt-1">Email tidak valid</p>
+                        </div>
+
+                        <div>
+                            <label for="subject" class="block text-gray-700 font-medium mb-2">Subjek</label>
+                            <input type="text" id="subject" x-model="form.comment_subject" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <label for="url" class="block text-gray-700 font-medium mb-2">URL (Opsional)</label>
+                            <input type="url" id="url" x-model="form.comment_url" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <label for="message" class="block text-gray-700 font-medium mb-2">Pesan</label>
+                            <textarea id="message" x-model="form.comment_content" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            <p x-text="formErrors.comment_content" class="text-red-500 text-sm mt-1">Pesan wajib diisi</p>
+                        </div>
+
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition w-full">
+                            Kirim Pesan
+                        </button>
+                    </form>
+                    <div x-show="successMessage" x-transition class="p-4 flex items-center space-x-3 text-green-700 bg-green-100 border border-green-300 rounded-md">
+
+                        <svg class="w-24 h-24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <p x-text="successMessage"></p>
                     </div>
-                    <div>
-                        <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
-                        <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="message" class="block text-gray-700 font-medium mb-2">Pesan</label>
-                        <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    </div>
-                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition w-full">Kirim Pesan</button>
-                </form>
+
+                </div>
             </div>
             <div class="md:w-1/2">
                 <div class="bg-white p-8 rounded-lg shadow-md h-full">

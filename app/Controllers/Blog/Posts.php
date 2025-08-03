@@ -5,6 +5,7 @@ namespace App\Controllers\Blog;
 use App\Controllers\AdminController;
 use App\Models\PostCategoriesModel;
 use App\Models\PostsModel;
+use App\Models\TagsModel;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
@@ -124,6 +125,7 @@ class Posts extends AdminController
             'post_title' => 'required|max_length[120]',
             'post_slug' => 'required|alpha_dash',
             'post_content' => 'required',
+            'created_at' => 'required',
             'post_status' => 'required|in_list[draft,publish]',
             'post_categories' => 'required',
         ];
@@ -150,11 +152,13 @@ class Posts extends AdminController
             'post_title' => $this->request->getPost('post_title'),
             'post_slug' => $slug,
             'post_content' => $this->request->getPost('post_content'),
+            'created_at' => $this->request->getPost('created_at'),
             'post_categories' => $this->request->getPost('post_categories'),
             'post_status' => $this->request->getPost('post_status'),
             'post_visibility' => $this->request->getPost('post_visibility'),
             'post_comment_status' => $this->request->getPost('post_comment_status'),
             'post_type' => 'post',
+            'post_tags' => $this->request->getPost('post_tags'),
             'post_author' => session('user_id'),
         ];
 
@@ -212,6 +216,27 @@ class Posts extends AdminController
             $success = $this->m_posts->insert($data);
             $action = 'ditambahkan';
         }
+        if ($success && $this->request->getPost('post_tags')) {
+            $tags = explode(',', $this->request->getPost('post_tags'));
+
+            $tagModel = new TagsModel(); // pastikan model ini sudah ada
+
+            foreach ($tags as $tag) {
+                $tag = trim($tag);
+                if ($tag === '') continue;
+
+                $existing = $tagModel->where('tag', $tag)->first();
+
+                if (!$existing) {
+                    $tagModel->insert([
+                        'tag' => $tag,
+                        'slug' => url_title($tag, '-', true),
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'created_by' => session('user_id')
+                    ]);
+                }
+            }
+        }
         $cekin = $this->m_posts->getIdBySlug($slug);
         return $this->response->setJSON([
             'status' => $success ? 'success' : 'error',
@@ -246,7 +271,7 @@ class Posts extends AdminController
             ]);
         }
 
-        $uploadPath = FCPATH . 'media_library/posts/';
+        $uploadPath = FCPATH . 'media_library/posts/content/';
         if (!is_dir($uploadPath)) {
             mkdir($uploadPath, 0777, true); // Buat folder jika belum ada
         }
@@ -257,7 +282,7 @@ class Posts extends AdminController
 
         return $this->response->setJSON([
             'status' => 'success',
-            'location' => base_url('media_library/posts/' . $newName),
+            'location' => base_url('media_library/posts/content' . $newName),
         ]);
     }
 }

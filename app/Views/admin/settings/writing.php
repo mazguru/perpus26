@@ -4,7 +4,7 @@
 <script>
     const config = {
         controller: 'settings/writing',
-        dirUpload: 'upload/image/'
+        dirUpload: 'upload/images/'
     }
 
     

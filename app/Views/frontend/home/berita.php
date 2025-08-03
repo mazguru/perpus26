@@ -1,11 +1,12 @@
 <section id="berita" class="bg-white py-16">
   <div class="max-w-screen-xl mx-auto px-4">
     <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-gray-800 mb-2">Berita Terbaru</h2>
+      <h2 class="text-3xl font-bold text-gray-800 mb-2">Latest Post</h2>
       <div class="w-24 h-1 bg-indigo-600 mx-auto mb-4"></div>
       <p class="text-gray-600 max-w-2xl mx-auto">Ikuti perkembangan terbaru dari perpustakaan kami, termasuk acara, koleksi baru, dan informasi penting lainnya.</p>
     </div>
     <?php
+    $postquery = get_latest_posts(6);
     if (! empty($postquery)) { ?>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Berita 1 -->
@@ -95,6 +96,7 @@
                 </div>
               </div>
             <?php } ?>
+
           <?php } ?>
           <?php $agenda = get_post_categories('agenda', 2);
           if (! empty($agenda)) { ?>
@@ -116,9 +118,12 @@
                 </div>
               </div>
             <?php } ?>
+
           <?php } ?>
         </div>
-
+        <div class="text-center mt-10">
+          <a href="<?= base_url('categories/pengumuman') ?>" class="inline-block bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-medium py-3 px-6 rounded-lg transition duration-300">Lihat Semua Pengumuman</a>
+        </div>
       </div>
 
       <!-- Konten Edukasi -->
@@ -171,6 +176,9 @@
             <?php } ?>
           </div>
         <?php } ?>
+        <div class="text-center mt-10">
+              <a href="<?= base_url('categories/artikel') ?>" class="inline-block bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-medium py-3 px-6 rounded-lg transition duration-300">Lihat Semua Jurnal</a>
+            </div>
       </div>
     </div>
   </div>

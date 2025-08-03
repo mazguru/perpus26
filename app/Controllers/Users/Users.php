@@ -79,7 +79,7 @@ class Users extends AdminController
         ]);
     }
 
-    public function postEdit($id = null)
+    public function putEdit($id = null)
     {
         $user = $this->userModel->find($id);
         if (!$user) {
@@ -143,7 +143,7 @@ class Users extends AdminController
             ],
             'user_type' => [
                 'label' => 'Role',
-                'rules' => 'required|in_list[super_admin,administrator,employee,student]'
+                'rules' => 'required|in_list[super_user,administrator,employee,student]'
             ]
         ];
 

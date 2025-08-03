@@ -172,15 +172,17 @@ class Page extends AdminController
         }
 
         // Ambil data
-        $data = [
+          $data = [
             'post_title' => $this->request->getPost('post_title'),
             'post_slug' => $slug,
             'post_content' => $this->request->getPost('post_content'),
+            'created_at' => $this->request->getPost('created_at'),
             'post_categories' => $this->request->getPost('post_categories'),
             'post_status' => $this->request->getPost('post_status'),
             'post_visibility' => $this->request->getPost('post_visibility'),
             'post_comment_status' => $this->request->getPost('post_comment_status'),
             'post_type' => 'page',
+            'post_tags' => $this->request->getPost('post_tags'),
             'post_author' => session('user_id'),
         ];
 
@@ -271,7 +273,7 @@ class Page extends AdminController
             ]);
         }
 
-        $uploadPath = FCPATH . 'media_library/posts/';
+        $uploadPath = FCPATH . 'media_library/posts/content/';
         if (!is_dir($uploadPath)) {
             mkdir($uploadPath, 0777, true); // Buat folder jika belum ada
         }
@@ -282,7 +284,7 @@ class Page extends AdminController
 
         return $this->response->setJSON([
             'status' => 'success',
-            'location' => base_url('media_library/posts/' . $newName),
+            'location' => base_url('media_library/posts/content' . $newName),
         ]);
     }
 }

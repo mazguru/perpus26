@@ -53,7 +53,7 @@
         <!-- Statistik Kunjungan -->
         <div x-data="visitSummary()" x-init="loadSummary()">
             <h2 class="text-lg font-semibold mb-4 border-b border-blue-500 inline-block pb-1">Statistik Pengunjung</h2>
-            <div class="space-y-2 text-gray-700 text-sm">
+            <div class="space-y-2 text-gray-300 text-sm">
                 <p>Pengunjung Hari Ini : <span class="font-bold" x-text="today"></span></p>
                 <p>Pengunjung Bulan Ini : <span class="font-bold" x-text="month"></span></p>
                 <p>Pengunjung Tahun Ini : <span class="font-bold" x-text="year"></span></p>

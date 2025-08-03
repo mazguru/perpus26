@@ -87,13 +87,62 @@ class PostsModel extends Model
     }
 
     /** ====== PORTING FUNGSI-FUNGSI CI3 ====== */
+    public function getPostsSlug($slug)
+    {
+        $builder = $this->db->table($this->table . ' x1');
+        $builder->select('
+        x1.id,
+        x1.post_title,
+        x1.post_slug,
+        x1.post_type,
+        x1.post_content,
+        x1.post_tags,
+        x1.post_categories,
+        x1.post_image,
+        x1.post_status,
+        x1.post_counter,
+        x1.created_at,
+        x1.updated_at,
+        x1.is_deleted,
+        x1.post_type,
+        x2.user_full_name AS post_author,
+        x2.user_jabatan AS author_jabatan,
+        x2.user_bio AS author_bio,
+        x2.user_contact AS post_contact,
+        x3.category_name,
+        x3.category_slug
+    ');
+        $builder->join('users x2', 'x1.post_author = x2.id', 'left');
+        $builder->join('categories x3', 'x1.post_categories = x3.id', 'left');
+        $builder->where('x1.is_deleted', 'false');
+        $builder->where('x1.post_slug', $slug);
 
+        return $builder->get()->getRowArray();
+    }
     public function get_latest_posts(int $limit = 0): array
     {
         $b = $this->db->table($this->table . ' x1')
             ->select("
-                x1.id, x1.post_title, x1.created_at, x1.post_content, x1.post_image,
-                x1.post_slug, x1.post_counter, x2.user_full_name AS post_author, x3.category_name
+                x1.id,
+                x1.post_title,
+                x1.post_slug,
+                x1.post_type,
+                x1.post_content,
+                x1.post_tags,
+                x1.post_categories,
+                x1.post_image,
+                x1.post_status,
+                x1.post_counter,
+                x1.created_at,
+                x1.updated_at,
+                x1.is_deleted,
+                x1.post_type,
+                x2.user_full_name AS post_author,
+                x2.user_jabatan AS author_jabatan,
+                x2.user_bio AS author_bio,
+                x2.user_contact AS post_contact,
+                x3.category_name,
+                x3.category_slug
             ", false)
             ->join('users x2', 'x1.post_author = x2.id', 'left')
             ->join('categories x3', 'x1.post_categories = x3.id', 'left')
@@ -180,14 +229,15 @@ class PostsModel extends Model
 
     public function get_related_posts(string $post_categories = '', int $id = 0): array
     {
-        $cats = array_filter(array_map('trim', explode(',', $post_categories)));
+        $catid = $post_categories;
 
         $b = $this->db->table($this->table . ' x1')
             ->select("
                 x1.id, x1.post_title, x1.created_at, x1.post_content, x1.post_image,
-                x1.post_slug, x1.post_counter, x2.user_full_name AS post_author
+                x1.post_slug, x1.post_counter, x2.user_full_name AS post_author, x3.category_name
             ", false)
             ->join('users x2', 'x1.post_author = x2.id', 'left')
+            ->join('categories x3', 'x1.post_categories = x3.id', 'left')
             ->where('x1.post_type', 'post')
             ->where('x1.post_status', 'publish')
             ->where('x1.is_deleted', 'false')
@@ -197,13 +247,9 @@ class PostsModel extends Model
 
         if ($id > 0) $b->where('x1.id !=', $id);
 
-        if (!empty($cats)) {
+        if (!empty($catid)) {
             $b->groupStart();
-            foreach ($cats as $i => $cat) {
-                $i === 0
-                    ? $b->like('x1.post_categories', $cat)
-                    : $b->orLike('x1.post_categories', $cat);
-            }
+            $b->like('x1.post_categories', $catid);
             $b->groupEnd();
         }
 
@@ -265,10 +311,37 @@ class PostsModel extends Model
             ->whereIn('x1.post_type', ['post'])
             ->groupBy('x1.id');;
 
-        if ($id!== '') {
+        if ($id !== '') {
             // MySQL/MariaDB: collation *_ci sudah case-insensitive → hindari LOWER()
             $this->groupStart()
                 ->like('x1.post_categories', $id, 'both')
+                ->groupEnd();
+        } else {
+            // Jika q kosong, jangan tampilkan semua data (opsional)
+            $this->where('1 = 0', null, false);
+        }
+
+        return $this->orderBy('x1.created_at', 'DESC');
+    }
+    public function applyPostsTags($tags): self
+    {
+
+        // pakai alias seperti di query kamu: x1 untuk posts, x2 untuk users
+        $this->from($this->table . ' x1')
+            ->select("
+                x1.id, x1.post_title, x1.created_at, x1.post_image, x1.post_content,
+                x1.post_slug, x1.post_counter, x2.user_full_name AS post_author
+             ", false)
+            ->join('users x2', 'x1.post_author = x2.id', 'left')
+            ->where('x1.post_status', 'publish')
+            ->where('x1.is_deleted', 'false')               // sesuaikan tipe kolom (0/1 atau boolean)
+            ->whereIn('x1.post_type', ['post'])
+            ->groupBy('x1.id');;
+
+        if ($tags !== '') {
+            // MySQL/MariaDB: collation *_ci sudah case-insensitive → hindari LOWER()
+            $this->groupStart()
+                ->like('x1.post_tags', $tags, 'both')
                 ->groupEnd();
         } else {
             // Jika q kosong, jangan tampilkan semua data (opsional)
@@ -494,5 +567,15 @@ class PostsModel extends Model
             ->groupBy('x2.id')
             ->get()
             ->getResultArray();
+    }
+    public function get_videos($limit = 0)
+    {
+        $video = $this->db->table($this->table)
+            ->select('id, post_title, post_content, post_slug')
+            ->where('post_type', 'video')
+            ->where('is_deleted', 'false')
+            ->orderBy('created_at', 'DESC');
+        if ($limit > 0) $video->limit($limit);
+        return $video->get()->getResultArray();
     }
 }

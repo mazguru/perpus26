@@ -1,42 +1,50 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
 
 <head>
-    <meta charset="UTF-8" />
+
+
+    <title><?= isset($title) ? $title . ' | ' : '' ?><?= __session('nama_perpus') ?></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="<?= __session('meta_keywords'); ?>" />
+    <meta name="description" content="<?= __session('meta_description'); ?>" />
+    <meta name="subject" content="Situs Pendidikan">
+    <meta name="copyright" content="<?= __session('nama_perpus') ?>">
+    <meta name="language" content="Indonesia">
+    <meta name="robots" content="index,follow" />
+    <meta name="revised" content="Friday, August 1th, 2025, 5:15 pm" />
+    <meta name="Classification" content="Education">
+    <meta name="author" content="Bakhtiar Rifai, bakhtiarsma@gmail.com">
+    <meta name="designer" content="Bakhtiar Rifai, bakhtiarsma@gmail.com">
+    <meta name="reply-to" content="bakhtiarsma@gmail.com">
+    <meta name="owner" content="Bakhtiar Rifai">
+    <meta name="url" content="https://sinmat.my.id">
+    <meta name="identifier-URL" content="https://sinmat.my.id">
+    <meta name="category" content="Admission, Education">
+    <meta name="coverage" content="Worldwide">
+    <meta name="distribution" content="Global">
+    <meta name="rating" content="General">
+    <meta name="revisit-after" content="7 days">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Copyright" content="<?= __session('nama_perpus'); ?>" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta name="revisit-after" content="7" />
+    <meta name="webcrawlers" content="all" />
+    <meta name="rating" content="general" />
+    <meta name="spiders" content="all" />
+    <meta itemprop="name" content="<?= __session('nama_perpus'); ?>" />
+    <meta itemprop="description" content="<?= __session('meta_description'); ?>" />
+    <meta itemprop="image" content="<?= base_url('assets/images/' . __session('logo')); ?>" />
+    <meta name="csrf-token" content="<?= __session('csrf_token') ?>">
 
-    <!-- SEO Meta Tags -->
-    <meta name="title" content="<?= isset($title) ? $title : 'Publik' ?> | SIAPNDAN SMKN 1 Temon" />
-    <meta name="description" content="SMKN 1 Temon adalah sekolah berbasis ketarunaan yang menyediakan informasi absensi, pelaporan pelanggaran taruna, dan layanan lainnya melalui aplikasi SIAPNDAN." />
-    <meta name="keywords" content="SMKN 1 Temon, ketarunaan, SIAPNDAN, absensi taruna, pelaporan pelanggaran, sekolah terbaik Temon" />
-    <meta name="author" content="SMKN 1 Temon" />
-    <meta name="robots" content="index, follow" />
-    <meta name="language" content="id" />
-
-    <!-- Open Graph / Facebook Meta Tags -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="<?= $title ?> | SIAPNDAN SMKN 1 Temon" />
-    <meta property="og:description" content="SMKN 1 Temon adalah sekolah berbasis ketarunaan yang menyediakan informasi absensi, pelaporan pelanggaran taruna, dan layanan lainnya melalui aplikasi SIAPNDAN." />
-    <meta property="og:image" content="<?= base_url('assets/images/logo.png') ?>" />
-    <meta property="og:url" content="<?= current_url() ?>" />
-    <meta property="og:site_name" content="SMKN 1 Temon" />
-
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="<?= $title ?> | SIAPNDAN SMKN 1 Temon" />
-    <meta name="twitter:description" content="SMKN 1 Temon adalah sekolah berbasis ketarunaan yang menyediakan informasi absensi, pelaporan pelanggaran taruna, dan layanan lainnya melalui aplikasi SIAPNDAN." />
-    <meta name="twitter:image" content="<?= base_url('assets/images/logo.png') ?>" />
-
-    <title>
-        <?php if (current_url() == base_url()) : ?>
-            SIAPNDAN SMKN 1 Temon
-        <?php else : ?>
-            <?= isset($title) ? $title . " | SIAPNDAN SMKN 1 Temon" : "SIAPNDAN SMKN 1 Temon" ?>
-        <?php endif; ?>
-    </title>
     <!-- Favicon -->
-    <link rel="icon" href="<?= base_url('assets/images/favicon.jpg') ?>" type="image/x-icon" />
+    <link rel="icon" href="<?= base_url('assets/images/' . __session('favicon')); ?>">
+    <link rel="alternate" type="application/rss+xml" title="<?= __session('nama_perpus'); ?> Feed" href="<?= base_url('feed') ?>" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,7 +52,6 @@
         rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('assets/css/custom.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/styles.css'); ?>">
-
     <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap-icons.css'); ?>">
 
     <script>

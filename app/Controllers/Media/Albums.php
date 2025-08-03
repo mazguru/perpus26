@@ -12,6 +12,22 @@ class Albums extends AdminController
     protected $albumModel;
     protected $photoModel;
 
+    public function initController(
+        \CodeIgniter\HTTP\RequestInterface $request,
+        \CodeIgniter\HTTP\ResponseInterface $response,
+        \Psr\Log\LoggerInterface $logger
+    ) {
+        parent::initController($request, $response, $logger);
+
+        $this->albumModel = new AlbumModel();
+        $this->photoModel = new PhotoModel();
+        // 🔑 Inisialisasi Primary Key & Table
+        $this->pk = 'id';            // Ganti dengan nama kolom PK sebenarnya
+        $this->table = 'albums';      // Nama tabel
+        $this->model = new \App\Models\GenericModel($this->table, $this->pk);
+        helper(['form', 'url']);
+    }
+
     public function __construct()
     {
         $this->albumModel = new AlbumModel();
@@ -127,123 +143,6 @@ class Albums extends AdminController
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Album berhasil diperbarui.'
-        ]);
-    }
-
-    public function postDelete()
-    {
-
-        if (!$this->request->isAJAX()) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Permintaan bukan AJAX.'
-            ]);
-        }
-        $json = $this->request->getJSON();
-        $id = $json->id ?? null;
-
-
-
-        if (!$id) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => 'error',
-                'message' => 'ID tidak ditemukan dalam permintaan.'
-            ]);
-        }
-
-        $this->albumModel->update($id, [
-            'is_deleted' => 'true',
-            'deleted_at' => date('Y-m-d H:i:s'),
-            'deleted_by' => session('user_id')
-        ]);
-
-        return $this->response->setJSON([
-            'status'  => 'success',
-            'message' => 'Album berhasil dihapus.'
-        ]);
-    }
-    public function postDeletepermanent()
-    {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Permintaan bukan AJAX.'
-            ]);
-        }
-
-        $json = $this->request->getJSON();
-        $ids = $json->id ?? [];
-
-        if (!is_array($ids) || empty($ids)) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => 'error',
-                'message' => 'Data ID tidak valid.'
-            ]);
-        }
-
-        foreach ($ids as $id) {
-            $album = $this->albumModel->find($id);
-            if (!$album) continue;
-
-            // Hapus file cover album
-            if (!empty($album['image_cover'])) {
-                $coverPath = FCPATH . 'upload/image/' . $album['image_cover'];
-                if (file_exists($coverPath)) {
-                    unlink($coverPath);
-                }
-            }
-
-            // Ambil dan hapus semua foto dari album
-            $photos = $this->photoModel->where('photo_album_id', $id)->findAll();
-            foreach ($photos as $photo) {
-                if (!empty($photo['photo_name'])) {
-                    $photoPath = FCPATH . 'uploads/photos/' . $photo['photo_name'];
-                    if (file_exists($photoPath)) {
-                        unlink($photoPath);
-                    }
-                }
-
-                $this->photoModel->delete($photo['id']);
-            }
-
-            // Hapus album
-            $this->albumModel->delete($id);
-        }
-
-        return $this->response->setJSON([
-            'status' => 'success',
-            'message' => 'Semua album dan foto berhasil dihapus.'
-        ]);
-    }
-
-
-    public function postRestore()
-    {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Permintaan bukan AJAX.'
-            ]);
-        }
-        $json = $this->request->getJSON();
-        $id = $json->id ?? null;
-
-
-        if (!$id) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => 'error',
-                'message' => 'ID tidak ditemukan dalam permintaan.'
-            ]);
-        }
-        $this->albumModel->update($id, [
-            'is_deleted' => 'false',
-            'restored_at' => date('Y-m-d H:i:s'),
-            'restored_by' => session('user_id')
-        ]);
-
-        return $this->response->setJSON([
-            'status'  => 'success',
-            'message' => 'Album berhasil dipulihkan.'
         ]);
     }
 

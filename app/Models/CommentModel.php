@@ -43,7 +43,7 @@ class CommentModel extends Model
         return $this->where('comment_post_id', $postId)
             ->where('comment_parent_id', null)
             ->where('is_deleted', 'false')
-            ->where('comment_status', 'approved')
+            ->whereIn('comment_status', ['approved', 'unapproved'])
             ->orderBy('created_at', 'DESC')
             ->findAll($limit, $offset);
     }
@@ -52,8 +52,8 @@ class CommentModel extends Model
     {
         return $this->where('comment_post_id', $postId)
             ->where('comment_parent_id !=', null)
+            ->whereIn('comment_status', ['approved', 'unapproved'])
             ->where('is_deleted', 'false')
-            ->where('comment_status', 'approved')
             ->orderBy('created_at', 'ASC')
             ->findAll();
     }
@@ -116,19 +116,21 @@ class CommentModel extends Model
     {
         $b = $this->db->table($this->table . ' x1')
             ->select('
-                x2.id,
+                x1.id,
                 x1.comment_author,
                 x1.comment_url,
                 x1.comment_content,
                 x1.comment_reply,
+                x1.comment_type,
+                x1.comment_status,
                 x2.id AS comment_post_id,
                 x2.post_title,
                 x2.post_slug,
                 x1.created_at
             ', false)
             ->join('posts x2', 'x1.comment_post_id = x2.id', 'left')
-            ->where('x1.comment_type', 'post')
-            ->where('x1.comment_status', 'approved')
+            ->whereIn('x1.comment_type', ['post', 'message'])
+            ->whereIn('x1.comment_status', ['approved', 'unapproved'])
             ->where('x1.is_deleted', 'false')
             ->orderBy('x1.created_at', 'DESC');
 

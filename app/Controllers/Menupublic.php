@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\Auth;
-use App\Models\MenuModel;
+use App\Models\MenusModel;
 use Config\AdminMenu;
 
 class Menupublic extends PublicController
@@ -13,29 +13,11 @@ class Menupublic extends PublicController
         if (! $this->request->isAJAX()) {
             return $this->response->setStatusCode(403)->setJSON(['status' => 'error', 'message' => 'Akses tidak diizinkan']);
         }
-        $menuModel = new MenuModel();
-        $rawMenus = $menuModel->getMenusWithSubmenus();
+        $menuModel = new MenusModel();
+        $rawMenus = $menuModel->getMenuWithChildren();
 
-        $menus = [];
-        foreach ($rawMenus as $row) {
-            if (!isset($menus[$row['id']])) {
-                $menus[$row['id']] = [
-                    'id' => $row['id'],
-                    'title' => $row['title'],
-                    'url' => $row['url'],
-                    'submenus' => []
-                ];
-            }
+        
 
-            if (!empty($row['submenu_id'])) {
-                $menus[$row['id']]['submenus'][] = [
-                    'id' => $row['submenu_id'],
-                    'title' => $row['submenu_title'],
-                    'url' => $row['submenu_url']
-                ];
-            }
-        }
-
-        return $this->response->setJSON(array_values($menus));
+        return $this->response->setJSON($rawMenus); 
     }
 }

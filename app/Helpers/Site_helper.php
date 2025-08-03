@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AlbumModel;
 use CodeIgniter\Model;
 use CodeIgniter\I18n\Time;
 use App\Models\LinksModel;
@@ -14,6 +15,7 @@ use App\Models\VideosModel;
 use App\Models\AlbumsModel;
 use App\Models\MenuModel;
 use App\Models\CategoriesModel;
+use App\Models\PhotoModel;
 use App\Models\PostsModel;
 use App\Models\publik\PostsModel as PublikPostModel;
 
@@ -48,9 +50,9 @@ if (! function_exists('get_links')) {
 if (! function_exists('get_tags')) {
     function get_tags(int $limit = 0)
     {
-        $m = model('M_tags');
+        $m = new TagsModel();
         // TRUE di CI3 untuk include_count (misal). Sesuaikan dengan model CI4 Anda.
-        return $m->get_tags($limit, true);
+        return $m->where('is_deleted', 'false')->findAll($limit);
     }
 }
 
@@ -236,7 +238,7 @@ if (! function_exists('get_opening_speech')) {
 if (! function_exists('get_videos')) {
     function get_videos(int $limit = 0)
     {
-        $m = model('M_videos');
+        $m = new PublikPostModel();
         return $m->get_videos($limit);
     }
 }
@@ -244,8 +246,21 @@ if (! function_exists('get_videos')) {
 if (! function_exists('get_albums')) {
     function get_albums(int $limit = 0)
     {
-        $m = model('M_albums');
-        return $m->get_albums($limit);
+        $photos = new PhotoModel();
+        $albumModel = new AlbumModel();
+
+        $albums = $albumModel->where('is_deleted', 'false')->findAll();
+
+        foreach ($albums as &$album) {
+            $albumPhotos = $photos
+                ->where('photo_album_id', $album['id'])
+                ->where('is_deleted', 'false')
+                ->findAll($limit);
+
+            $album['photos'] = $albumPhotos;
+            $album['total_photos'] = count($albumPhotos);
+        }
+        return $albums;
     }
 }
 
@@ -348,9 +363,33 @@ if (! function_exists('generate_tags_links')) {
         foreach ($tags as $tag) {
             // url_title tersedia di helper 'url'
             $tag_slug = url_title($tag, '-', true);
-            $links[] = '<a href="' . esc(base_url('tag/' . $tag_slug)) . '">' . esc(ucfirst($tag)) . '</a>';
+            $links[] = '<a class="hover:underline" href="' . esc(base_url('tag/' . $tag_slug)) . '">' . esc(ucfirst($tag)) . '</a>';
         }
 
         return implode(', ', $links);
+    }
+}
+
+if (!function_exists('reading_time')) {
+    /**
+     * Estimasi waktu membaca artikel
+     *
+     * @param string $content Konten artikel (HTML atau plain text)
+     * @param int $wpm Words per minute (default 200)
+     * @return string Waktu baca, misalnya: "2 menit baca"
+     */
+    function reading_time(string $content, int $wpm = 200): string
+    {
+        // Hilangkan tag HTML jika ada
+        $text = strip_tags($content);
+
+        // Hitung jumlah kata
+        $wordCount = str_word_count($text);
+
+        // Hitung waktu baca dalam menit (dibulatkan ke atas)
+        $minutes = (int) ceil($wordCount / $wpm);
+
+        // Output yang fleksibel
+        return $minutes . ' menit baca';
     }
 }

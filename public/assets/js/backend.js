@@ -273,7 +273,7 @@ function DM(config) {
                                             class="absolute right-0 mt-1 w-32 bg-white shadow-lg rounded-md border dark:bg-gray-800 z-50"
                                             style="display: none;">
                                             
-                                    ${row.is_deleted == 1
+                                    ${row.is_deleted == 'true'
                                         ? `<button
                                                 class="w-full px-4 py-2 text-left text-black dark:text-white hover:bg-gray-100 flex items-center"
                                                 @click="confirmRestore(${row.id})">
@@ -458,7 +458,7 @@ function mgrData(config) {
         errorData: '',
         selectedId: [],
 
-        errors:{},
+        errors: {},
 
 
         deleteUrl: _BASEURL + `${config.controller}/delete`,
@@ -714,7 +714,7 @@ function mgrData(config) {
             window.location.href = this.createUrl;
         },
         editContent(id) {
-            window.location.href = this.editUrl + '/'+ id;
+            window.location.href = this.editUrl + '/' + id;
         }
 
     };
@@ -817,4 +817,437 @@ function postingan(config) {
         }
 
     };
+}
+
+function dashboardData() {
+    return {
+        app: {},
+        visitor: {},
+        stats: {},
+        latest: {},
+        categories: {},
+        comments: {},
+        async fetchData(url, method = 'GET', body = null) {
+            try {
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                const isFormData = body instanceof FormData;
+
+                if (!isFormData) headers['Content-Type'] = 'application/json';
+
+                const response = await fetch(url, {
+                    method,
+                    headers,
+                    body: body ? (isFormData ? body : JSON.stringify(body)) : null
+                });
+
+                // Handle status error
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP Error', response.status, errorText);
+                    return null; // fetchData akan return null => tangani di pemanggil
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                return null;
+            }
+        },
+        async loadDashboard() {
+            const response = await this.fetchData(_BASEURL + `dashboard/stats`);
+            console.log(response);
+            if (response) {
+                this.stats = response.stats;
+                this.visitor = response.visitor;
+                this.app = response.app;
+                this.latest = response.post;
+                this.categories = response.categories;
+                this.comments = response.comment;
+                this.renderChart();
+                this.renderCategoriesChart();
+            } else {
+                Notifier.show('Error', 'Gagal memuat data.', 'error');
+            }
+        },
+        renderChart() {
+            if (!this.visitor || !this.visitor.label) return;
+
+            const ctx = this.$refs.canvas.getContext('2d');
+
+            if (this.chart) {
+                this.chart.destroy(); // Hancurkan jika sudah ada chart sebelumnya
+            }
+
+            this.chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: this.visitor.label,
+                    datasets: [{
+                        label: 'Jumlah Pengunjung',
+                        data: this.visitor.data,
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        },
+        renderCategoriesChart() {
+            if (!this.categories || !this.categories.label) return;
+
+            const ctx = this.$refs.categoriesCanvas.getContext('2d');
+
+            if (this.categoriesChart) {
+                this.categoriesChart.destroy();
+            }
+
+            this.categoriesChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: this.categories.label,
+                    datasets: [{
+                        data: this.categories.data,
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#4B5563', // teks abu
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+    }
+}
+function stripTagsTruncate(str, length = 150) {
+    // Hapus tag HTML
+    const stripped = str.replace(/<\/?[^>]+(>|$)/g, '');
+
+    if (stripped.length <= length) {
+        return stripped;
+    }
+
+    // Potong string
+    let truncated = stripped.substring(0, length);
+
+    // Potong di spasi terakhir agar tidak memotong kata
+    const lastSpace = truncated.lastIndexOf(' ');
+    if (lastSpace !== -1) {
+        truncated = truncated.substring(0, lastSpace);
+    }
+
+    return truncated.trim() + '...';
+}
+
+
+function timeAgo(datetime) {
+    const now = new Date();
+    const past = new Date(datetime.replace(' ', 'T')); // ISO-compatible
+    const seconds = Math.floor((now - past) / 1000);
+
+    const intervals = [
+        { label: 'tahun', seconds: 31536000 },
+        { label: 'bulan', seconds: 2592000 },
+        { label: 'hari', seconds: 86400 },
+        { label: 'jam', seconds: 3600 },
+        { label: 'menit', seconds: 60 },
+        { label: 'detik', seconds: 1 }
+    ];
+
+    for (const interval of intervals) {
+        const count = Math.floor(seconds / interval.seconds);
+        if (count > 0) {
+            return `${count} ${interval.label}${count > 1 ? '' : ''} yang lalu`;
+        }
+    }
+
+    return 'baru saja';
+}
+
+function postForm(config) {
+    return {
+        form: {
+            post_title: '',
+            post_slug: '',
+            post_content: '',
+            post_categories: [],
+            post_status: 'publish',
+            post_type: 'post',
+            post_visibility: 'public',
+            post_comment_status: 'open',
+            created_at: new Date().toLocaleString("sv-SE", {
+                timeZone: "Asia/Jakarta",
+                hour12: false,
+            }).replace(" ", "T").slice(0, 16),
+            post_tags: ''
+        },
+
+        previewFile: null,
+        curent_tumb: '',
+
+        postId: config.post_id,
+        type: config.type_crud,
+
+        categories: '',
+        errors: [],
+
+        errorMessage: '',
+        generateSlug() {
+            this.form.post_slug = this.form.post_title
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/--+/g, '-');
+        },
+        validateForm() {
+            if (!this.form.post_title.trim()) {
+                this.errorMessage = 'Judul tidak boleh kosong.';
+                return;
+            }
+            if (!this.form.post_content.trim()) {
+                this.errorMessage = 'Isi post tidak boleh kosong.';
+                return;
+            }
+            if (!this.form.post_categories) {
+                this.errorMessage = 'Kategori harus dipilih.';
+                return;
+            }
+            this.errorMessage = '';
+            this.submitForm();
+            console.log(this.form)
+        },
+
+        async submitForm() {
+            const url = _BASEURL + config.controller + '/store';
+            const method = 'POST';
+
+            const formData = new FormData();
+            for (const key in this.form) {
+                formData.append(key, this.form[key]);
+            }
+
+            // Pastikan elemen file dimasukkan (gunakan ref atau cara lain)
+            const imageInput = document.querySelector('input[name="post_image"]');
+            if (imageInput && imageInput.files.length > 0) {
+                formData.append('post_image', imageInput.files[0]);
+            }
+
+            const response = await this.fetchData(url, method, formData);
+
+            console.log(response);
+
+            if (response && response.status === 'success') {
+                Notifier.show('Berhasil!', response.message, 'success');
+                this.form.id = response.id;
+            } else {
+                this.errors = response.errors ? response.errors : [];
+                Notifier.show('Gagal!', response ? response.message : 'Terjadi kesalahan.', 'error');
+            }
+        },
+        init() {
+            this.loadCategories();
+            this.initTinymce()
+            if (this.type === 'edit' && this.postId) {
+                this.loadPostById(this.postId);
+            }
+        },
+
+        async fetchData(url, method = 'GET', body = null) {
+            try {
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+
+                // Jangan set Content-Type jika pakai FormData, browser akan otomatis menambahkan boundary
+                const isFormData = body instanceof FormData;
+                if (!isFormData) headers['Content-Type'] = 'application/json';
+
+                const response = await fetch(url, {
+                    method,
+                    headers,
+                    body: body ? (isFormData ? body : JSON.stringify(body)) : null
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP Error', response.status, errorText);
+                    return null;
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                return null;
+            }
+        },
+        async loadCategories() {
+            const response = await this.fetchData(_BASEURL + `${config.controller}/categories`);
+            console.log(response);
+            if (response) {
+                this.categories = response.categories;
+            } else {
+                Notifier.show('Error', 'Gagal memuat data.', 'error');
+            }
+        },
+
+        async loadPostById(id) {
+            const response = await this.fetchData(_BASEURL + `${config.controller}/postid/${this.postId}`);
+            console.log(response);
+            if (response) {
+                this.form = response;
+                const date = new Date(response.created_at.replace(' ', 'T')); // '2025-07-31T22:23:07'
+                this.form.created_at = date.toLocaleString("sv-SE", {
+                    timeZone: "Asia/Jakarta",
+                    hour12: false,
+                }).replace(" ", "T").slice(0, 16);
+                this.form.post_tags = response.post_tags ? response.post_tags : '';
+            } else {
+                Notifier.show('Error', 'Gagal memuat data.', 'error');
+            }
+        },
+
+        resetForm() {
+            this.form = {
+                post_title: '',
+                post_content: '',
+                category_id: '',
+                post_status: 'publish',
+                post_image: '',
+                post_type: 'post',
+            };
+        },
+        selectCategory(id) {
+            this.form.post_categories = this.form.post_categories === id ? null : id;
+        },
+        handleFile(event) {
+            const file = event.target.files[0];
+            const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+            const imageFile = this.$refs.post_image?.files[0];
+
+            if (file && allowedExtensions.includes(file.name.split('.').pop().toLowerCase())) {
+                if (imageFile) {
+                    this.form.post_image = imageFile;
+                }
+                this.previewFile = URL.createObjectURL(file);
+            } else {
+                this.form.post_image = null; // Reset jika file tidak valid
+                Notifier.show('Error', 'File harus berupa JPG, JPEG, PNG, atau GIF.', 'error');
+            }
+        },
+
+        initTinymce() {
+            tinymce.init({
+                selector: "#post_content",
+                theme: 'modern',
+                paste_data_images: true,
+                relative_urls: false,
+                remove_script_host: false,
+                toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                toolbar2: "print preview forecolor backcolor emoticons",
+                image_advtab: true,
+                plugins: [
+                    "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime nonbreaking save table contextmenu directionality",
+                    "emoticons template paste textcolor colorpicker textpattern"
+                ],
+                automatic_uploads: true,
+                file_picker_types: 'image',
+                file_picker_callback: function (cb, value, meta) {
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
+                    input.onchange = function () {
+                        var file = this.files[0];
+                        var reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = function () {
+                            var id = 'post-image-' + (new Date()).getTime();
+                            var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                            var blobInfo = blobCache.create(id, file, reader.result);
+                            blobCache.add(blobInfo);
+                            cb(blobInfo.blobUri(), {
+                                title: file.name
+                            });
+                        };
+                    };
+                    input.click();
+                },
+                images_upload_handler: function (blobInfo, success, failure) {
+                    var xhr, formData;
+                    xhr = new XMLHttpRequest();
+                    xhr.withCredentials = false;
+                    xhr.open('POST', _BASEURL + 'blog/posts/uploadimageeditor');
+                    xhr.onload = function () {
+                        if (xhr.status != 200) {
+                            failure('HTTP Error: ' + xhr.status);
+                            return;
+                        }
+                        var res = JSON.parse(xhr.responseText);
+                        console.log(res.location);
+                        if (res.status == 'error') {
+                            failure(res.message);
+                            return;
+                        }
+                        success(res.location);
+                    };
+                    formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+                    xhr.send(formData);
+                },
+
+                setup: (editor) => {
+                    editor.on('init', () => {
+                        editor.setContent(this.form.post_content); // Set initial content
+                    });
+                    editor.on('change input', () => {
+                        this.form.post_content = editor.getContent(); // Sync with Alpine.js state
+                    });
+                }
+            });
+        }
+    }
 }
