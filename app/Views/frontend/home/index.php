@@ -1,8 +1,6 @@
 <!-- Hero Section -->
 <?= $this->include('frontend/home/hero') ?>
 
-
-
 <!-- Berita Section -->
  <?= $this->include('frontend/home/berita') ?>
 
@@ -15,13 +13,15 @@
 <!-- Kontak Section -->
  <?= $this->include('frontend/home/contact')?>
 
+<?php $links = get_links();
+if (!empty($links)):?>
 <section class=" bg-pumpkin-500 px-4 py-12">
     <div class="container">
     <h1 class="text-2xl font-bold text-orange-700 mb-6 text-center">Tautan Penting Perpustakaan</h1>
 
     <div class="flex gap-4">
-        <?php $links = get_links();
-        foreach ($links as $link): ?>
+        
+        <?php foreach ($links as $link): ?>
         <a href="<?= esc($link['link_url']) ?>"
            target="<?= esc($link['link_target'] ?? '_self') ?>"
            class=" transition-all duration-200 p-4 text-center hover:scale-110">
@@ -44,3 +44,4 @@
     </div>
     </div>
 </section>
+<?php endif?>

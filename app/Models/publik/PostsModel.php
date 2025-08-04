@@ -98,6 +98,7 @@ class PostsModel extends Model
         x1.post_content,
         x1.post_tags,
         x1.post_categories,
+        x1.post_comment_status,
         x1.post_image,
         x1.post_status,
         x1.post_counter,
@@ -463,7 +464,7 @@ class PostsModel extends Model
             ->where('x1.is_deleted', 'false')
             ->where('x1.post_status', 'publish')
             ->groupStart()
-            ->like('x1.post_categories', '1')
+            ->like('x1.post_categories', $idLike)
             ->groupEnd()
             ->orderBy('x1.created_at', 'DESC');
 

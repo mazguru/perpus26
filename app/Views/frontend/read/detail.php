@@ -86,10 +86,10 @@
   <!-- Author Bio -->
   <div class="mt-8 pt-6 border-t border-gray-200">
     <div class="flex items-center">
-      <div class="w-12 h-12 rounded-full bg-abbey-100 flex-shrink-0 overflow-hidden">
-        <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-        </svg>
+      <div class="flex-shrink-0">
+        <div class="h-12 w-12 rounded-full bg-pink-100 flex items-center justify-center">
+          <span class="text-md font-medium text-pink-800 uppercase"><?= substr($artikel['post_author'], 0, 2) ?></span>
+        </div>
       </div>
       <div class="ml-4">
         <h3 class="text-lg font-medium text-gray-800"><?= $artikel['post_author'] ?></h3>

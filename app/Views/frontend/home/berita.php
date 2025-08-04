@@ -77,20 +77,20 @@
         <div class="mt-6 space-y-6">
           <?php $pengumuman = get_post_categories('pengumuman', 2);
           if (! empty($pengumuman)) { ?>
-            <?php foreach ($pengumuman as $row) { ?>
+            <?php foreach ($pengumuman as $prow) { ?>
               <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 flex flex-col md:flex-row">
                 <div class="md:w-1/4 mb-4 md:mb-0 flex flex-col items-center justify-center bg-pumpkin-100 rounded-lg p-4 md:mr-6">
-                  <span class="text-3xl font-bold text-pumpkin-600"><?= date('j', strtotime($row['created_at'])) ?></span>
-                  <span class="text-pumpkin-600 font-medium"><?= date('F', strtotime($row['created_at'])) ?></span>
-                  <span class="text-pumpkin-600"><?= date('Y', strtotime($row['created_at'])) ?></span>
+                  <span class="text-3xl font-bold text-pumpkin-600"><?= date('j', strtotime($prow['created_at'])) ?></span>
+                  <span class="text-pumpkin-600 font-medium"><?= date('F', strtotime($prow['created_at'])) ?></span>
+                  <span class="text-pumpkin-600"><?= date('Y', strtotime($prow['created_at'])) ?></span>
                 </div>
                 <div class="md:w-3/4">
-                  <h3 class="text-xl font-bold text-gray-800 mb-2"><?= $row['post_title'] ?></h3>
-                  <p class="text-gray-600 text-sm mb-4"><?= strip_tags_truncate($row['post_content']) ?></p>
+                  <h3 class="text-xl font-bold text-gray-800 mb-2"><?= $prow['post_title'] ?></h3>
+                  <p class="text-gray-600 text-sm mb-4"><?= strip_tags_truncate($prow['post_content']) ?></p>
 
                   <div class="flex justify-between items-center">
                     <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded">pengumuman</span>
-                    <a href="<?= base_url('post/' . $row['post_slug']) ?>" class="text-pumpkin-600 border-pumpkin-200 hover:text-pumpkin-800 text-sm font-medium ">Selengkapnya</a>
+                    <a href="<?= base_url('post/' . $prow['post_slug']) ?>" class="text-pumpkin-600 0 hover:text-pumpkin-800 text-sm font-medium ">Selengkapnya</a>
                   </div>
                 </div>
               </div>
@@ -99,20 +99,20 @@
           <?php } ?>
           <?php $agenda = get_post_categories('agenda', 2);
           if (! empty($agenda)) { ?>
-            <?php foreach ($agenda as $row) { ?>
+            <?php foreach ($agenda as $arow) { ?>
               <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 flex flex-col md:flex-row">
                 <div class="md:w-1/4 mb-4 md:mb-0 flex flex-col items-center justify-center bg-pumpkin-100 rounded-lg p-4 md:mr-6">
-                  <span class="text-3xl font-bold text-pumpkin-600"><?= date('j', strtotime($row['created_at'])) ?></span>
-                  <span class="text-pumpkin-600 font-medium"><?= date('F', strtotime($row['created_at'])) ?></span>
-                  <span class="text-pumpkin-600"><?= date('Y', strtotime($row['created_at'])) ?></span>
+                  <span class="text-3xl font-bold text-pumpkin-600"><?= date('j', strtotime($arow['created_at'])) ?></span>
+                  <span class="text-pumpkin-600 font-medium"><?= date('F', strtotime($arow['created_at'])) ?></span>
+                  <span class="text-pumpkin-600"><?= date('Y', strtotime($arow['created_at'])) ?></span>
                 </div>
                 <div class="md:w-3/4">
-                  <h3 class="text-xl font-bold text-gray-800 mb-2"><?= $row['post_title'] ?></h3>
-                  <p class="text-gray-600 text-sm mb-4"><?= strip_tags_truncate($row['post_content']) ?></p>
+                  <h3 class="text-xl font-bold text-gray-800 mb-2"><?= $arow['post_title'] ?></h3>
+                  <p class="text-gray-600 text-sm mb-4"><?= strip_tags_truncate($arow['post_content']) ?></p>
 
                   <div class="flex justify-between items-center">
                     <span class="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded">agenda</span>
-                    <a href="<?= base_url('post/' . $row['post_slug']) ?>" class="text-pumpkin-600 hover:text-pumpkin-800 text-sm font-medium border border-pumpkin-200">Selengkapnya</a>
+                    <a href="<?= base_url('post/' . $arow['post_slug']) ?>" class="text-pumpkin-600 hover:text-pumpkin-800 text-sm font-medium ">Selengkapnya</a>
                   </div>
                 </div>
               </div>
@@ -133,19 +133,18 @@
         </h3>
         <?php $jurnal = get_post_categories('artikel', 5);
         if (! empty($jurnal)) { ?>
-
           <div class="mt-6 space-y-6">
             <!-- Artikel 1 -->
-            <?php foreach ($jurnal as $row) { ?>
+            <?php foreach ($jurnal as $jrow) { ?>
 
               <div class="bg-white shadow p-2 flex items-start gap-4">
-                <a href="<?= base_url('post/' . $row['post_slug']) ?>">
-                  <?php if ($row['post_image']): ?>
+                <a href="<?= base_url('post/' . $jrow['post_slug']) ?>">
+                  <?php if ($jrow['post_image']): ?>
 
                     <img
-                      src="<?= base_url() ?>/media_library/posts/thumbs/<?= $row['post_image'] ?>"
+                      src="<?= base_url() ?>/media_library/posts/thumbs/<?= $jrow['post_image'] ?>"
                       class="h-24 object-cover rounded-lg shrink-0 transition delay-150 duration-300 ease-in-out mb-2 hover:scale-110"
-                      alt="<?= $row['post_title'] ?>"
+                      alt="<?= $jrow['post_title'] ?>"
                       loading="lazy"
                       onerror="this.onerror=null; this.src='<?= base_url('assets/images/noimage.svg') ?>'">
 
@@ -159,12 +158,12 @@
                 </a>
                 <div>
                   <h4 class="text-base font-semibold leading-tight">
-                    <?= $row['post_title'] ?>
+                    <?= $jrow['post_title'] ?>
                   </h4>
                   <p class="text-sm text-gray-700 mt-1 line-clamp-2">
-                    <?= strip_tags_truncate($row['post_content'], 100) ?>
+                    <?= strip_tags_truncate($jrow['post_content'], 100) ?>
                   </p>
-                  <a href="<?= base_url('post/' . $row['post_slug']) ?>" class="mt-2 inline-flex items-center text-sm font-semibold text-pumpkin-600">
+                  <a href="<?= base_url('post/' . $jrow['post_slug']) ?>" class="mt-2 inline-flex items-center text-sm font-semibold text-pumpkin-600">
                     selengkapnya
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

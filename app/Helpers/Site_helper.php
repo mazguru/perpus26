@@ -16,6 +16,7 @@ use App\Models\AlbumsModel;
 use App\Models\MenuModel;
 use App\Models\CategoriesModel;
 use App\Models\CommentModel;
+use App\Models\MenusModel;
 use App\Models\PhotoModel;
 use App\Models\PostsModel;
 use App\Models\publik\PostsModel as PublikPostModel;
@@ -271,8 +272,8 @@ if (! function_exists('get_albums')) {
 if (! function_exists('get_menus')) {
     function get_menus(): array
     {
-        $m = model('M_menus');
-        return $m->nested_menus();
+        $m = new MenusModel();
+        return $m->getMenuWithChildren();
     }
 }
 
@@ -364,7 +365,7 @@ if (! function_exists('generate_tags_links')) {
         foreach ($tags as $tag) {
             // url_title tersedia di helper 'url'
             $tag_slug = url_title($tag, '-', true);
-            $links[] = '<a class="hover:underline" href="' . esc(base_url('tag/' . $tag_slug)) . '">' . esc(ucfirst($tag)) . '</a>';
+            $links[] = '<a class="hover:underline" href="' . esc(base_url('tags/' . $tag_slug)) . '">' . esc(ucfirst($tag)) . '</a>';
         }
 
         return implode(', ', $links);

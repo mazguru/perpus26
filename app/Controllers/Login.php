@@ -15,7 +15,7 @@ class Login extends BaseController
         $this->auth = new Auth();
     }
 
-    public function getIndex()
+    public function index()
     {
         if (session()->get('logged_in')) {
             header("Location: " . base_url('dashboard'));
@@ -33,7 +33,7 @@ class Login extends BaseController
         return view('admin/login', $data);
     }
 
-    public function postVerify()
+    public function verify()
     {
 
         if ($this->request->isAJAX()) {
@@ -96,11 +96,11 @@ class Login extends BaseController
             }
         }
 
-        return redirect()->to('/login');
+        return redirect()->to(base_url('login'));
     }
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('/login')->with('message', 'Kamu telah logout');
+        return redirect()->to(base_url('login'))->with('message', 'Kamu telah logout');
     }
 }

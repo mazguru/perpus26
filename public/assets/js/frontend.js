@@ -80,7 +80,34 @@ function copyLink() {
         }, 3000);
     });
 }
+function addReaction(emoji) {
+    const input = document.getElementById('comment-input');
+    input.value += ` ${emoji}`;
+    input.focus();
+}
+function timeAgo(datetime) {
+    const now = new Date();
+    const past = new Date(datetime.replace(' ', 'T')); // ISO-compatible
+    const seconds = Math.floor((now - past) / 1000);
 
+    const intervals = [
+        { label: 'tahun', seconds: 31536000 },
+        { label: 'bulan', seconds: 2592000 },
+        { label: 'hari', seconds: 86400 },
+        { label: 'jam', seconds: 3600 },
+        { label: 'menit', seconds: 60 },
+        { label: 'detik', seconds: 1 }
+    ];
+
+    for (const interval of intervals) {
+        const count = Math.floor(seconds / interval.seconds);
+        if (count > 0) {
+            return `${count} ${interval.label}${count > 1 ? '' : ''} yang lalu`;
+        }
+    }
+
+    return 'baru saja';
+}
 function commentSection(config) {
     return {
         comments: [],
@@ -105,7 +132,7 @@ function commentSection(config) {
 
         init() {
             this.loadComments();
-            this.loadReplies(); // dipisah agar lebih aman
+            this.loadReplies();
         },
 
         formatDate(dateString) {
@@ -120,25 +147,34 @@ function commentSection(config) {
         },
 
         async loadComments() {
-            const res = await fetch(`/comment/list/${this.postId}?page=${this.page}`);
-            const data = await res.json();
-            this.comments.push(...data.comments);
-            this.hasMore = data.more;
-            this.page++;
-            console.log(data);
+            try {
+                const res = await fetch(`/comment/list/${this.postId}?page=${this.page}`);
+                const data = await res.json();
+                console.log(data);
+                if (Array.isArray(data.comments)) {
+                    this.comments.push(...data.comments);
+                    this.hasMore = data.more || false;
+                    this.page++;
+                }
+            } catch (e) {
+                console.error('Gagal memuat komentar:', e);
+            }
         },
 
         async loadReplies() {
-            const res = await fetch(`/comment/replies/${this.postId}`);
-            const data = await res.json();
-            this.replies = {}; // inisialisasi ulang
-            console.log(data);
-            data.replies.forEach(reply => {
-                if (!this.replies[reply.comment_parent_id]) {
-                    this.replies[reply.comment_parent_id] = [];
-                }
-                this.replies[reply.comment_parent_id].push(reply);
-            });
+            try {
+                const res = await fetch(`/comment/replies/${this.postId}`);
+                const data = await res.json();
+                this.replies = {};
+                (data.replies || []).forEach(reply => {
+                    if (!this.replies[reply.comment_parent_id]) {
+                        this.replies[reply.comment_parent_id] = [];
+                    }
+                    this.replies[reply.comment_parent_id].push(reply);
+                });
+            } catch (e) {
+                console.error('Gagal memuat balasan:', e);
+            }
         },
 
         loadMore() {
@@ -154,18 +190,18 @@ function commentSection(config) {
 
             let valid = true;
 
-            if (!this.form.name.trim()) {
+            if (!this.form.name?.trim()) {
                 this.formErrors.name = true;
                 valid = false;
             }
 
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(this.form.email)) {
+            if (!emailRegex.test(this.form.email || '')) {
                 this.formErrors.email = true;
                 valid = false;
             }
 
-            if (!this.form.content.trim()) {
+            if (!this.form.content?.trim()) {
                 this.formErrors.content = true;
                 valid = false;
             }
@@ -180,58 +216,84 @@ function commentSection(config) {
                 },
                 body: JSON.stringify({
                     comment_post_id: this.postId,
-                    comment_author: this.form.name,
-                    comment_email: this.form.email,
-                    comment_content: this.form.content
+                    comment_author: this.form.name.trim(),
+                    comment_email: this.form.email.trim(),
+                    comment_content: this.form.content.trim()
                 })
             })
                 .then(res => res.json())
                 .then(data => {
-                    if (data.status == 'success') {
-
+                    if (data.status === 'success') {
                         Notifier.show('komentar', 'Komentar berhasil dikirim', 'success');
-                        this.form = {};
+                        this.form = { name: '', email: '', content: '' };
                         this.page = 1;
+                        this.comments = [];
                         this.loadComments();
                         this.loadReplies();
                     } else {
-                        alert(data.message || "Gagal mengirim komentar");
+                        Notifier.show(data.message || "Gagal mengirim komentar");
                     }
+                })
+                .catch(error => {
+                    console.error('Error saat kirim komentar:', error);
                 });
         },
 
         toggleReplyForm(commentId) {
             this.activeReply = this.activeReply === commentId ? null : commentId;
             this.replyText = '';
+            this.replyName = '';
+            this.replyEmail = '';
         },
 
         async submitReply(parentId) {
+            if (!this.replyText.trim() || !this.replyName.trim() || !this.replyEmail.trim()) {
+                Notifier.show("Semua kolom balasan harus diisi!");
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(this.replyEmail)) {
+                Notifier.show("Format email tidak valid!");
+                return;
+            }
+
             const payload = {
                 comment_post_id: this.postId,
-                comment_content: this.replyText,
-                comment_author: this.replyName,
-                comment_email: this.replyEmail,
+                comment_content: this.replyText.trim(),
+                comment_author: this.replyName.trim(),
+                comment_email: this.replyEmail.trim(),
                 comment_parent_id: parentId,
             };
 
-            const res = await fetch('/comment/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify(payload)
-            });
+            try {
+                const res = await fetch('/comment/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-            const result = await res.json();
-            if (result.status === 'success') {
-                this.loadReplies();
-                this.replyText = '';
-                this.activeReply = null;
+                const result = await res.json();
+                if (result.status === 'success') {
+                    this.loadReplies();
+                    this.replyText = '';
+                    this.replyName = '';
+                    this.replyEmail = '';
+                    this.activeReply = null;
+                    Notifier.show('balasan', 'Balasan berhasil dikirim', 'success');
+                } else {
+                    Notifier.show(result.message || "Gagal mengirim balasan");
+                }
+            } catch (error) {
+                console.error('Error saat kirim balasan:', error);
             }
         }
     }
 }
+
 function formMessage() {
     return {
         form: {},
@@ -351,4 +413,69 @@ function galleryApp() {
             // Optional preload
         }
     };
+}
+
+function menuPublic() {
+    return {
+        menus: [],
+        openmenu: false,
+        currentPath: window.location.pathname,
+        base_url: _BASEURL,
+        async fetchMenu() {
+            try {
+                const res = await fetch(this.base_url + 'menupublic', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                });
+
+                const data = await res.json();
+
+                this.menus = data.map(menu => {
+                    const fullPath = this.base_url.replace(location.origin, '') + menu.menu_url;
+                    let menuActive = this.currentPath === fullPath;
+
+                    const children = (menu.children || []).map(child => {
+                        const childPath = this.base_url.replace(location.origin, '') + child.menu_url;
+                        const childActive = this.currentPath === childPath;
+                        if (childActive) menuActive = true;
+
+                        return {
+                            ...child,
+                            active: childActive
+                        };
+                    });
+
+                    return {
+                        ...menu,
+                        active: menuActive,
+                        children
+                    };
+                });
+
+            } catch (error) {
+                console.error('Gagal memuat menu:', error);
+            }
+        }
+    };
+}
+
+function visitSummary() {
+    return {
+        today: 0,
+        month: 0,
+        year: 0,
+        total: 0,
+        loadSummary() {
+            fetch(_BASEURL + 'visitor/summary')
+                .then(res => res.json())
+                .then(data => {
+                    this.today = data.today;
+                    this.month = data.month;
+                    this.year = data.year;
+                    this.total = data.total;
+                });
+        }
+    }
 }

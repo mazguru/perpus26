@@ -49,6 +49,12 @@ if (! function_exists('menuadmin')) {
                         'route' => 'blog/page/create',
                         'roles' => ['administrator', 'super_user']
                     ],
+                    [
+                        'title' => 'Tautan',
+                        'route' => 'blog/links',
+                        'roles' => ['super_user']
+                    ],
+
                 ]
             ],
             [
@@ -89,12 +95,7 @@ if (! function_exists('menuadmin')) {
                         'route' => 'media/video',
                         'roles' => ['super_user']
                     ],
-                    [
-                        'title' => 'Tautan',
-                        'route' => 'media/tautan',
-                        'roles' => ['super_user']
-                    ],
-
+                    
                 ]
             ],
             [

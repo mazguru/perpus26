@@ -36,7 +36,7 @@
                 </div>
                 <div class="flex items-start space-x-2">
                     <span class="bi bi-envelope"></span>
-                    <span>adyatama@perpustakaan.sch.id</span>
+                    <span><?= session('email')?></span>
                 </div>
                 <div class="flex items-start space-x-2">
                     <span class="bi bi-whatsapp"></span>
@@ -58,28 +58,6 @@
                 <p>Total Pengunjung : <span class="font-bold" x-text="total"></span></p>
             </div>
         </div>
-
-        <script>
-            function visitSummary() {
-                return {
-                    today: 0,
-                    month: 0,
-                    year: 0,
-                    total: 0,
-                    loadSummary() {
-                        fetch(_BASEURL + 'visitor/summary')
-                            .then(res => res.json())
-                            .then(data => {
-                                this.today = data.today;
-                                this.month = data.month;
-                                this.year = data.year;
-                                this.total = data.total;
-                            });
-                    }
-                }
-            }
-        </script>
-
     </div>
 
     <!-- Copyright -->

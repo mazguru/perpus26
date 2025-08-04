@@ -19,9 +19,10 @@
         border-color: #3b82f6;
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
     }
+    
 </style>
 <!-- Hero Section -->
-<section class="bg-pumpkin-700 text-white py-16">
+<section class="hero-pattern2 text-white py-16">
     <div class="container mx-auto px-4 text-center">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">Hubungi Kami</h1>
         <p class="text-xl max-w-2xl mx-auto text-pumpkin-100">Kami siap membantu Anda. Jangan ragu untuk menghubungi kami dengan pertanyaan, saran, atau kebutuhan informasi lainnya.</p>

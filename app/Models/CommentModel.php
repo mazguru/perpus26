@@ -54,7 +54,7 @@ class CommentModel extends Model
             ->where('comment_parent_id !=', null)
             ->whereIn('comment_status', ['approved', 'unapproved'])
             ->where('is_deleted', 'false')
-            ->orderBy('created_at', 'ASC')
+            ->orderBy('created_at', 'DESC')
             ->findAll();
     }
     /**
