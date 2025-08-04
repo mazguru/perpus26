@@ -16,7 +16,7 @@
       <?php foreach ($results as $row): ?>
         <article class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
 
-          <a class="relative bg-gray-200 flex items-center overflow-hidden aspect-[16/9] my-auto" href="<?= base_url('post/' . $row['post_slug']) ?>">
+          <a class="relative bg-saddle-200 flex items-center overflow-hidden aspect-[16/9] my-auto" href="<?= base_url('post/' . $row['post_slug']) ?>">
             <?php if ($row['post_image']): ?>
               <img
                 src="<?= base_url() ?>/media_library/posts/thumbs/<?= $row['post_image'] ?>"
@@ -27,7 +27,7 @@
 
             <?php else : ?>
               <div class="w-full  flex items-center justify-center object-cover rounded shrink-0 transition delay-150 duration-300 ease-in-out mb-2 hover:scale-110">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-pumpkin-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
@@ -45,7 +45,7 @@
 
             <div class="w-full flex justify-between mt-auto pt-4">
               <a href="<?= base_url('post/' . $row['post_slug']) ?>"
-                class="inline-flex items-center rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100">
+                class="inline-flex items-center rounded-lg border border-pumpkin-200 bg-pumpkin-50 px-3 py-2 text-sm font-medium text-pumpkin-700 hover:bg-pumpkin-100">
                 Baca selengkapnya
               </a>
               <span class="text-xs text-gray-500">

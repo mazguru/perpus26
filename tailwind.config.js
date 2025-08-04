@@ -2,20 +2,20 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
 module.exports = {
   content: [
-      './app/Views/*.php', // Sesuaikan dengan path file PHP Anda
-      './app/Views/**/*.php', // Sesuaikan dengan path file PHP Anda
-      './app/Views/**/**/*.php', // Sesuaikan dengan path file PHP Anda
-      './app/Views/**/**/**/*.php', // Sesuaikan dengan path file PHP Anda
-      './Views/*.php', // Sesuaikan dengan path file PHP Anda
-      './application/libraries/*.php', // Sesuaikan dengan path file PHP Anda
-      './views/**/**/*.php', // Sesuaikan dengan path file PHP Anda
-      './views/**/**/*.html', // Sesuaikan dengan path file PHP Anda
-      './views/**/*.html',
-      './public/assets/**/*.js',
-      './public/src/**/*.js',
-      './src/**/*.js',
-      './src/js/notifier.js',
-      
+    './app/Views/*.php', // Sesuaikan dengan path file PHP Anda
+    './app/Views/**/*.php', // Sesuaikan dengan path file PHP Anda
+    './app/Views/**/**/*.php', // Sesuaikan dengan path file PHP Anda
+    './app/Views/**/**/**/*.php', // Sesuaikan dengan path file PHP Anda
+    './Views/*.php', // Sesuaikan dengan path file PHP Anda
+    './application/libraries/*.php', // Sesuaikan dengan path file PHP Anda
+    './views/**/**/*.php', // Sesuaikan dengan path file PHP Anda
+    './views/**/**/*.html', // Sesuaikan dengan path file PHP Anda
+    './views/**/*.html',
+    './public/assets/**/*.js',
+    './public/src/**/*.js',
+    './src/**/*.js',
+    './src/js/notifier.js',
+
 
   ],
   darkMode: 'class',
@@ -65,7 +65,7 @@ module.exports = {
         bodydark: '#AEB7C0',
         bodydark1: '#DEE4EE',
         bodydark2: '#8A99AF',
-        primary: '#3C50E0',
+        primary: '#FB7927',
         secondary: '#80CAEE',
         stroke: '#E2E8F0',
         primarylight: '#f1f4ff',
@@ -94,6 +94,45 @@ module.exports = {
           8: '#F0950C',
           9: '#E5E7EB',
           10: '#0FADCF',
+        },
+        pumpkin: {
+          '50': '#fff7ed',
+          '100': '#ffecd5',
+          '200': '#ffd5a9',
+          '300': '#feb773',
+          '400': '#fc8e3b',
+          '500': '#fb7927',
+          '600': '#ec520a',
+          '700': '#c33c0b',
+          '800': '#9b3111',
+          '900': '#7d2b11',
+          '950': '#431307',
+        },
+        saddle: {
+          '50': '#faf6f0',
+          '100': '#efe6d6',
+          '200': '#ddcaaa',
+          '300': '#ccac7d',
+          '400': '#c0955f',
+          '500': '#b57c4b',
+          '600': '#9f6340',
+          '700': '#854c38',
+          '800': '#6e3f32',
+          '900': '#4f2e26',
+          '950': '#331a15',
+        },
+        abbey: {
+          '50': '#f5f5f6',
+          '100': '#e6e6e7',
+          '200': '#d0d0d1',
+          '300': '#afafb1',
+          '400': '#86868a',
+          '500': '#6b6b6f',
+          '600': '#5b5b5f',
+          '700': '#4e4e50',
+          '800': '#48484a',
+          '900': '#3c3c3d',
+          '950': '#262527',
         },
         success: '#219653',
         danger: '#D34053',

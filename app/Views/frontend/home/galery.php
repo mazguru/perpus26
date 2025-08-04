@@ -1,5 +1,5 @@
 <!-- Galeri -->
-<section class="py-12 bg-gray-50">
+<section class="py-12 bg-white">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center">Galeri Kegiatan</h2>
         <p class="text-gray-600 max-w-2xl mx-auto text-center mb-6">

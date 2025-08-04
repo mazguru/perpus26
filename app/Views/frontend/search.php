@@ -4,9 +4,9 @@
     <div class="max-w-3xl mx-auto text-center">
       <h2 class="text-4xl font-bold mb-4">Jelajahi Dunia Pengetahuan</h2>
       <p class="text-lg mb-8">Temukan berbagai artikel, berita, jurnal, dan sumber belajar digital untuk menambah wawasan Anda</p>
-      <form method="get" action="<?= site_url('search'); ?>" class="bg-white rounded-lg p-2 flex items-center shadow-lg">
+      <form method="get" action="<?= base_url('search'); ?>" class="bg-white rounded-lg p-2 flex items-center shadow-lg">
         <input name="q" type="text" placeholder="Cari artikel berita atau informasi..." class="w-full px-4 py-2 outline-none text-gray-700" value=<?= esc($q) ?>>
-        <button class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">Cari</button>
+        <button class="bg-pumpkin-600 text-white px-6 py-2 rounded-md hover:bg-pumpkin-700 transition">Cari</button>
       </form>
     </div>
   </div>
@@ -34,14 +34,14 @@
 
             <?php else : ?>
               <div class="h-24 flex items-center justify-center object-cover rounded shrink-0 transition delay-150 duration-300 ease-in-out mb-2 hover:scale-110">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-pumpkin-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
             <?php endif ?>
           </a>
           <div>
-            <a href="<?= site_url('posts/' . $row['post_slug']); ?>" class="font-semibold hover:underline " >
+            <a href="<?= base_url($row['post_type'].'/' . $row['post_slug']); ?>" class="font-semibold hover:underline " >
               <?= esc($row['post_title']) ?>
             </a>
             <p class="text-sm mt-1"><?= strip_tags_truncate($row['post_content']) ?></p>

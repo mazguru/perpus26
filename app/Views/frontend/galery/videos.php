@@ -9,7 +9,7 @@
     }
 
     .gallery-container {
-        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
     }
 </style>
 <!-- Hero Section -->

@@ -18,19 +18,19 @@
             </div>
         </div>
 
-        <button @click="submitComment()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+        <button @click="submitComment()" class="bg-pumpkin-600 text-white px-4 py-2 rounded hover:bg-pumpkin-700">
             Post Comment
         </button>
     </div>
 
     <!-- Daftar Komentar -->
     <template x-for="comment in comments" :key="comment.id">
-        <div class="bg-gray-50 p-4 rounded-lg mb-4 border-b">
+        <div class="bg-saddle-50 p-4 rounded-lg mb-4 border-b">
             <!-- Komentar Utama -->
             <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center">
-                    <div class="h-5 w-5 rounded-full bg-indigo-100 overflow-hidden mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                    <div class="h-5 w-5 rounded-full bg-pumpkin-100 overflow-hidden mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-pumpkin-400" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                         </svg>
                     </div>
@@ -79,8 +79,8 @@
                         <div>
                             <div class="flex justify-between items-center mb-2">
                                 <div class="flex items-center">
-                                    <div class="h-5 w-5 rounded-full bg-indigo-100 overflow-hidden mr-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <div class="h-5 w-5 rounded-full bg-pumpkin-100 overflow-hidden mr-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-pumpkin-400" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                                         </svg>
                                     </div>
@@ -118,7 +118,7 @@
 
     <!-- Tombol Load More -->
     <div class="text-center">
-        <button @click="loadMore()" x-show="hasMore" class="border border-indigo-600 text-indigo-600 px-4 py-2 rounded hover:bg-indigo-100">
+        <button @click="loadMore()" x-show="hasMore" class="border border-pumpkin-600 text-pumpkin-600 px-4 py-2 rounded hover:bg-pumpkin-100">
             Load More Comments
         </button>
     </div>

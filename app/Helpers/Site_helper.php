@@ -3,7 +3,7 @@
 use App\Models\AlbumModel;
 use CodeIgniter\Model;
 use CodeIgniter\I18n\Time;
-use App\Models\LinksModel;
+use App\Models\LinkModel;
 use App\Models\TagsModel;
 use App\Models\BannersModel;
 use App\Models\QuotesModel;
@@ -15,6 +15,7 @@ use App\Models\VideosModel;
 use App\Models\AlbumsModel;
 use App\Models\MenuModel;
 use App\Models\CategoriesModel;
+use App\Models\CommentModel;
 use App\Models\PhotoModel;
 use App\Models\PostsModel;
 use App\Models\publik\PostsModel as PublikPostModel;
@@ -39,8 +40,8 @@ if (! function_exists('get_links')) {
     function get_links(int $limit = 0)
     {
         // Sesuaikan class model Anda
-        $m = model('M_links'); // contoh: model(\App\Models\MLinks::class)
-        return $m->get_links($limit);
+        $m = new LinkModel(); // contoh: model(\App\Models\MLinks::class)
+        return $m->where('is_deleted', 'false')->findAll($limit);
     }
 }
 
@@ -216,7 +217,7 @@ if (! function_exists('get_another_pages')) {
 if (! function_exists('get_recent_comments')) {
     function get_recent_comments(int $limit = 0)
     {
-        $m = model('M_post_comments');
+        $m = new CommentModel();
         return $m->get_recent_comments($limit);
     }
 }

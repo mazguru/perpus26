@@ -275,7 +275,7 @@ class PostsModel extends Model
         // pakai alias seperti di query kamu: x1 untuk posts, x2 untuk users
         $this->from($this->table . ' x1')
             ->select("
-                x1.id, x1.post_title, x1.created_at, x1.post_image, x1.post_content,
+                x1.id, x1.post_title, x1.created_at, x1.post_image, x1.post_content, x1.post_type,
                 x1.post_slug, x1.post_counter, x2.user_full_name AS post_author
              ", false)
             ->join('users x2', 'x1.post_author = x2.id', 'left')
@@ -479,7 +479,7 @@ class PostsModel extends Model
         $b = $this->db->table($this->table . ' x1')
             ->select("
                 x1.id, x1.post_title, x1.post_content, x1.created_at,
-                x1.post_image, x1.post_slug, x2.user_full_name AS post_author,
+                x1.post_image, x1.post_image, x1.post_slug, x2.user_full_name AS post_author,
                 x1.post_counter
             ", false)
             ->join('users x2', 'x1.post_author = x2.id', 'left')
@@ -501,8 +501,8 @@ class PostsModel extends Model
         if ($limit <= 0) $limit = 10;
 
         $b = $this->db->table($this->table)
-            ->select('id, post_title, created_at, post_content, post_slug')
-            ->where('post_type', 'post')
+            ->select('id, post_title, created_at, post_content, post_slug, post_type')
+            ->whereIn('post_type', ['post', 'page'])
             ->where('post_status', 'publish')
             ->where('is_deleted', 'false')
             ->orderBy('created_at', 'DESC')

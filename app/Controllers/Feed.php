@@ -8,7 +8,7 @@ use CodeIgniter\I18n\Time;
 
 class Feed extends BaseController
 {
-    
+
     /**
      * Contoh feed XML generic (bukan RSS/Atom).
      * URL: /feed.xml  (lihat routes di bawah)
@@ -17,7 +17,7 @@ class Feed extends BaseController
     {
         helper(['url', 'Site', 'App']); // site => untuk strip_tags_truncate() jika Anda pakai
 
-        $limit = (int) ($this->request->getGet('limit') ?? 20);
+        $limit = (int) (session('post_rss_count') ?? 20);
 
         // Ganti dengan class model CI4 Anda
         $posts = get_latest_posts($limit);
@@ -26,6 +26,7 @@ class Feed extends BaseController
         $items = [];
         foreach ($posts as $p) {
             $title   = $p['post_title']   ?? ($p['title'] ?? '');
+            $post_type   = $p['post_type'];
             $slug    = $p['post_slug']    ?? ($p['slug'] ?? '');
             $content = $p['post_content'] ?? ($p['content'] ?? '');
             $created = $p['created_at']   ?? ($p['updated_at'] ?? Time::now('UTC')->toDateTimeString());
@@ -35,7 +36,7 @@ class Feed extends BaseController
                 'id'         => (int)($p['id'] ?? 0),
                 'title'      => $title,
                 'slug'       => $slug,
-                'url'        => base_url('post/' . $slug),
+                'url'        => base_url($post_type . '/' . $slug),
                 'excerpt'    => strip_tags_truncate($content, 300),
                 'created_at' => date(DATE_ATOM, strtotime($created)),
                 'updated_at' => date(DATE_ATOM, strtotime($updated)),

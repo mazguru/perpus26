@@ -1,4 +1,4 @@
-<section class="hero-pattern2 shadow z-50 border-b" x-data="{ open: false, submenu: null }">
+<section class="hero-pattern2 shadow z-50" x-data="{ open: false, submenu: null }">
     <!-- Logo dan Search -->
     <div class="max-w-screen-xl mx-auto flex flex-wrap justify-between items-center px-4 pt-2">
         <div class="hidden md:flex items-center space-x-3">
@@ -7,7 +7,7 @@
             if (is_file($logoPath)) { ?>
                 <img src="<?= base_url('assets/images/' . session('logo')) ?>" alt="Logo" class="w-10 h-10">
             <?php } else { ?>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-pumpkin-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
             <?php } ?>
@@ -23,10 +23,10 @@
                 type="text"
                 name="q"
                 placeholder="Cari sesuatu..."
-                class="mr-2 border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                class="mr-2 border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pumpkin-500" />
             <button
                 type="submit"
-                class="bg-white text-gray-600 text-sm px-4 py-2 rounded hover:bg-blue-700 transition duration-200">
+                class="bg-white text-gray-600 text-sm px-4 py-2 rounded hover:bg-pumpkin-700 transition duration-200">
                 <span class='bi bi-search mr-2'></span>Cari
             </button>
         </form>
@@ -39,10 +39,10 @@
                         type="text"
                         name="q"
                         placeholder="Cari..."
-                        class="w-full border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        class="w-full border border-gray-300 rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pumpkin-500" />
                     <button
                         type="submit"
-                        class="bg-blue-600 text-white text-sm px-3 py-2 rounded hover:bg-blue-700 transition duration-200">
+                        class="bg-pumpkin-600 text-white text-sm px-3 py-2 rounded hover:bg-pumpkin-700 transition duration-200">
                         <span class='bi bi-search'></span>
                     </button>
                 </div>

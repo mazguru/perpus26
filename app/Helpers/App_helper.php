@@ -256,30 +256,37 @@ if (!function_exists('slugify')) {
     }
 }
 
+
 if (!function_exists('timezone_list')) {
-    function timezone_list()
+    function timezone_list(): array
     {
         $regions = [DateTimeZone::ASIA];
         $timezones = [];
+
         foreach ($regions as $region) {
             $timezones = array_merge($timezones, DateTimeZone::listIdentifiers($region));
         }
+
         $timezone_offsets = [];
         foreach ($timezones as $timezone) {
             $tz = new DateTimeZone($timezone);
-            $timezone_offsets[$timezone] = $tz->getOffset(new DateTime);
+            $timezone_offsets[$timezone] = $tz->getOffset(new DateTime('now', $tz));
         }
+
         asort($timezone_offsets);
+
         $timezone_list = [];
         foreach ($timezone_offsets as $timezone => $offset) {
             $offset_prefix = $offset < 0 ? '-' : '+';
             $offset_formatted = gmdate('H:i', abs($offset));
-            $pretty_offset = "UTC${offset_prefix}${offset_formatted}";
-            $timezone_list[$timezone] = "(${pretty_offset}) $timezone";
+            $pretty_offset = "UTC{$offset_prefix}{$offset_formatted}";
+            $timezone_list[$timezone] = "({$pretty_offset}) {$timezone}";
         }
+
         return $timezone_list;
     }
 }
+
 
 if (!function_exists('__captchaActivated')) {
     function __captchaActivated()

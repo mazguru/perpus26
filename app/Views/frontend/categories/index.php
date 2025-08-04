@@ -32,7 +32,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
                 </svg>
               </a>
-              <span class="px-5 py-3 text-sm font-semibold bg-sky-600 text-white"><?= esc($title) ?></span>
+              <span class="px-5 py-3 text-sm font-semibold bg-pumpkin-600 text-white"><?= esc($title) ?></span>
             </div>
           </div>
         </div>

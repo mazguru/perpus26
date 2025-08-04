@@ -28,8 +28,8 @@
         <h1 class="text-4xl md:text-5xl font-bold mb-4">Selamat Datang di <?= session('nama_perpus') ?></h1>
         <p class="text-sm md:text-lg mb-8"><?= session('meta_description') ?></p>
         <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-            <a href="#jelajah" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 text-center">Jelajahi Layanan</a>
-            <a href="#katalog" class="bg-white hover:bg-gray-100 text-blue-600 font-medium py-3 px-6 rounded-lg border border-blue-600 transition duration-300 text-center">Katalog Buku</a>
+            <a href="#jelajah" class="bg-pumpkin-600 hover:bg-pumpkin-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 text-center">Jelajahi Layanan</a>
+            <a href="#katalog" class="bg-white hover:bg-saddle-100 text-pumpkin-600 font-medium py-3 px-6 rounded-lg border border-pumpkin-600 transition duration-300 text-center">Katalog Buku</a>
         </div>
     </div>
 </section>
@@ -106,7 +106,7 @@
             <p class="text-lg mb-8">Temukan berbagai artikel, berita, jurnal, dan sumber belajar digital untuk menambah wawasan Anda</p>
             <form action="/search" class="bg-white rounded-lg p-2 flex items-center shadow-lg">
                 <input name="q" type="text" placeholder="Cari artikel berita atau informasi..." class="w-full px-4 py-2 outline-none text-gray-700">
-                <button class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">Cari</button>
+                <button class="bg-pumpkin-600 text-white px-6 py-2 rounded-md hover:bg-pumpkin-700 transition">Cari</button>
             </form>
         </div>
     </div>

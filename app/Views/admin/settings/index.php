@@ -62,21 +62,14 @@
                                 x-model="editItem.setting_value" required>
                         </div>
 
-                        <!-- Upload Field: Display Upload Input for Image or File -->
-                        <template x-if="isUploadField(editItem.setting_variable)">
-                            <div class="mb-4">
-                                <div class="mb-2">
-                                    <label class="block text-sm font-medium text-gray-600">Gambar Aktif:</label>
-                                    <img :src="baseUrl + editItem.setting_value" alt="Current Image" class="h-20 object-cover rounded border">
-                                </div>
-                                <label class="block text-sm font-medium text-gray-600" for="editFile">Upload File</label>
-                                <input type="file" id="editFile" class="w-full border rounded px-3 py-2 mt-1"
-                                    @change="handleFileChange($event)">
-                                <span class="text-sm text-gray-500" x-show="selectedFile">
-                                    Selected File: <span x-text="selectedFile ? selectedFile.name : ''"></span>
-                                </span>
-                            </div>
-                        </template>
+                        <div class="mb-4">
+                            <label class="block text-xs font-semibold mb-1">Logo</label>
+                            <input name="link_image" type="file" @change="handleCoverUpload" accept="image/*"
+                                class="w-full border rounded px-3 py-2">
+                            <template x-if="previewFile">
+                                <img :src="previewFile" class="mt-2 w-32 h-32 object-cover rounded">
+                            </template>
+                        </div>
 
                         <!-- Textarea Field -->
                         <template x-if="isTextArea(editItem.setting_variable)">

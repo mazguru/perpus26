@@ -1,17 +1,13 @@
 <!-- Sidebar -->
 <aside class="w-full md:w-1/3">
   <!-- About Widget -->
-  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-    <h3 class="text-xl font-bold mb-4 text-gray-800">About the Blog</h3>
-    <p class="text-gray-700 mb-4">Welcome to our blog where we share insights, tips, and inspiration for writers and creative minds.</p>
-    <button class="text-blue-600 hover:text-blue-800 font-medium transition">Learn More →</button>
-  </div>
+  
 
   <!-- Search Widget -->
   <div class="bg-white rounded-lg shadow-md p-6 mb-6">
     <h3 class="text-xl font-bold mb-4 text-gray-800">Search</h3>
     <form action="<?= base_url('search') ?>" class="relative" methode="GET">
-      <input type="text" name="q" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search posts...">
+      <input type="text" name="q" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pumpkin-500" placeholder="Search posts...">
       <button type="submit" class="absolute right-2 top-2 text-gray-500 hover:text-gray-700">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -27,9 +23,9 @@
       <?php $catCount = count_post_categories();
       foreach ($catCount as $cc) : ?>
         <li>
-          <a href="<?= base_url('categories/' . $cc['category_slug']) ?>" class="flex items-center justify-between text-gray-700 hover:text-blue-600 transition">
+          <a href="<?= base_url('categories/' . $cc['category_slug']) ?>" class="flex items-center justify-between text-gray-700 hover:text-pumpkin-600 transition">
             <span><?= $cc['category_name'] ?></span>
-            <span class="bg-gray-100 text-gray-600 text-xs font-medium px-2 py-1 rounded-full"><?= $cc['post_count'] ?></span>
+            <span class="bg-abbey-100 text-gray-600 text-xs font-medium px-2 py-1 rounded-full"><?= $cc['post_count'] ?></span>
           </a>
         </li>
       <?php endforeach ?>
@@ -45,7 +41,7 @@
         <?php foreach ($recent as $rc) : ?>
           <a href="<?= base_url($rc['post_type'] . '/' . $rc['post_slug']) ?>" class="block group">
             <div class="flex items-start">
-              <div class="w-16 h-16 bg-gray-200 rounded flex-shrink-0">
+              <div class="w-16 h-16 bg-abbey-200 rounded flex-shrink-0">
                 <?php if ($rc['post_image']): ?>
 
                   <img
@@ -64,7 +60,7 @@
                 <?php endif ?>
               </div>
               <div class="ml-4">
-                <h4 class="font-medium text-gray-800 group-hover:text-blue-600 transition"><?= $rc['post_title'] ?></h4>
+                <h4 class="font-medium text-gray-800 group-hover:text-pumpkin-600 transition"><?= $rc['post_title'] ?></h4>
                 <span class="text-sm text-gray-500"><?= _date($rc['created_at']) ?></span>
               </div>
             </div>
@@ -81,7 +77,7 @@
       <?php $tags = get_tags(10);
       if (!empty($tags)):
         foreach ($tags as $tag) : ?>
-          <a href="<?= base_url('tags/' . $tag['slug']) ?>" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-blue-100 hover:text-blue-700 transition"><?= $tag['tag'] ?></a>
+          <a href="<?= base_url('tags/' . $tag['slug']) ?>" class="px-3 py-1 bg-abbey-100 text-gray-700 rounded-full text-sm hover:bg-pumpkin-100 hover:text-pumpkin-700 transition"><?= $tag['tag'] ?></a>
         <?php endforeach ?>
       <?php endif ?>
     </div>

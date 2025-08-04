@@ -8,7 +8,7 @@
         if (!empty($relatedPost)) {
             foreach ($relatedPost as $rp) { ?>
                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition">
-                    <div class="h-40  bg-gray-200 relative">
+                    <div class="min-h-40 bg-abbey-200 relative">
                         <a href="<?= base_url('post/' . $rp['post_slug']) ?>" class="h-40">
                             <?php if ($rp['post_image']): ?>
                                 <img class="w-full object-cover hover:scale-110 transition" src="<?= base_url('media_library/posts/thumbs/' . $rp['post_image']) ?>">
@@ -19,13 +19,13 @@
                                 </svg>
                             <?php endif ?>
                         </a>
-                        <div class="absolute top-2 left-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded"><?= $rp['category_name'] ?></div>
+                        <div class="absolute top-2 left-2 bg-pumpkin-600 text-white text-xs font-bold px-2 py-1 rounded"><?= $rp['category_name'] ?></div>
                     </div>
                     <div class="p-4">
                         <a href="<?= base_url('post/' . $rp['post_slug']) ?>">
-                            <h4 class="font-bold text-gray-800 mb-2 hover:text-blue-600 transition"><?= $rp['post_title'] ?></h4>
+                            <h4 class="font-bold text-gray-800 mb-2 hover:text-pumpkin-600 transition"><?= $rp['post_title'] ?></h4>
                         </a>
-                        <p class="text-gray-600 text-sm mb-3 line-clamp-2"><?= strip_tags_truncate($rp['post_title'], 100) ?></p>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2"><?= strip_tags_truncate($rp['post_content'], 100) ?></p>
                         <div class="flex justify-between items-center text-xs text-gray-500">
                             <span><?= _date($rp['created_at']) ?></span>
                             <span><?= reading_time($artikel['post_content']) ?></span>

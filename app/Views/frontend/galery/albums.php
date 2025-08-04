@@ -9,7 +9,7 @@
     }
 
     .gallery-container {
-        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
     }
 </style>
 <!-- Hero Section -->
@@ -29,19 +29,19 @@
                 <?php foreach ($albums as $album): ?>
                     <div class="album-card bg-white rounded-xl overflow-hidden shadow-lg">
                         <div class="relative">
-                            <div class="h-48 bg-blue-100 overflow-hidden">
+                            <div class="h-48 bg-pumpkin-100 overflow-hidden">
                                 <img src="<?= base_url('upload/image/' . $album['image_cover']) ?>" alt="<?= esc($album['album_title']) ?>"
                                     class="rounded shadow cursor-pointer w-full aspect-[1/1] object-cover   hover:opacity-80"
                                     @click="open(<?= $album['id'] ?>)">
                             </div>
-                            <div class="absolute top-4 right-4 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full"><?= $album['total_photos'] ?> Foto</div>
+                            <div class="absolute top-4 right-4 bg-pumpkin-600 text-white text-xs font-bold px-2 py-1 rounded-full"><?= $album['total_photos'] ?> Foto</div>
                         </div>
                         <div class="p-5">
                             <h3 class="text-xl font-semibold text-gray-800 mb-2"><?= esc($album['album_title']) ?></h3>
                             <p class="text-gray-600 mb-4"><?= esc($album['album_description']) ?></p>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-500"><?= _date($album['created_at']) ?></span>
-                                <button @click="open(<?= $album['id'] ?>)" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                                <button @click="open(<?= $album['id'] ?>)" class="text-pumpkin-600 hover:text-pumpkin-800 font-medium flex items-center">
                                     Lihat Album
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

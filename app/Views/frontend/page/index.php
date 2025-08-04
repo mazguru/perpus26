@@ -16,8 +16,8 @@
                 </div>
                 <span>•</span>
                 <span><?= date_indo($artikel['created_at']) ?></span>
-                <span>•</span>
-                <span><?= read_time($artikel['post_content']) ?></span>
+                <span class="hidden md:block">•</span>
+                <span class="hidden md:block"><?= read_time($artikel['post_content']) ?></span>
             </div>
         </div>
     </header>
@@ -32,8 +32,8 @@
         <!-- Author Bio -->
         <div class="mt-12 pt-8 border-t border-gray-200">
             <div class="flex items-center">
-                <div class="h-16 w-16 rounded-full bg-indigo-100 overflow-hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                <div class="h-16 w-16 rounded-full bg-gray-100 overflow-hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-pumpkin-400" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                     </svg>
                 </div>
@@ -49,17 +49,17 @@
         <div class="mt-8 flex items-center">
             <span class="mr-4 font-semibold">Share this article:</span>
             <div class="flex space-x-3">
-                <button class="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">
+                <button class="p-2 bg-pumpkin-600 text-white rounded-full hover:bg-pumpkin-700 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
                     </svg>
                 </button>
-                <button class="p-2 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition">
+                <button class="p-2 bg-pumpkin-400 text-white rounded-full hover:bg-pumpkin-500 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
                     </svg>
                 </button>
-                <button class="p-2 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition">
+                <button class="p-2 bg-pumpkin-700 text-white rounded-full hover:bg-pumpkin-800 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
                     </svg>
@@ -73,25 +73,37 @@
             <h3 class="text-2xl font-bold mb-6">Related Articles</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <?php foreach ($otherpage as $page) : ?>
+                    <div class="border shadow-md rounded">
                     <a href="<?= base_url('page/' . $artikel['post_slug']) ?>" class="block group">
-                        <div class="bg-gray-100 rounded-lg overflow-hidden">
-                            <div class="h-48 bg-gray-200 group-hover:opacity-90 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="p-4">
-                                <h4 class="text-lg font-bold mt-1 group-hover:text-indigo-600 transition"><?= $page['post_title'] ?></h4>
-                                <p class="text-gray-600 mt-2 text-sm"><?= strip_tags_truncate($page['post_content']) ?></p>
+                        <div class="min-h-40 bg-abbey-200 relative">
+                            <a href="<?= base_url('page/' . $page['post_slug']) ?>" class="h-40">
+                                <?php if ($page['post_image']): ?>
+                                    <img class="w-full object-cover hover:scale-110 transition" src="<?= base_url('media_library/posts/thumbs/' . $page['post_image']) ?>">
+                                <?php else: ?>
+
+                                    <svg class="text-gray-400 object-cover hover:scale-110 transition h-40 mx-auto " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                <?php endif ?>
+                            </a>
+                        </div>
+                        <div class="p-4">
+                            <a href="<?= base_url('page/' . $page['post_slug']) ?>">
+                                <h4 class="font-bold text-gray-800 mb-2 hover:text-pumpkin-600 transition"><?= $page['post_title'] ?></h4>
+                            </a>
+                            <p class="text-gray-600 text-sm mb-3 line-clamp-2"><?= strip_tags_truncate($page['post_content'], 100) ?></p>
+                            <div class="flex justify-between items-center text-xs text-gray-500">
+                                <span><?= _date($page['created_at']) ?></span>
+                                <span><?= reading_time($artikel['post_content']) ?></span>
                             </div>
                         </div>
                     </a>
+                    </div>
                 <?php endforeach ?>
-
             </div>
         </div>
 
-        <?= $this->include('frontend/page/comment')?>
+        <?= $this->include('frontend/page/comment') ?>
 
 
     </main>
