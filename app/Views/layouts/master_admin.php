@@ -107,13 +107,14 @@
         </div>
 
     </div>
-
+<!-- TinyMCE -->
+    <script src="<?= base_url('assets/plugins/tinymce/tinymce.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/backend.js') ?>"></script>
 
     <script src="<?= base_url('assets/js/notif.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/datatables.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/app.min.js') ?>"></script>
-
+    
 
 
 </body>

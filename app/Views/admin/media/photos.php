@@ -10,7 +10,7 @@
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
     <template x-for="photo in photos" :key="photo.id">
       <div class="relative group">
-        <img :src="'/uploads/photos/' + photo.photo_name" class="rounded shadow w-full h-48 object-cover" />
+        <img :src="'/media_library/photos/' + photo.photo_name" class="rounded shadow w-full h-48 object-cover" />
         <button @click="deletePhoto(photo.id)"
           class="absolute top-2 right-2 bg-red-600 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition">
           <span class="bi bi-trash">Hapus</span>

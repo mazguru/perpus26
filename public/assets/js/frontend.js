@@ -363,6 +363,43 @@ function videoSwiper() {
         }
     };
 }
+function swiperSlide() {
+    return {
+        swiper: null,
+        showModal: false,
+        videoUrl: '',
+        initSwiper() {
+            this.$nextTick(() => {
+                const totalSlides = document.querySelectorAll('.swiper .swiper-slide').length;
+                this.swiper = new Swiper('.banner', {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    loop: totalSlides > 2,
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+            });
+        },
+        openModal(code) {
+            this.videoUrl = `https://www.youtube.com/embed/${code}?autoplay=1`;
+            this.showModal = true;
+        },
+        closeModal() {
+            this.videoUrl = '';
+            this.showModal = false;
+        }
+    };
+}
 
 function galleryApp() {
     return {

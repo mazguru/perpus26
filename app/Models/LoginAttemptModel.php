@@ -12,6 +12,6 @@ class LoginAttemptModel extends Model
     protected $createdField  = 'created_at';
 
     protected $allowedFields = [
-        'user_name', 'ip_address', 'user_agent', 'status'
+        'user_name', 'ip_address', 'user_agent', 'status', 'counter'
     ];
 }

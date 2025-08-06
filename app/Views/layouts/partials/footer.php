@@ -34,12 +34,12 @@
                     <span class="bi bi-geo-alt text-pumpkin-400"></span>
                     <span>Jl. Padjajaran, Sumberan, Mlati, Sleman 55284</span>
                 </div>
-                <div class="flex items-start space-x-2">
-                    <span class="bi bi-envelope"></span>
+                <div class="flex items-start space-x-2 ">
+                    <span class="bi bi-envelope text-pumpkin-400"></span>
                     <span><?= session('email')?></span>
                 </div>
-                <div class="flex items-start space-x-2">
-                    <span class="bi bi-whatsapp"></span>
+                <div class="flex items-start space-x-2 ">
+                    <span class="bi bi-whatsapp text-pumpkin-400"></span>
                     <div>
                         <p>Bu Ruri : +62 856-2630-023</p>
                         <p>Bu Afifah : +62 877-8477-0063</p>

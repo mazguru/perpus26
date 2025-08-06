@@ -64,7 +64,7 @@
 
                         <div class="mb-4">
                             <label class="block text-xs font-semibold mb-1">Logo</label>
-                            <input name="link_image" type="file" @change="handleCoverUpload" accept="image/*"
+                            <input name="link_image" type="file" @change="handleFileChange" accept="image/*"
                                 class="w-full border rounded px-3 py-2">
                             <template x-if="previewFile">
                                 <img :src="previewFile" class="mt-2 w-32 h-32 object-cover rounded">

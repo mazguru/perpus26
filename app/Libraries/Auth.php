@@ -75,26 +75,47 @@ class Auth
         return ($log['count'] >= 5 && (time() - $log['time']) < 600);
     }
 
-    protected function log_ip_attempt($ip, $username = null, $status = 'fail')
+    protected function log_ip_attempt(string $ip, ?string $username = null, string $status = 'fail'): void
     {
-        // Log ke session untuk pemblokiran IP
-        $log = session()->get("ip_$ip") ?? ['count' => 0, 'time' => time()];
+        // Session blocking tetap digunakan
+        $log = $this->session->get("ip_$ip") ?? ['count' => 0, 'time' => time()];
         if ((time() - $log['time']) > 600) {
             $log = ['count' => 1, 'time' => time()];
         } else {
             $log['count']++;
         }
-        session()->set("ip_$ip", $log);
+        $this->session->set("ip_$ip", $log);
 
-        // Simpan ke database
+        // Logging ke DB
         $model = new LoginAttemptModel();
-        $model->insert([
-            'user_name'  => $username,
-            'ip_address' => $ip,
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
-            'status'     => $status
-        ]);
+
+        $tenMinutesAgo = date('Y-m-d H:i:s', time() - 600);
+
+        // Cek apakah sudah ada log yang sama dalam 10 menit terakhir
+        $existing = $model->where('ip_address', $ip)
+            ->where('user_name', $username)
+            ->where('status', $status)
+            ->where('created_at >=', $tenMinutesAgo)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($existing) {
+            // Update attempt_count
+            $model->update($existing['id'], [
+                'counter' => $existing['counter'] + 1,
+            ]);
+        } else {
+            // Insert baru
+            $model->insert([
+                'user_name'     => $username,
+                'ip_address'    => $ip,
+                'user_agent'    => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
+                'status'        => $status,
+                'counter' => 1
+            ]);
+        }
     }
+
 
     public function has_login()
     {

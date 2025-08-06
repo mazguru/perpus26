@@ -16,14 +16,14 @@
                     <div class="grid grid-cols-2 gap-4">
                         <?php foreach ($albums as $album): ?>
                             <div class="text-center">
-                                <img src="<?= base_url('upload/image/' . $album['image_cover']) ?>" alt="<?= esc($album['album_title']) ?>"
+                                <img src="<?= base_url('media_library/images/' . $album['image_cover']) ?>" alt="<?= esc($album['album_title']) ?>"
                                     class="rounded shadow cursor-pointer w-full aspect-[1/1] object-cover hover:opacity-80"
                                     @click="open(<?= $album['id'] ?>)">
                                 <h4 class="mt-2 text-base font-medium"><?= esc($album['album_title']) ?></h4>
                             </div>
                             <div id="album-<?= $album['id'] ?>" class="hidden">
                                 <?= json_encode(array_map(function ($photo) {
-                                    return base_url('uploads/photos/' . $photo['photo_name']);
+                                    return base_url('media_library/photos/' . $photo['photo_name']);
                                 }, $album['photos'])) ?>
                             </div>
                         <?php endforeach; ?>

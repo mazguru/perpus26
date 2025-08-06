@@ -17,6 +17,7 @@ function settingsApp(config) {
             setting_variable: '',
             setting_value: ''
         },
+        previewFile: null,
         selectedFile: null,
         errorData: '',
         async fetchData(url, method = 'GET', body = null) {
@@ -142,11 +143,13 @@ function settingsApp(config) {
             const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
             if (file && allowedExtensions.includes(file.name.split('.').pop().toLowerCase())) {
                 this.selectedFile = file; // Simpan file jika valid
+                this.previewFile = URL.createObjectURL(file);
             } else {
                 this.selectedFile = null; // Reset jika file tidak valid
                 Notifier.show('Error', 'File harus berupa JPG, JPEG, PNG, atau GIF.', 'error');
             }
         },
+
         async uploadFile() {
             const formData = new FormData();
             formData.append('file', this.selectedFile);
@@ -587,7 +590,7 @@ function mgrData(config) {
                     ...item
                 };
                 this.previewFile = item.image_cover ?
-                    _BASEURL + `upload/image/${item.image_cover}` :
+                    _BASEURL + `media_library/images/${item.image_cover}` :
                     null;
 
                 this.modalType = 'edit';

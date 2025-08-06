@@ -61,7 +61,7 @@
 <script>
     const config = {
         controller: 'media/albums',
-        dirUpload: 'upload/image/',
+        dirUpload: 'media_library/images/',
         columns: [{
                 key: 'album_title',
                 label: 'Judul',

@@ -13,6 +13,7 @@ use App\Models\AnswersModel;
 use App\Models\PostCommentsModel;
 use App\Models\VideosModel;
 use App\Models\AlbumsModel;
+use App\Models\BannerModel;
 use App\Models\MenuModel;
 use App\Models\CategoriesModel;
 use App\Models\CommentModel;
@@ -64,8 +65,8 @@ if (! function_exists('get_tags')) {
 if (! function_exists('get_banners')) {
     function get_banners(int $limit = 0)
     {
-        $m = model('M_banners');
-        return $m->get_banners($limit);
+        $m = new BannerModel();
+        return $m->where('is_deleted', 'false')->findAll($limit);
     }
 }
 

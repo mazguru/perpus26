@@ -74,7 +74,7 @@
 <script>
     const config = {
         controller: 'media/video',
-        dirUpload: 'upload/image/',
+        dirUpload: 'media_library/images/',
         columns: [{
                 key: 'post_title',
                 label: 'Judul',

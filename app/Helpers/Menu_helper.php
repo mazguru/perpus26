@@ -109,6 +109,12 @@ if (! function_exists('menuadmin')) {
                         'roles' => ['super_user']
                     ],
 
+                    [
+                        'title' => 'Banner',
+                        'route' => 'blog/banner',
+                        'roles' => ['super_user']
+                    ],
+
                 ]
             ],
 

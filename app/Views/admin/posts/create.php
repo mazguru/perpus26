@@ -144,5 +144,3 @@
     }
 </script>
 
-<!-- TinyMCE -->
-<script src="<?= base_url('assets/plugins/tinymce/tinymce.min.js') ?>"></script>

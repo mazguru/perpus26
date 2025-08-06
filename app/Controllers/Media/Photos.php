@@ -56,7 +56,7 @@ class Photos extends BaseController
         foreach ($files as $file) {
             if ($file->isValid() && !$file->hasMoved()) {
                 $newName = $file->getRandomName();
-                $file->move('uploads/photos', $newName);
+                $file->move('media_library/photos', $newName);
 
                 $this->photoModel->save([
                     'photo_album_id' => $albumId,
@@ -78,7 +78,7 @@ class Photos extends BaseController
         }
 
         // Hapus file dari sistem
-        $path = FCPATH . 'uploads/photos/' . $photo['photo_name'];
+        $path = FCPATH . 'media_library/photos/' . $photo['photo_name'];
         if (file_exists($path)) {
             unlink($path);
         }

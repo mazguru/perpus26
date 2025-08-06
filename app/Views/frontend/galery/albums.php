@@ -30,7 +30,7 @@
                     <div class="album-card bg-white rounded-xl overflow-hidden shadow-lg">
                         <div class="relative">
                             <div class="h-48 bg-pumpkin-100 overflow-hidden">
-                                <img src="<?= base_url('upload/image/' . $album['image_cover']) ?>" alt="<?= esc($album['album_title']) ?>"
+                                <img src="<?= base_url('media_library/images/' . $album['image_cover']) ?>" alt="<?= esc($album['album_title']) ?>"
                                     class="rounded shadow cursor-pointer w-full aspect-[1/1] object-cover   hover:opacity-80"
                                     @click="open(<?= $album['id'] ?>)">
                             </div>
@@ -52,7 +52,7 @@
                     </div>
                     <div id="album-<?= $album['id'] ?>" class="hidden">
                         <?= json_encode(array_map(function ($photo) {
-                            return base_url('uploads/photos/' . $photo['photo_name']);
+                            return base_url('media_library/photos/' . $photo['photo_name']);
                         }, $album['photos'])) ?>
                     </div>
                 <?php endforeach; ?>

@@ -119,4 +119,13 @@ class Category extends AdminController
             'message' => 'Data tidak ditemukan.'
         ]);
     }
+    // Helper
+    private function failValidationErrors($errors)
+    {
+        return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
+            ->setJSON([
+                'status' => 'error',
+                'message' => $errors
+            ]);
+    }
 }

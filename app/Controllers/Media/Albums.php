@@ -81,7 +81,7 @@ class Albums extends AdminController
 
         $cover = $this->request->getFile('image_cover');
         $filename = $cover->getRandomName();
-        $cover->move('upload/image/', $filename);
+        $cover->move('media_library/images/', $filename);
 
         $slug = url_title($this->request->getPost('album_title'), '-', true);
 
@@ -129,12 +129,12 @@ class Albums extends AdminController
         $cover = $this->request->getFile('image_cover');
         if ($cover && $cover->isValid() && !$cover->hasMoved()) {
             $newName = $cover->getRandomName();
-            $cover->move(FCPATH . 'upload/image', $newName);
+            $cover->move(FCPATH . 'media_library/images', $newName);
             $data['image_cover'] = $newName;
 
             // Hapus cover lama jika ada
-            if ($album['image_cover'] && file_exists(FCPATH . 'upload/image/' . $album['image_cover'])) {
-                unlink(FCPATH . 'upload/image/' . $album['image_cover']);
+            if ($album['image_cover'] && file_exists(FCPATH . 'media_library/images/' . $album['image_cover'])) {
+                unlink(FCPATH . 'media_library/images/' . $album['image_cover']);
             }
         }
 
@@ -162,7 +162,7 @@ class Albums extends AdminController
         foreach ($photos as $photo) {
             if ($photo->isValid() && !$photo->hasMoved()) {
                 $filename = $photo->getRandomName();
-                $photo->move('upload/image/', $filename);
+                $photo->move('media_library/images/', $filename);
 
                 $this->photoModel->insert([
                     'photo_album_id' => $id,

@@ -136,12 +136,12 @@ class Links extends AdminController
         $cover = $this->request->getFile('image_cover');
         if ($cover && $cover->isValid() && !$cover->hasMoved()) {
             $newName = $cover->getRandomName();
-            $cover->move(FCPATH . 'upload/image', $newName);
+            $cover->move(FCPATH . 'media_library/images', $newName);
             $data['image_cover'] = $newName;
 
             // Hapus cover lama jika ada
             if ($link['image_cover'] && file_exists(FCPATH . 'media_library/images/' . $link['image_cover'])) {
-                unlink(FCPATH . 'upload/image/' . $link['image_cover']);
+                unlink(FCPATH . 'media_library/images/' . $link['image_cover']);
             }
         }
 

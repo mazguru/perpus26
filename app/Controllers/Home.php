@@ -33,7 +33,7 @@ class Home extends PublicController
     {
         return view('layouts/master', [
             'title'    => 'Galeri Foto',
-            'content'  => 'frontend/galery/videos',
+            'content'  => 'frontend/galery/albums',
         ]);
     }
 

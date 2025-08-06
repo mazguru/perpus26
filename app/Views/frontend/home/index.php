@@ -1,5 +1,5 @@
 <!-- Hero Section -->
-<?= $this->include('frontend/home/hero') ?>
+<?= $this->include('frontend/home/image-slider') ?>
 
 <!-- Berita Section -->
  <?= $this->include('frontend/home/berita') ?>
@@ -27,7 +27,7 @@ if (!empty($links)):?>
            class=" transition-all duration-200 p-4 text-center hover:scale-110">
             
             <?php if (!empty($link['image_cover'])): ?>
-                <img src="<?= base_url('upload/image/' . $link['image_cover']) ?>"
+                <img src="<?= base_url('media_library/images/' . $link['image_cover']) ?>"
                      alt="<?= esc($link['link_title']) ?>"
                      class="max-w-full h-12 object-fit rounded-md mb-3 mx-auto group-hover:scale-105 transition-transform duration-200">
             <?php else: ?>

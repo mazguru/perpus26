@@ -120,7 +120,7 @@
   </style>
 </head>
 
-<body class="bg-orange-300 min-h-screen flex items-center justify-center p-4 relative">
+<body class="bg-orange-300 min-h-screen flex items-center justify-center p-4 relative" x-data="loginForm()">
   <!-- Floating Background Shapes -->
   <div class="floating-shapes">
     <div class="shape w-20 h-20 bg-white rounded-full" style="left: 10%; animation-delay: 0s; animation-duration: 25s;"></div>
@@ -130,7 +130,7 @@
     <div class="shape w-24 h-24 bg-white rounded-full" style="left: 90%; animation-delay: 20s; animation-duration: 22s;"></div>
   </div>
 
-  <div class="w-full max-w-md" x-data="loginForm()">
+  <div class="w-full max-w-md" >
     <!-- Logo/Brand Section -->
     <div class="text-center mb-8 slide-in">
       <div class="float-animation inline-block">
@@ -147,7 +147,7 @@
     <!-- Login Form -->
 
     <div class="glass-effect rounded-3xl p-8 shadow-2xl slide-in">
-      <?php if (!$ip_banned): ?>
+     
         <template x-if="!ip_banned">
           <form @submit.prevent="login">
             <!-- Email Field -->
@@ -216,13 +216,13 @@
             </button>
           </form>
         </template>
-      <?php else : ?>
+      
         <template x-if="ip_banned">
           <div class="text-red-600 text-center font-semibold">
             IP kamu diblokir sementara karena terlalu banyak percobaan login.
           </div>
         </template>
-      <?php endif ?>
+      
     </div>
 
     <!-- Footer -->
@@ -294,7 +294,7 @@
           user_password: '',
         },
 
-        ip_banned: <?= $ip_banned ?>,
+        ip_banned: false,
         login_info: "Enter your username and password to log on",
 
         errorMessage: '',
