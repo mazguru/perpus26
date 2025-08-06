@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class BannerModel extends Model
 {
-    protected $table = 'image_sliders';
+    protected $table = 'banners';
     protected $primaryKey = 'id';
 
     protected $allowedFields = [

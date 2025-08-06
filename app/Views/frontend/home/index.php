@@ -17,7 +17,7 @@
 if (!empty($links)):?>
 <section class=" bg-pumpkin-500 px-4 py-12">
     <div class="container">
-    <h1 class="text-2xl font-bold text-orange-700 mb-6 text-center">Tautan Penting Perpustakaan</h1>
+    <h1 class="text-2xl font-bold text-white mb-6 text-center">Tautan Penting Perpustakaan</h1>
 
     <div class="flex gap-4">
         

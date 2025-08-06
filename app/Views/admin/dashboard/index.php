@@ -99,7 +99,7 @@
             <div class="p-6 bg-white border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-800">Latest Posts</h2>
-                    <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800">View All</a>
+                    <a href="<?=base_url('blog/post')?>" class="text-sm text-indigo-600 hover:text-indigo-800">View All</a>
                 </div>
             </div>
             <div class="p-6">
@@ -136,7 +136,7 @@
             <div class="p-6 bg-white border-b border-gray-200">
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold text-gray-800">Recent Comments</h2>
-                    <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800">View All</a>
+                    <a href="<?=base_url('blog/comment')?>" class="text-sm text-indigo-600 hover:text-indigo-800">View All</a>
                 </div>
             </div>
             <div class="p-6">

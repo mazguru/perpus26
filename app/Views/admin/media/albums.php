@@ -1,19 +1,13 @@
 <div x-data="mgrData(config)" x-init="loadData()">
-    <div class="p-4 bg-white shadow-md border-b border-gray-200">
-        <div class="mb-4">
-            <h1 class="text-2xl font-semibold"><?= $title ?></h1>
-        </div>
+     <div class="p-4 bg-white dark:bg-boxdark shadow-md border-b border-gray-200">
         <div class="flex justify-between items-center mb-4">
-            <p class="text-xs">Menampilkan daftar album foto dan video</p>
-            <button @click="openModal('create')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-2 rounded text-xs">
+            <p>Menampilkan daftar album foto</p>
+            <button @click="openModal('create')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-2 rounded text-sm">
                 <i class="bi bi-plus-lg mr-2"></i> Tambah Album
             </button>
         </div>
     </div>
-    <div class="bg-white dark:bg-boxdark shadow-md rounded-b border-b p-4 table-striped table-hover">
-        <table id="table-data" class="table-auto w-full border-collapse border">
-        </table>
-    </div>
+    <?= $this->include('admin/list-data') ?>
     <!-- Modal -->
     <template x-if="showModal">
         <div class="fixed inset-0 bg-black/50 z-99 flex items-center justify-center">
@@ -22,7 +16,7 @@
                 <form @submit.prevent="submitForm" enctype="multipart/form-data">
                     <div class="mb-4">
                         <label class="block text-xs font-semibold mb-1">Judul</label>
-                        <input type="text" x-model="form.album_title" @input="generateSlug"
+                        <input type="text" x-model="form.album_title" @input="modalType === 'create' && (form[config.field.slug] = generateSlug(form[config.field.name]))"
                             class="w-full border rounded px-3 py-2" required>
                     </div>
 
@@ -61,6 +55,10 @@
 <script>
     const config = {
         controller: 'media/albums',
+        field: {
+            name: 'album_title',
+            slug: 'album_slug',
+        },
         dirUpload: 'media_library/images/',
         columns: [{
                 key: 'album_title',
@@ -86,22 +84,14 @@
                             <i class="bi bi-database-up mr-2"></i>
                             <span>Restore</span>
                         </button>
-                        <button
-                            class="text-xs bg-red-400 px-2 py-1 rounded mr-2 text-white dark:text-white hover:bg-red-300 flex items-center"
-                            @click="confirmDeletepermanent(${row.id})">
-                            <i class="bi bi-trash mr-2"></i>
-                            <span>Hapus</span>
-                        </button>
                         </div>`
                     : `<div class="flex"><button class="text-xs bg-yellow-400 px-2 py-1 rounded mr-2 text-white" @click="editData(${row.id})">Edit</button>
-                        <button class="text-xs bg-red-400 px-2 py-1 rounded mr-2 text-white" @click="deleteData(${row.id})">Hapus</button>
-                        <button class="text-xs bg-blue-600 px-2 py-1 rounded text-white" @click="goLink('${_BASEURL}media/photos/${row.id}')">Upload</button></div>`
+                        <button class="text-xs bg-red-400 px-2 py-1 rounded mr-2 text-white" @click="confirmDelete(${row.id})">Hapus</button>
+                        <button class="text-xs bg-blue-600 px-2 py-1 rounded text-white" @click="goLink('${_BASEURL}media/albums/upload/${row.id}')">Upload</button></div>`
                                     }
                 `;
                 }
             }
         ],
     }
-
-    
 </script>

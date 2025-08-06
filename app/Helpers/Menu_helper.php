@@ -122,7 +122,18 @@ if (! function_exists('menuadmin')) {
                 'title' => 'Manajemen User',
                 'icon'  => 'bi bi-person-gear',
                 'roles' => ['super_user'],
-                'route' => 'users/users',
+                'submenu' => [
+                    [
+                        'title' => 'Users',
+                        'route' => 'users/users',
+                        'roles' => ['super_user']
+                    ],
+                    [
+                        'title' => 'Visitor',
+                        'route' => 'users/visitor',
+                        'roles' => ['super_user']
+                    ],
+                ]
             ],
             [
                 'title' => 'Pengaturan',

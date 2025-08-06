@@ -15,10 +15,10 @@
         ?>
           <div class="news-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
             <div class="relative overflow-hidden">
-              <a href="/post/<?= $berita['post_slug'] ?>">
+              <a href="<?= base_url($berita['post_type'].'/'.$berita['post_slug']) ?>">
                 <?php if ($berita['post_image']): ?>
                   <img
-                    src="<?= base_url() ?>/media_library/posts/thumbs/<?= $berita['post_image'] ?>"
+                    src="<?= base_url('/media_library/posts/thumbs/'.$berita['post_image']) ?>"
                     class="w-full transition delay-150 duration-300 ease-in-out aspect-[16/9] object-cover mb-2 hover:scale-110"
                     alt="<?= $berita['post_title'] ?>"
                     loading="lazy"
@@ -41,14 +41,11 @@
               <p class="text-gray-600 mt-3"><?= strip_tags_truncate($berita['post_content']) ?></p>
               <div class="mt-4 flex items-center">
                 <span class="text-sm text-gray-500"><?= _date($berita['created_at']) ?></span>
-                <a href="/post/<?= $berita['post_slug'] ?>" class="ml-auto text-pumpkin-600 hover:text-pumpkin-800  font-medium">Baca selengkapnya</a>
+                <a href="<?= base_url($berita['post_type'].'/'.$berita['post_slug']) ?>" class="ml-auto text-pumpkin-600 hover:text-pumpkin-800  font-medium">Baca selengkapnya →</a>
               </div>
             </div>
           </div>
-
-
         <?php } ?>
-
       </div>
       <div class="text-center mt-10">
         <a href="<?= base_url('categories/berita') ?>" class="inline-block bg-pumpkin-50 hover:bg-pumpkin-100 text-pumpkin-600 font-medium py-3 px-6 rounded-lg transition duration-300 border border-pumpkin-200">Lihat Semua Berita</a>
@@ -56,9 +53,6 @@
     <?php } else { ?>
       <p class="text-center text-gray-500">Belum ada berita tersedia.</p>
     <?php } ?>
-
-
-
   </div>
 </section>
 
@@ -90,12 +84,14 @@
 
                   <div class="flex justify-between items-center">
                     <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded">pengumuman</span>
-                    <a href="<?= base_url('post/' . $prow['post_slug']) ?>" class="text-pumpkin-600 0 hover:text-pumpkin-800 text-sm font-medium ">Selengkapnya</a>
+                    <a href="<?= base_url('post/' . $prow['post_slug']) ?>" class="text-pumpkin-600 0 hover:text-pumpkin-800 text-sm font-medium ">selengkapnya →</a>
                   </div>
                 </div>
               </div>
             <?php } ?>
-
+            <div class="text-center mt-10">
+              <a href="<?= base_url('categories/pengumuman') ?>" class="inline-block bg-pumpkin-50 border border-pumpkin-200 hover:bg-pumpkin-100 text-pumpkin-600 font-medium py-3 px-6 rounded-lg transition duration-300">Lihat Semua Pengumuman</a>
+            </div>
           <?php } ?>
           <?php $agenda = get_post_categories('agenda', 2);
           if (! empty($agenda)) { ?>
@@ -112,17 +108,20 @@
 
                   <div class="flex justify-between items-center">
                     <span class="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded">agenda</span>
-                    <a href="<?= base_url('post/' . $arow['post_slug']) ?>" class="text-pumpkin-600 hover:text-pumpkin-800 text-sm font-medium ">Selengkapnya</a>
+                    <a href="<?= base_url('post/' . $arow['post_slug']) ?>" class="text-pumpkin-600 hover:text-pumpkin-800 text-sm font-medium ">selengkapnya →</a>
                   </div>
                 </div>
               </div>
             <?php } ?>
-
+            <div class="text-center mt-10">
+              <a href="<?= base_url('categories/agenda') ?>" class="inline-block bg-pumpkin-50 border border-pumpkin-200 hover:bg-pumpkin-100 text-pumpkin-600 font-medium py-3 px-6 rounded-lg transition duration-300">Lihat Semua Pengumuman</a>
+            </div>
           <?php } ?>
         </div>
-        <div class="text-center mt-10">
-          <a href="<?= base_url('categories/pengumuman') ?>" class="inline-block bg-pumpkin-50 border border-pumpkin-200 hover:bg-pumpkin-100 text-pumpkin-600 font-medium py-3 px-6 rounded-lg transition duration-300">Lihat Semua Pengumuman</a>
-        </div>
+        <?php if (empty($pengumuman) && empty($agenda)) { ?>
+          <p>Belum ada Agenda & Pengumuman</p>
+        <?php } ?>
+
       </div>
 
       <!-- Konten Edukasi -->
@@ -164,7 +163,7 @@
                     <?= strip_tags_truncate($jrow['post_content'], 100) ?>
                   </p>
                   <a href="<?= base_url('post/' . $jrow['post_slug']) ?>" class="mt-2 inline-flex items-center text-sm font-semibold text-pumpkin-600">
-                    selengkapnya
+                    selengkapnya →
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
@@ -173,10 +172,12 @@
               </div>
             <?php } ?>
           </div>
+          <div class="text-center mt-10">
+          <a href="<?= base_url('categories/artikel') ?>" class="inline-block bg-pumpkin-50 hover:bg-pumpkin-100 text-pumpkin-600 font-medium py-3 px-6 rounded-lg transition duration-300 border border-pumpkin-200">Lihat Semua Jurnal</a>
+        </div>
+        <?php }else{ ?>
+          <p class="mt-4">Belum ada jurnal pendidikan</p>
         <?php } ?>
-        <div class="text-center mt-10">
-              <a href="<?= base_url('categories/artikel') ?>" class="inline-block bg-pumpkin-50 hover:bg-pumpkin-100 text-pumpkin-600 font-medium py-3 px-6 rounded-lg transition duration-300 border border-pumpkin-200">Lihat Semua Jurnal</a>
-            </div>
       </div>
     </div>
   </div>

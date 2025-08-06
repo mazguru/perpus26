@@ -30,7 +30,7 @@ class Menu extends AdminController
     {
         $data = [
             'title' => 'Manajemen Menu',
-            'content' => 'admin/menu/index'
+            'content' => 'admin/tampilan/menu'
         ];
 
         return view('layouts/master_admin', $data);

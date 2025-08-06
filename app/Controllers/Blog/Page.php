@@ -32,11 +32,11 @@ class Page extends AdminController
     {
         $breadcrumbs = [
             ['title' => 'Beranda', 'url' => base_url()],
-            ['title' => 'Kelola Postingan']
+            ['title' => 'Kelola Halaman']
         ];
         $data = [
-            'title' => 'Kelola Postingan',
-            'content' => 'admin/page/index',
+            'title' => 'Kelola Halaman',
+            'content' => 'admin/blog/page',
             'breadcrumbs' => $breadcrumbs
 
         ];
@@ -47,13 +47,13 @@ class Page extends AdminController
     {
         $breadcrumbs = [
             ['title' => 'Beranda', 'url' => base_url()],
-            ['title' => 'Kelola Postingan', 'url' => base_url('blog/page')],
+            ['title' => 'Kelola Halaman', 'url' => base_url('blog/page')],
             ['title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan']
         ];
         $data = [
             'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
             'type' => 'create',
-            'content' => 'admin/page/create',
+            'content' => 'admin/blog/create-page',
             'breadcrumbs' => $breadcrumbs
         ];
         return view('layouts/master_admin', $data);
@@ -62,13 +62,13 @@ class Page extends AdminController
     {
         $breadcrumbs = [
             ['title' => 'Beranda', 'url' => base_url()],
-            ['title' => 'Kelola Postingan', 'url' => base_url('blog/page')],
+            ['title' => 'Kelola Halaman', 'url' => base_url('blog/page')],
             ['title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan']
         ];
         $data = [
             'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
             'post_id' => $id,
-            'content' => 'admin/page/create',
+            'content' => 'admin/blog/create-page',
             'breadcrumbs' => $breadcrumbs
         ];
         return view('layouts/master_admin', $data);
@@ -151,6 +151,7 @@ class Page extends AdminController
             'post_title' => 'required|max_length[120]',
             'post_slug' => 'required|alpha_dash',
             'post_content' => 'required',
+            'post_categories' => 'required',
             'post_status' => 'required|in_list[draft,publish]',
         ];
 
@@ -284,7 +285,7 @@ class Page extends AdminController
 
         return $this->response->setJSON([
             'status' => 'success',
-            'location' => base_url('media_library/posts/content' . $newName),
+            'location' => base_url('media_library/posts/content/' . $newName),
         ]);
     }
 }

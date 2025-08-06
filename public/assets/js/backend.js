@@ -458,7 +458,7 @@ function mgrData(config) {
         tableData: [],
         previewFile: null,
         dataTableInstance: null,
-        errorData: '',
+        errorData: {},
         selectedId: [],
 
         errors: {},
@@ -484,14 +484,25 @@ function mgrData(config) {
                     body: body ? (isFormData ? body : JSON.stringify(body)) : null
                 });
 
-                // Handle status error
+                const responseText = await response.text(); // baca hanya sekali
+
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('HTTP Error', response.status, errorText);
-                    return null; // fetchData akan return null => tangani di pemanggil
+                    console.error('HTTP Error', response.status, responseText);
+                    // coba parse jika mungkin JSON
+                    try {
+                        const errorJson = JSON.parse(responseText);
+                        return errorJson;
+                    } catch (e) {
+                        return {
+                            status: 'error',
+                            message: 'Terjadi kesalahan pada server.',
+                            debug: responseText
+                        };
+                    }
                 }
 
-                return await response.json();
+                // parse jika response OK
+                return JSON.parse(responseText);
             } catch (error) {
                 console.error('Fetch error:', error);
                 return null;
@@ -555,11 +566,13 @@ function mgrData(config) {
         openModal(type, id = null) {
             this.modalType = type;
             this.showModal = true;
+            this.errorData = {};
         },
 
         closeModal() {
             this.showModal = false;
             this.resetForm();
+            this.errorData = {};
         },
 
         resetForm() {
@@ -704,9 +717,10 @@ function mgrData(config) {
                 this.showModal = false;
                 Notifier.show('Berhasil', res.message, 'success');
                 this.loadData();
+                this.resetForm();
             } else {
-                this.errorData = res?.errors || ''
-                Notifier.show('Error', res?.message || 'Gagal menyimpan data', 'error');
+                this.errorData = res.errors ?? {};
+                Notifier.show('Error', res?.message || 'Gagal memproses data.', 'error');
             }
         },
 
@@ -1254,3 +1268,117 @@ function postForm(config) {
         }
     }
 }
+
+function photoManager(config) {
+    return {
+      showModal: false,
+      albumId: config.id,
+      photos: {},
+
+      init() {
+        this.loadPhotos()
+      },
+
+      openModal() {
+        this.showModal = true;
+      },
+      closeModal() {
+        this.showModal = false;
+      },
+
+      async loadPhotos() {
+        try {
+          const res = await fetch(_BASEURL + "media/albums/photos/" + this.albumId, {
+            method: 'GET',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+
+          if (res.ok) {
+            const data = await res.json(); // Ambil JSON dari response
+            this.photos = data.photos || []; // Pastikan bentuk responsnya { photos: [...] }
+          } else {
+            console.error('HTTP Error:', res.status);
+            alert('Gagal memuat foto');
+          }
+        } catch (error) {
+          console.error('Fetch Error:', error);
+          alert('Terjadi kesalahan saat memuat data');
+        }
+      },
+
+
+      async submitUpload() {
+        const form = new FormData();
+        const input = document.querySelector('input[type=file]');
+        const files = input.files;
+
+        if (files.length === 0) return;
+
+        for (let i = 0; i < files.length; i++) {
+          form.append('photos[]', files[i]);
+        }
+        form.append('photo_album_id', this.albumId);
+
+        try {
+          const res = await fetch(_BASEURL + "media/albums/upload-image", {
+            method: 'POST',
+            body: form
+          });
+
+          const data = await res.json(); // pastikan response server berupa JSON
+
+          if (res.ok && data.status === 'success') {
+            Notifier.show(data.message || 'Foto berhasil diunggah', 'success');
+            this.loadPhotos();
+            this.closeModal();
+          } else {
+            Notifier.show(data.message || 'Gagal mengunggah foto', 'error');
+          }
+        } catch (error) {
+          console.error(error);
+          Notifier.show('Terjadi kesalahan saat mengunggah foto', 'error');
+        }
+      },
+
+
+      async deletePhoto(id) {
+        if (!confirm('Yakin ingin menghapus foto ini?')) return;
+
+        try {
+          const res = await fetch(_BASEURL + 'media/albums/delete-photos/' + id, {
+            method: 'POST'
+          });
+
+          const data = await res.json();
+
+          if (res.ok && data.status === 'success') {
+            this.photos = this.photos.filter(p => p.id !== id);
+            Notifier.show(data.message || 'Foto berhasil dihapus', 'success');
+          } else {
+            Notifier.show(data.message || 'Gagal menghapus foto', 'error');
+          }
+        } catch (error) {
+          console.error(error);
+          Notifier.show('Terjadi kesalahan saat menghapus foto', 'error');
+        }
+      }
+
+    }
+  }
+
+  function videoModal() {
+        return {
+            videoOpen: false,
+            videoSrc: '',
+            openVideo(id) {
+                this.videoSrc = `https://www.youtube.com/embed/${id}?autoplay=1`;
+                this.videoOpen = true;
+            },
+            closeVideo() {
+                this.videoOpen = false;
+                this.videoSrc = '';
+            }
+        }
+    }

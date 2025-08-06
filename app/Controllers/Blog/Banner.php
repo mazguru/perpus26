@@ -20,7 +20,7 @@ class Banner extends AdminController
         $this->bannerModel = new BannerModel();
         // 🔑 Inisialisasi Primary Key & Table
         $this->pk = 'id';            // Ganti dengan nama kolom PK sebenarnya
-        $this->table = 'image_sliders';      // Nama tabel
+        $this->table = 'banners';      // Nama tabel
         $this->model = new \App\Models\GenericModel($this->table, $this->pk);
         helper(['form', 'url']);
     }
@@ -29,7 +29,7 @@ class Banner extends AdminController
     {
         $data = [
             'title' => 'Banner Slider',
-            'content' => 'admin/media/banner',
+            'content' => 'admin/tampilan/banner',
         ];
         return view('layouts/master_admin', $data);
     }

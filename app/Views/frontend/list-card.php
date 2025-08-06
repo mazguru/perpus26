@@ -50,7 +50,7 @@
               </a>
               <span class="text-xs text-gray-500">
                 <i class="bi bi-eye h-4 w-4 mr-1"></i>
-      Dibaca <?= number_format($row['post_counter'])?> kali
+                Dibaca <?= number_format($row['post_counter']) ?> kali
               </span>
             </div>
           </div>

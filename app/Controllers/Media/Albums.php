@@ -28,18 +28,15 @@ class Albums extends AdminController
         helper(['form', 'url']);
     }
 
-    public function __construct()
-    {
-        $this->albumModel = new AlbumModel();
-        $this->photoModel = new PhotoModel();
-    }
-
     public function getIndex(): string
     {
+        $breadcrumbs = [
+            ['title' => 'Beranda', 'url' => base_url()],
+            ['title' => 'Kelola Album']
+        ];
         $data = [
-            'title' => 'Album Media',
-            'media' => true,
-            'albums' => true,
+            'title' => 'Kelola Album',
+            'breadcrumbs' => $breadcrumbs,
             'content' => 'admin/media/albums',
         ];
         return view('layouts/master_admin', $data);
@@ -100,16 +97,6 @@ class Albums extends AdminController
         ]);
     }
 
-    public function edit($id)
-    {
-        $album = $this->albumModel->find($id);
-        if (!$album) {
-            return $this->failNotFound('Album tidak ditemukan');
-        }
-
-        return $this->response->setJSON($album);
-    }
-
     public function postUpdate($id)
     {
         helper(['form', 'text']);
@@ -146,30 +133,72 @@ class Albums extends AdminController
         ]);
     }
 
-    public function postUploadImage($id)
+    public function getUpload($albumId = null)
     {
-        $album = $this->albumModel->find($id);
+        if (!$albumId) {
+            return redirect()->to('media/albums')->with('error', 'Album tidak ditemukan.');
+        }
+
+        $album = $this->albumModel->find($albumId);
         if (!$album) {
-            return $this->failNotFound('Album tidak ditemukan');
+            return redirect()->to('media/albums')->with('error', 'Album tidak valid.');
+        }
+        $breadcrumbs = [
+            ['title' => 'Beranda', 'url' => base_url()],
+            ['title' => 'Kelola Album', 'url' => base_url('media/albums')],
+            ['title' => 'Foto Album']
+        ];
+        $data = [
+            'title' => 'Album '.$album['album_title'],
+            'album'  => $album,
+            'breadcrumbs' => $breadcrumbs,
+            'content' => 'admin/media/photos',
+        ];
+        return view('layouts/master_admin', $data);
+    }
+    public function getPhotos($albumId = null)
+    {
+        if (!$albumId) {
+            return redirect()->to('media/albums')->with('error', 'Album tidak ditemukan.');
         }
 
-        $files = $this->request->getFiles();
-        if (!$files || !isset($files['photos'])) {
-            return $this->failValidationErrors(['photos' => 'Foto tidak ditemukan']);
+        $album = $this->albumModel->find($albumId);
+        if (!$album) {
+            return redirect()->to('media/albums')->with('error', 'Album tidak valid.');
         }
 
-        $photos = $files['photos'];
-        foreach ($photos as $photo) {
-            if ($photo->isValid() && !$photo->hasMoved()) {
-                $filename = $photo->getRandomName();
-                $photo->move('media_library/images/', $filename);
+        $photos = $this->photoModel
+            ->where('photo_album_id', $albumId)
+            ->orderBy('id', 'DESC')
+            ->findAll();
+        $data = [
+            'photos' => $photos,
+        ];
+        return $this->response->setJSON($data);
+    }
 
-                $this->photoModel->insert([
-                    'photo_album_id' => $id,
-                    'photo_name'     => $filename,
+    public function postUploadImage()
+    {
+        $albumId = $this->request->getPost('photo_album_id');
+        if (!$albumId) {
+            return redirect()->back()->with('error', 'Album tidak ditemukan.');
+        }
+
+        $files = $this->request->getFiles()['photos'] ?? null;
+        if (!$files) {
+            return redirect()->back()->with('error', 'Tidak ada file yang diunggah.');
+        }
+
+        foreach ($files as $file) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move('media_library/photos', $newName);
+
+                $this->photoModel->save([
+                    'photo_album_id' => $albumId,
+                    'photo_name'     => $newName,
                     'created_at'     => date('Y-m-d H:i:s'),
-                    'created_by'     => session('user_id'),
-                    'is_deleted'     => 'false'
+                    'created_by'     => session('user_id') ?? null,
                 ]);
             }
         }
@@ -177,6 +206,28 @@ class Albums extends AdminController
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Foto berhasil diunggah.'
+        ]);
+    }
+
+    public function postDeletePhotos($id = null)
+    {
+        $photo = $this->photoModel->find($id);
+        if (!$photo) {
+            return redirect()->back()->with('error', 'Foto tidak ditemukan.');
+        }
+
+        // Hapus file dari sistem
+        $path = FCPATH . 'media_library/photos/' . $photo['photo_name'];
+        if (file_exists($path)) {
+            unlink($path);
+        }
+
+        // Hapus dari database
+        $this->photoModel->delete($id);
+
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => 'Foto berhasil dihapus.'
         ]);
     }
 

@@ -57,7 +57,7 @@ class UserModel extends Model
 
     public function getAllUsers()
     {
-        return $this->select('id, user_name, user_full_name, user_type, user_email, user_bio, user_jabatan, user_contact, last_logged_in, is_deleted')->findAll();
+        return $this->select('id, user_name, user_full_name, user_type, user_email, user_bio, user_jabatan, user_contact, last_logged_in, is_deleted')->where('user_group_id !=','77')->findAll();
     }
     public function loggedIn(string $userName)
     {

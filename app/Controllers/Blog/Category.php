@@ -26,10 +26,13 @@ class Category extends AdminController
 
     public function getIndex(): string
     {
+        $breadcrumbs = [
+            ['title' => 'Beranda', 'url' => base_url()],
+            ['title' => 'Kategori']
+        ];
         $data = [
             'title' => 'Kategori',
-            'media' => true,
-            'categorys' => true,
+            'breadcrumbs' => $breadcrumbs,
             'content' => 'admin/categories/index',
         ];
         return view('layouts/master_admin', $data);
@@ -63,7 +66,8 @@ class Category extends AdminController
 
         $rules = [
             'category_name' => 'required|min_length[3]',
-            'category_description' => 'permit_empty|string'
+            'category_description' => 'permit_empty|string',
+            'category_type' => 'required|in_list[post, file, page]',
         ];
 
         if (!$this->validate($rules)) {
@@ -125,6 +129,7 @@ class Category extends AdminController
         return $this->response->setStatusCode(ResponseInterface::HTTP_BAD_REQUEST)
             ->setJSON([
                 'status' => 'error',
+                'errors' => $errors,
                 'message' => $errors
             ]);
     }

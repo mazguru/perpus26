@@ -10,10 +10,7 @@
             </button>
         </div>
     </div>
-    <div class="bg-white dark:bg-boxdark shadow-md rounded-b border-b p-4 table-striped table-hover">
-        <table id="table-data" class="table-auto w-full border-collapse border">
-        </table>
-    </div>
+    <?= $this->include('admin/list-data') ?>
     <!-- Modal -->
     <template x-if="showModal">
         <div class="fixed inset-0 bg-black/50 z-99 flex items-center justify-center">
@@ -86,7 +83,7 @@
             },
             {
                 key: 'link_url',
-                label: 'ID Youtube'
+                label: 'Link URL'
             },
 
             {

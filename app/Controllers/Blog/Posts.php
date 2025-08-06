@@ -37,7 +37,7 @@ class Posts extends AdminController
         ];
         $data = [
             'title' => 'Kelola Postingan',
-            'content' => 'admin/posts/index',
+            'content' => 'admin/blog/post',
             'breadcrumbs' => $breadcrumbs
 
         ];
@@ -54,7 +54,7 @@ class Posts extends AdminController
         $data = [
             'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
             'type' => 'create',
-            'content' => 'admin/posts/create',
+            'content' => 'admin/blog/create-post',
             'breadcrumbs' => $breadcrumbs
         ];
         return view('layouts/master_admin', $data);
@@ -69,7 +69,7 @@ class Posts extends AdminController
         $data = [
             'title' => $id ? 'Edit Tulisan' : 'Tambah Tulisan',
             'post_id' => $id,
-            'content' => 'admin/posts/create',
+            'content' => 'admin/blog/create-post',
             'breadcrumbs' => $breadcrumbs
         ];
         return view('layouts/master_admin', $data);
@@ -282,7 +282,7 @@ class Posts extends AdminController
 
         return $this->response->setJSON([
             'status' => 'success',
-            'location' => base_url('media_library/posts/content' . $newName),
+            'location' => base_url('media_library/posts/content/' . $newName),
         ]);
     }
 }

@@ -1,20 +1,6 @@
-<style>
-    .album-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(30, 64, 175, 0.2);
-    }
-
-    .album-card {
-        transition: all 0.3s ease;
-    }
-
-    .gallery-container {
-        background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
-    }
-</style>
 <!-- Hero Section -->
-<section class="gallery-container text-white py-16">
-    <div class="container mx-auto px-4 text-center">
+<section class="">
+    <div class="container hero-pattern2 text-white py-16 shadow-xl rounded-b-xl mx-auto px-4 text-center">
         <h2 class="text-4xl font-bold mb-4">Galeri Video Perpustakaan</h2>
         <p class="text-xl max-w-2xl mx-auto mb-8">Jelajahi koleksi video kegiatan, tutorial, dan konten edukatif dari perpustakaan kami</p>
 
@@ -22,7 +8,7 @@
 </section>
 <section class="py-12">
     <div class="container mx-auto px-4" x-data="videoSwiper()">
-        <h3 class="text-2xl font-semibold mb-4 text-center">Daftar Album</h3>
+        <h3 class="text-2xl font-semibold mb-4">Daftar Video</h3>
         <?php $videos = get_videos();
         if (!empty($videos)): ?>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

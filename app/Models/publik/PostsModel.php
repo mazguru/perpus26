@@ -147,8 +147,9 @@ class PostsModel extends Model
             ", false)
             ->join('users x2', 'x1.post_author = x2.id', 'left')
             ->join('categories x3', 'x1.post_categories = x3.id', 'left')
-            ->where('x1.post_type', 'post')
+            ->whereIn('x1.post_type', ['post', 'page'])
             ->where('x1.post_status', 'publish')
+            ->where('x1.post_visibility', 'public')
             ->where('x1.is_deleted', 'false')
             ->orderBy('x1.created_at', 'DESC');
 
@@ -450,8 +451,11 @@ class PostsModel extends Model
             ->where('is_deleted', 'false')
             ->limit(1)
             ->get()->getRowArray();
-
+        if (!$catRow || !isset($catRow['id'])) {
+            return [];
+        }
         $idLike = $catRow['id'];
+
 
         $b = $this->db->table($this->table . ' x1')
             ->select("

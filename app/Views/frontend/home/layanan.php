@@ -38,7 +38,7 @@
 
                 </div>
                 <div class="w-full mt-4 px-4">
-                    <button @click="window.location.href= _BASEURL +'page/layanan-perpustakaan'" class="w-full bg-pumpkin-600 text-white font-medium py-2 rounded-lg hover:bg-pumpkin-700 transition">Selengkapnya</button>
+                    <button @click="window.location.href= _BASEURL +'page/layanan-perpustakaan'" class="w-full bg-pumpkin-600 text-white font-medium py-2 rounded-lg hover:bg-pumpkin-700 transition">selengkapnya →</button>
                 </div>
             </div>
 
@@ -109,7 +109,7 @@
                         <?php endforeach; ?>
                     </div>
                     <div class="w-full mt-4">
-                        <button @click="window.location.href= _BASEURL +'page/program-perpustakaan'" class="w-full bg-pumpkin-600 text-white font-medium py-2 rounded-lg hover:bg-pumpkin-700 transition">Selengkapnya</button>
+                        <button @click="window.location.href= _BASEURL +'page/program-perpustakaan'" class="w-full bg-pumpkin-600 text-white font-medium py-2 rounded-lg hover:bg-pumpkin-700 transition">selengkapnya →</button>
                     </div>
                 </div>
             </div>
@@ -146,7 +146,7 @@
                     </ul>
                 </div>
                 <div class="w-full px-4 mt-4">
-                <button @click="window.location.href= _BASEURL +'page/layanan-referensi'" class="w-full px-4 bg-pumpkin-600 text-white font-medium py-2 rounded-lg hover:bg-pumpkin-700 transition">Selengkapnya</button>
+                <button @click="window.location.href= _BASEURL +'page/layanan-referensi'" class="w-full px-4 bg-pumpkin-600 text-white font-medium py-2 rounded-lg hover:bg-pumpkin-700 transition">selengkapnya →</button>
                 </div>
             </div>
         </div>

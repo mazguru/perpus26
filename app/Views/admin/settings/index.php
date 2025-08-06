@@ -61,16 +61,16 @@
                             <input :type="getFieldType(editItem.setting_variable)" id="editsetting_value" class="w-full border rounded px-3 py-2 mt-1"
                                 x-model="editItem.setting_value" required>
                         </div>
-
-                        <div class="mb-4">
-                            <label class="block text-xs font-semibold mb-1">Logo</label>
-                            <input name="link_image" type="file" @change="handleFileChange" accept="image/*"
-                                class="w-full border rounded px-3 py-2">
-                            <template x-if="previewFile">
-                                <img :src="previewFile" class="mt-2 w-32 h-32 object-cover rounded">
-                            </template>
-                        </div>
-
+                        <template x-if="isUploadField(editItem.setting_variable)">
+                            <div class="mb-4">
+                                <label class="block text-xs font-semibold mb-1">Logo</label>
+                                <input name="link_image" type="file" @change="handleFileChange" accept="image/*"
+                                    class="w-full border rounded px-3 py-2">
+                                <template x-if="previewFile">
+                                    <img :src="previewFile" class="mt-2 w-32 h-32 object-cover rounded">
+                                </template>
+                            </div>
+                        </template>
                         <!-- Textarea Field -->
                         <template x-if="isTextArea(editItem.setting_variable)">
                             <div class="mb-4">

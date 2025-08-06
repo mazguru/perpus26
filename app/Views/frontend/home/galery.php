@@ -77,8 +77,9 @@
                             <?php endforeach; ?>
                         </div>
                     </div>
+                <?php else: ?>
+                    <p class="text-gray-500">Belum ada video tersedia.</p>
                 <?php endif; ?>
-
                 <!-- Modal Video -->
                 <div x-show="showModal" x-transition x-cloak
                     class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">

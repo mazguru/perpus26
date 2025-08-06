@@ -1,16 +1,23 @@
-<div x-data="photoManager()" x-init="init()">
+<div x-data="photoManager(config)" x-init="init()">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-2xl font-bold">Foto Album: <?= esc($album['album_title']) ?></h2>
-    <button @click="openUploadModal" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+    <button @click="openModal" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
       + Unggah Foto
     </button>
   </div>
+  <!-- Jika kosong -->
+  <template x-if="photos.length === 0">
+    <div class="text-center text-gray-500 p-6">
+      <p>Belum ada foto di galeri ini.</p>
+    </div>
+  </template>
 
+  <!-- Jika ada foto -->
   <!-- Galeri Foto -->
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+  <div x-show="photos.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
     <template x-for="photo in photos" :key="photo.id">
       <div class="relative group">
-        <img :src="'/media_library/photos/' + photo.photo_name" class="rounded shadow w-full h-48 object-cover" />
+        <img :src="_BASEURL+'/media_library/photos/' + photo.photo_name" class="rounded shadow w-full h-48 object-cover" />
         <button @click="deletePhoto(photo.id)"
           class="absolute top-2 right-2 bg-red-600 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition">
           <span class="bi bi-trash">Hapus</span>
@@ -37,52 +44,7 @@
 </div>
 
 <script>
-function photoManager() {
-  return {
-    showModal: false,
-    albumId: <?= $album['id'] ?>,
-    photos: <?= json_encode($photos) ?>,
-
-    init() {},
-
-    openUploadModal() {
-      this.showModal = true;
-    },
-
-    async submitUpload() {
-      const form = new FormData();
-      const input = document.querySelector('input[type=file]');
-      const files = input.files;
-
-      if (files.length === 0) return;
-
-      for (let i = 0; i < files.length; i++) {
-        form.append('photos[]', files[i]);
-      }
-      form.append('photo_album_id', this.albumId);
-
-      const res = await fetch('<?= site_url("media/photos/upload") ?>', {
-        method: 'POST',
-        body: form
-      });
-
-      if (res.ok) {
-        const data = await res.text();
-        window.location.reload();
-      } else {
-        alert('Gagal mengunggah foto');
-      }
-    },
-
-    async deletePhoto(id) {
-      if (!confirm('Yakin ingin menghapus foto ini?')) return;
-      const res = await fetch(`<?= site_url('media/photos/delete') ?>/` + id);
-      if (res.ok) {
-        this.photos = this.photos.filter(p => p.id !== id);
-      } else {
-        alert('Gagal menghapus');
-      }
-    }
+  const config = {
+    id: <?= $album['id'] ?>
   }
-}
 </script>
