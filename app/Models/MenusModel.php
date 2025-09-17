@@ -61,8 +61,12 @@ class MenusModel extends Model
         $tree = [];
 
         foreach ($menus as $menu) {
-            if (!$menu['menu_parent_id']) {
-                $menu['children'] = $this->getChildren($menus, $menu['id']);
+            // Tambahkan default
+            $menu['active'] = false;
+            $menu['children'] = $this->getChildren($menus, $menu['id']);
+
+            // Top-level
+            if (empty($menu['menu_parent_id'])) {
                 $tree[] = $menu;
             }
         }
@@ -70,15 +74,18 @@ class MenusModel extends Model
         return $tree;
     }
 
-    private function getChildren($menus, $parentId)
+    private function getChildren(array $menus, int $parentId): array
     {
         $children = [];
+
         foreach ($menus as $menu) {
-            if ($menu['menu_parent_id'] == $parentId) {
+            if ((int) $menu['menu_parent_id'] === $parentId) {
+                $menu['active'] = false;
                 $menu['children'] = $this->getChildren($menus, $menu['id']);
                 $children[] = $menu;
             }
         }
+
         return $children;
     }
 }

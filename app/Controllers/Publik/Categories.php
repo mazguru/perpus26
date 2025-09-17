@@ -33,7 +33,7 @@ class Categories extends PublicController
         // gunakan group 'search' agar param halaman jadi ?page_search=2
         $results = $postModel->paginate(6, 'default', $page);
 
-        return view('layouts/master', [
+        return render('layouts/master', [
             'title'    => $category['category_name'],
             'category' => $category,
             'results' => $results,

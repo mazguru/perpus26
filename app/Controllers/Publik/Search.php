@@ -27,6 +27,6 @@ class Search extends PublicController
             'content' => 'frontend/search',
         ];
 
-        return view('layouts/master', $data);
+        return render('layouts/master', $data);
     }
 }

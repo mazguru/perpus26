@@ -21,6 +21,7 @@ use App\Models\MenusModel;
 use App\Models\PhotoModel;
 use App\Models\PostsModel;
 use App\Models\publik\PostsModel as PublikPostModel;
+use Config\Services;
 
 // Pastikan helper URL dipakai untuk base_url() & url_title()
 helper(['url']);
@@ -396,3 +397,29 @@ if (!function_exists('reading_time')) {
         return $minutes . ' menit baca';
     }
 }
+
+if (! function_exists('render')) {
+    function render(string $view, array $data = [], array $options = [])
+    {
+        // Ambil data global dari controller
+        $globalVars = $GLOBALS['CI_VARS'] ?? [];
+
+        if (is_array($globalVars) && !empty($globalVars)) {
+            $data = array_merge($globalVars, $data);
+        }
+
+        return view($view, $data, $options);
+    }
+}
+
+if (!function_exists('character_limiter')) {
+    function character_limiter($str, $n = 500, $end_char = '...')
+    {
+        if (strlen($str) < $n) {
+            return $str;
+        }
+
+        return substr($str, 0, $n) . $end_char;
+    }
+}
+

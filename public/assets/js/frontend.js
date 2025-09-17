@@ -511,7 +511,7 @@ function visitSummary() {
                     this.today = data.today;
                     this.month = data.month;
                     this.year = data.year;
-                    this.total = data.total;
+                    this.total = data.all_time;
                 });
         }
     }

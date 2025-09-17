@@ -33,7 +33,7 @@ class Readmore extends PublicController
             'content' => $viewPath
         ];
 
-        return view('layouts/master', $data);
+        return render('layouts/master', $data);
     }
 
     public function article(string $slug)

@@ -23,14 +23,13 @@ class VisitorLogger implements FilterInterface
             return;
         }
 
-        // Cek hanya halaman publik, bukan /admin misalnya
+        // Abaikan halaman admin
         $uri = service('uri')->getPath();
         if (str_starts_with($uri, 'admin')) {
             return;
         }
 
         $visitorModel = new VisitorModel();
-
         $visitorModel->logVisit();
     }
 

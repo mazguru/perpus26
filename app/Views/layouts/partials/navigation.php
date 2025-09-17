@@ -1,6 +1,6 @@
-<header x-data="menuPublic()" x-init="fetchMenu()" id="navbar" class="backdrop-blur-xl transition-colors duration-500 bg-abbey-900/85 text-white sticky top-0 z-40 font-semibold leading-6 shadow-md w-full">
-    <div class="container px-4 md:px-0">
-        <nav class="w-full py-2 flex justify-between">
+<header id="navbar" class="backdrop-blur-xl transition-colors duration-500 bg-abbey-900/85 text-white sticky top-0 z-40 font-semibold leading-6 shadow-md w-full">
+    <div class="container px-4 md:px-0" x-data="{ mobileOpen: false }">
+        <nav class="w-full py-2 flex justify-between items-center">
             <!-- Logo -->
             <a href="<?= base_url() ?>" class="flex items-center space-x-3 md:hidden">
                 <?php
@@ -17,108 +17,112 @@
                     <p class="text-xs text-white"><?= session('school_name') ?><br>NPP. <?= session('npp') ?></p>
                 </div>
             </a>
-
-
-            <!-- Burger Icon -->
-            <button @click="openmenu = !openmenu" class="md:hidden focus:outline-none">
+            <!-- Hamburger Menu Button (Mobile) -->
+            <button @click="mobileOpen = !mobileOpen" class="md:hidden focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path x-show="!openmenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path x-show="!mobileOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 6h16M4 12h16M4 18h16" />
-                    <path x-show="openmenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path x-show="mobileOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M6 18L18 6M6 6l12 12" />
                 </svg>
+                
             </button>
-            <!-- Menu utama (desktop) -->
-            <div class="hidden md:flex items-center text-sm font-medium">
 
-                <template x-for="menu in menus" :key="menu.id">
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center text-sm font-medium space-x-2">
+                <?php foreach ($site_menus as $menu): ?>
                     <div class="relative group" x-data="{ hover: false }">
-                        <!-- Menu tanpa submenu -->
-                        <template x-if="menu.children.length === 0">
-                            <a
-                                :href="menu.menu_type === 'link' ? menu.menu_url : base_url + menu.menu_url"
-                                :target="menu.menu_target"
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium  hover:text-pumpkin-600"
-                                :class="menu.active ? 'text-pumpkin-600 font-semibold ' : 'text-white'">
-                                <span x-text="menu.menu_title"></span>
+                        <?php if (empty($menu['children'])): ?>
+                            <!-- Menu tanpa submenu -->
+                            <a href="<?= $menu['menu_type'] === 'link' ? $menu['menu_url'] : base_url($menu['menu_url']) ?>"
+                                target="<?= esc($menu['menu_target']) ?>"
+                                class="inline-flex items-center px-4 py-2 hover:text-pumpkin-600
+                               <?= $menu['active'] ? 'text-pumpkin-600 font-semibold' : 'text-white' ?>">
+                                <?= esc($menu['menu_title']) ?>
                             </a>
-                        </template>
+                        <?php else: ?>
+                            <!-- Menu dengan submenu -->
+                            <button type="button"
+                                @mouseenter="hover = true"
+                                @mouseleave="hover = false"
+                                class="inline-flex items-center px-4 py-2 hover:text-pumpkin-600 focus:outline-none
+                                    <?= isset($menu['active']) && $menu['active'] ? 'text-pumpkin-600 font-semibold' : 'text-white' ?>">
+                                <?= esc($menu['menu_title']) ?>
+                                <i class="bi bi-chevron-down ml-2 transition-transform duration-300"
+                                    :class="hover ? 'rotate-180' : 'rotate-0'"></i>
+                            </button>
 
-                        <!-- Menu dengan submenu -->
-                        <template x-if="menu.children.length > 0">
-                            <div @mouseenter="hover = true" @mouseleave="hover = false">
-                                <button
-                                    type="button"
-                                    @click="menu.open = !menu.open"
-                                    class="inline-flex items-center px-4 py-2 text-sm font-medium  hover:text-pumpkin-600 focus:outline-none"
-                                    :class="menu.active ? 'text-pumpkin-600 font-semibold' : 'text-white'">
-                                    <span x-text="menu.menu_title"></span>
-                                    <i class="bi bi-chevron-down ml-2 transform transition-transform duration-300"
-                                        :class="hover ? 'rotate-180' : 'rotate-0'"></i>
-                                </button>
-
-                                <div
-                                    class="absolute left-0 mt-2 w-40 bg-abbey-900/85 shadow-lg z-50 rounded-b-md"
-                                    x-show="hover"
-                                    x-transition>
-                                    <template x-for="child in menu.children" :key="child.id">
-                                        <a
-                                            class="block px-4 py-2 text-sm  hover:bg-gray-800"
-                                            :href="child.menu_type === 'link' ? child.menu_url : base_url + child.menu_url"
-                                            :target="child.menu_target"
-                                            x-text="child.menu_title"
-                                            :class="child.active ? 'text-pumpkin-600 font-semibold' : 'text-white'"></a>
-                                    </template>
-                                </div>
+                            <!-- Submenu Desktop -->
+                            <div class="absolute left-0 mt-2 w-40 bg-abbey-900/85 shadow-lg rounded-b-md z-50"
+                                x-show="hover"
+                                x-transition
+                                @mouseenter="hover = true"
+                                @mouseleave="hover = false"
+                                style="display: none;">
+                                <?php foreach ($menu['children'] as $child): ?>
+                                    <a href="<?= $child['menu_type'] === 'link' ? $child['menu_url'] : base_url($child['menu_url']) ?>"
+                                        target="<?= esc($child['menu_target']) ?>"
+                                        class="block px-4 py-2 text-sm hover:bg-gray-800
+                                       <?= $child['active'] ? 'text-pumpkin-600 font-semibold' : 'text-white' ?>">
+                                        <?= esc($child['menu_title']) ?>
+                                    </a>
+                                <?php endforeach; ?>
                             </div>
-                        </template>
+                        <?php endif; ?>
                     </div>
-                </template>
+                <?php endforeach; ?>
             </div>
 
+            <!-- Login Button Desktop -->
             <div class="hidden md:block py-2">
-                <a href="<?= base_url('login') ?>" class="p-2 font-medium text-sm bg-primary text-white border border-primary rounded duration-700">Login</a>
+                <a href="<?= base_url('login') ?>" class="p-2 font-medium text-sm bg-primary text-white border border-primary rounded duration-700">
+                    Login
+                </a>
             </div>
-
         </nav>
-        <!-- Menu mobile dropdown -->
-        <div class="md:hidden border-t" x-show="openmenu" x-transition>
-            <div class="px-4 py-2 space-y-2">
-                <template x-for="menu in menus" :key="menu.id">
-                    <div x-data="{ subOpen: false }">
-                        <!-- Menu tanpa submenu -->
-                        <template x-if="menu.children.length === 0">
-                            <a
-                                :href="menu.menu_type === 'link' ? menu.menu_url : base_url + menu.menu_url"
-                                :target="menu.menu_target"
-                                class="inline-flex text-sm font-medium text-white hover:text-pumpkin-600"
-                                :class="menu.active ? 'text-pumpkin-600 font-semibold' : ''">
-                                <span x-text="menu.menu_title"></span>
-                            </a>
-                        </template>
 
-                        <!-- Menu dengan submenu -->
-                        <template x-if="menu.children.length > 0">
-                            <div>
-                                <button @click="subOpen = !subOpen" class="w-full flex justify-between py-2 text-white hover:text-pumpkin-600 font-medium">
-                                    <span x-text="menu.menu_title"></span>
-                                    <i class="bi bi-chevron-down ml-1 transform transition-transform duration-300"
-                                        :class="subOpen ? 'rotate-180' : 'rotate-0'"></i>
-                                </button>
-                                <div x-show="subOpen" x-transition class="pl-4">
-                                    <template x-for="child in menu.children" :key="child.id">
-                                        <a
-                                            class="block px-4 py-2 text-sm text-white hover:bg-gray-100"
-                                            :href="child.menu_type === 'link' ? child.menu_url : base_url + child.menu_url"
-                                            :target="child.menu_target"
-                                            x-text="child.menu_title"
-                                            :class="child.active ? 'text-pumpkin-600 font-semibold' : ''"></a>
-                                    </template>
-                                </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden" x-show="mobileOpen" x-transition>
+            <div class="bg-abbey-900/95 rounded-b-md shadow-md mt-2 px-4 py-3 space-y-2">
+                <?php foreach ($site_menus as $menu): ?>
+                    <div x-data="{ open: false }" class="border-b border-gray-700 pb-2">
+                        <?php if (empty($menu['children'])): ?>
+                            <!-- Menu tanpa submenu -->
+                            <a href="<?= $menu['menu_type'] === 'link' ? $menu['menu_url'] : base_url($menu['menu_url']) ?>"
+                                target="<?= esc($menu['menu_target']) ?>"
+                                class="block px-2 py-2 rounded hover:bg-gray-800
+                               <?= $menu['active'] ? 'text-pumpkin-600 font-semibold' : 'text-white' ?>">
+                                <?= esc($menu['menu_title']) ?>
+                            </a>
+                        <?php else: ?>
+                            <!-- Menu dengan submenu -->
+                            <button @click="open = !open" class="w-full flex justify-between items-center px-2 py-2 rounded hover:bg-gray-800 focus:outline-none
+                                    <?= isset($menu['active']) && $menu['active'] ? 'text-pumpkin-600 font-semibold' : 'text-white' ?>">
+                                <?= esc($menu['menu_title']) ?>
+                                <i class="bi bi-chevron-down transition-transform duration-300"
+                                    :class="open ? 'rotate-180' : 'rotate-0'"></i>
+                            </button>
+
+                            <div x-show="open" x-transition class="mt-2 pl-4 space-y-2" style="display: none;">
+                                <?php foreach ($menu['children'] as $child): ?>
+                                    <a href="<?= $child['menu_type'] === 'link' ? $child['menu_url'] : base_url($child['menu_url']) ?>"
+                                        target="<?= esc($child['menu_target']) ?>"
+                                        class="block px-2 py-1 text-sm rounded hover:bg-gray-800
+                                       <?= $child['active'] ? 'text-pumpkin-600 font-semibold' : 'text-white' ?>">
+                                        <?= esc($child['menu_title']) ?>
+                                    </a>
+                                <?php endforeach; ?>
                             </div>
-                        </template>
+                        <?php endif; ?>
                     </div>
-                </template>
+                <?php endforeach; ?>
+
+                <!-- Login Button Mobile -->
+                <div class="pt-3">
+                    <a href="<?= base_url('login') ?>" class="block w-full text-center px-2 py-2 bg-primary text-white rounded">
+                        Login
+                    </a>
+                </div>
             </div>
         </div>
     </div>

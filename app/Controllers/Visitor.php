@@ -13,22 +13,25 @@ class Visitor extends BaseController
         $this->visitorModel = new VisitorModel();
     }
 
+    /**
+     * Statistik harian untuk grafik
+     */
     public function getIndex()
     {
-        $this->visitorModel->logVisit(); // log otomatis
+        $stats = $this->visitorModel->getDailyStats(30);
 
-        $stats = $this->visitorModel->getDailyStats();
-
-        return $this->response->setJSON(['data' => array_reverse($stats)]);
+        return $this->response->setJSON([
+            'data' => array_reverse($stats) // data lama ke baru
+        ]);
     }
-    public function getSummary()
-{
 
-    return $this->response->setJSON([
-        'today' => $this->visitorModel ->countToday(),
-        'month' => $this->visitorModel->countThisMonth(),
-        'year'  => $this->visitorModel->countThisYear(),
-        'total' => $this->visitorModel->countTotal(),
-    ]);
-}
+    /**
+     * Statistik ringkasan (hari ini, bulan ini, tahun ini, total)
+     */
+    public function getSummary()
+    {
+        $summary = $this->visitorModel->getSummaryStats();
+
+        return $this->response->setJSON($summary);
+    }
 }

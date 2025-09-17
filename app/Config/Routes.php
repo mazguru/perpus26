@@ -53,3 +53,5 @@ $routes->get('video/(:segment)', 'Publik\Readmore::videos/$1');
 $routes->get('categories/(:segment)', 'Publik\Categories::index/$1');
 $routes->get('kategori/(:segment)', 'Publik\Categories::index/$1');
 $routes->get('tags/(:segment)', 'Publik\Tags::index/$1');
+
+$routes->get('sitemap.xml', 'Publik\Sitemap::feed');

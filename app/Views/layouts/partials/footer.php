@@ -1,3 +1,11 @@
+<?php
+$summary = $visitor_summary ?? [
+    'today' => ['total' => 0, 'unique' => 1],
+    'month' => ['total' => 0, 'unique' => 1],
+    'year'  => ['total' => 0, 'unique' => 1],
+    'all_time' => ['total' => 0, 'unique' => 1],
+];
+?>
 <footer class="bg-[#1a1a1a] text-white">
     <div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-10 text-sm relative z-10">
         <!-- About Us -->
@@ -49,13 +57,13 @@
         </div>
 
         <!-- Statistik Kunjungan -->
-        <div x-data="visitSummary()" x-init="loadSummary()">
+        <div>
             <h2 class="text-lg font-semibold mb-4 border-b border-pumpkin-500 inline-block pb-1">Statistik Pengunjung</h2>
             <div class="space-y-2 text-gray-300 text-sm">
-                <p>Pengunjung Hari Ini : <span class="font-bold" x-text="today"></span></p>
-                <p>Pengunjung Bulan Ini : <span class="font-bold" x-text="month"></span></p>
-                <p>Pengunjung Tahun Ini : <span class="font-bold" x-text="year"></span></p>
-                <p>Total Pengunjung : <span class="font-bold" x-text="total"></span></p>
+                <p>Pengunjung Hari Ini : <span class="font-bold"><?= $summary['today']['unique'] ?></span></p>
+                <p>Pengunjung Bulan Ini : <span class="font-bold"><?= $summary['month']['unique'] ?></span></p>
+                <p>Pengunjung Tahun Ini : <span class="font-bold"><?= $summary['year']['unique'] ?></span></p>
+                <p>Total Pengunjung : <span class="font-bold"><?= $summary['all_time']['unique'] ?></span></p>
             </div>
         </div>
     </div>
