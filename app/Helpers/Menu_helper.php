@@ -8,7 +8,7 @@ if (! function_exists('menuadmin')) {
                 'title' => 'Dashboard',
                 'icon'  => 'bi bi-house',
                 'route' => 'dashboard',
-                'roles' => ['administrator', 'super_user']
+                'roles' => ['administrator', 'super_user', 'student', 'employee']
             ],
             [
                 'title' => 'Lihat Blog',

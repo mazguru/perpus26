@@ -16,6 +16,8 @@
         </a>
     </div>
 
+    <?= session('user_role') ?>
+
     <!-- Menu -->
 
 

@@ -5,39 +5,39 @@ return [
         'title' => 'Dashboard',
         'icon'  => 'bi bi-house',
         'route' => 'dashboard',
-        'roles' => ['admin', 'super_user']
+        'roles' => ['admin', 'super_user', 'administrator', 'student', 'employee']
     ],
     [
         'title' => 'Manajemen Tulisan',
         'icon'  => 'bi bi-newspaper',
-        'roles' => ['admin', 'super_user'],
+        'roles' => ['admin', 'super_user', 'administrator', 'student', 'employee'],
         'submenu' => [
             [
                 'title' => 'Semua Tulisan',
                 'route' => 'blog/posts',
-                'roles' => ['admin', 'super_user']
+                'roles' => ['admin', 'super_user', 'administrator', 'student', 'employee']
             ],
             [
                 'title' => 'Tambah Tulisan',
                 'route' => 'blog/posts/create',
-                'roles' => ['admin', 'super_user']
+                'roles' => ['admin', 'super_user', 'administrator', 'student', 'employee']
             ],
             [
                 'title' => 'Halaman',
                 'route' => 'blog/page',
-                'roles' => ['admin', 'super_user']
+                'roles' => ['admin', 'super_user', 'administrator', 'student', 'employee']
             ],
             [
                 'title' => 'Komentar',
                 'route' => 'blog/comment',
-                'roles' => ['admin', 'super_user']
+                'roles' => ['admin', 'super_user', 'administrator', 'student', 'employee']
             ],
         ]
     ],
     [
         'title' => 'Manajemen Halaman',
         'icon'  => 'bi bi-newspaper',
-        'roles' => ['admin', 'super_user'],
+        'roles' => ['admin', 'super_user', 'administrator', 'student', 'employee'],
         'submenu' => [
             [
                 'title' => 'Semua Halaman',

@@ -77,7 +77,11 @@ class Posts extends AdminController
 
     public function getList()
     {
-        $posts = $this->m_posts->withDeleted()->getAllPosts();
+        if (session('user_role') == 'student' || session('user_role') == 'employee') {
+            $posts = $this->m_posts->withDeleted()->getAllPosts('post', session('user_id'));
+        } else {
+            $posts = $this->m_posts->withDeleted()->getAllPosts();
+        }
         $data = [
             'alldata' => $posts
         ];

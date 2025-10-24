@@ -41,7 +41,7 @@ class PostsModel extends Model
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
-    public function getAllPosts($type = 'post')
+    public function getAllPosts($type = 'post', $author = null)
     {
         $builder = $this->db->table($this->table . ' x1');
         $builder->select('
@@ -60,6 +60,10 @@ class PostsModel extends Model
         $builder->join('users x2', 'x1.post_author = x2.id', 'left');
         $builder->join('categories x3', 'x1.post_categories = x3.id', 'left');
         $builder->where('x1.post_type', $type);
+
+        if ($author) {
+            $builder->where('x1.post_author', $author);
+        }
 
         $builder->orderBy('x1.created_at', 'DESC');
 
